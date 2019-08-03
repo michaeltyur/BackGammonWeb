@@ -2,6 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BackGammonWeb.Models;
+using BackGammonWeb.Services;
+using Common.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BackGammonWeb.Controllers
@@ -9,6 +13,7 @@ namespace BackGammonWeb.Controllers
     [Route("api/[controller]")]
     public class SampleDataController : Controller
     {
+
         private static string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -25,6 +30,8 @@ namespace BackGammonWeb.Controllers
                 Summary = Summaries[rng.Next(Summaries.Length)]
             });
         }
+
+
 
         public class WeatherForecast
         {

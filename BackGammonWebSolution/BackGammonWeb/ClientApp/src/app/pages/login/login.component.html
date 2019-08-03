@@ -1,32 +1,42 @@
-<div class="container">
-  <div class="row">
-    <div class="col-3 ml-auto mr-auto">
-      <nb-card [nbPopover]="users" nbPopoverTrigger="hint" nbPopoverPlacement="right">
+<div class="container h-100">
+  <div class="row h-100">
+    <div class="col-3 ml-auto mr-auto mb-auto mt-auto">
+      <nb-card
+      [nbPopover]="users"
+      nbPopoverTrigger="hint"
+      nbPopoverPlacement="right"
+      [nbSpinner]="loginLoading"
+      nbSpinnerStatus="info">
         <nb-card-header>Login</nb-card-header>
         <nb-card-body>
-          <form>
-            <div class="form-group">
-              <label for="userName">User Name</label>
-              <input
-                type="text"
-                fullWidth
-                id="userName"
-                nbInput
-                placeholder="Enter User Name"
-              />
+          <form [formGroup]="loginForm" (ngSubmit)="login()">
+            <div class="row form-group">
+              <div class="col">
+                <div class="float-right mr-2" *ngIf="userName.invalid && (userName.dirty || userName.touched)">
+                  <span *ngIf="userName.errors?.required" style="color: crimson;">required</span>
+                  <span *ngIf="userName.errors?.minlength" style="color: crimson;">3 character minimum</span>
+                </div>
+                <label for="userName">User Name</label>
+                <input type="text" formControlName="userName" fullWidth id="userName" nbInput placeholder="Enter User Name" />
+              </div>
+
             </div>
-            <div class="form-group">
-              <label for="password">Password</label>
-              <input
-                type="password"
-                fullWidth
-                id="password"
-                nbInput
-                placeholder="Enter Password"
-              />
+            <div class="row form-group">
+              <div class="col">
+                <div class="float-right mr-2 mb-2" *ngIf="password.invalid && (password.dirty || password.touched)">
+                  <div class="row"><span *ngIf="password.errors?.required" style="color: crimson;">required</span></div>
+                  <div class="row"><span *ngIf="password.errors?.minlength" style="color: crimson;">3 digits minimum</span></div>
+                  <div class="row"><span *ngIf="password.errors?.onlyDigits" style="color: crimson;">only digits and letters</span></div>
+                </div>
+                <label for="password">Password</label>
+                <input type="password" formControlName="password" fullWidth id="password" nbInput placeholder="Enter Password" />
+              </div>
             </div>
-            <button nbButton hero status="success" class="float-right">
-              Send
+            <button nbButton outline status="warning" class="float-left">
+              registration
+            </button>
+            <button [disabled]="loginForm.invalid" nbButton hero status="success" class="float-right">
+              LogIn
             </button>
           </form>
         </nb-card-body>
@@ -37,10 +47,17 @@
 
 <ng-template #users>
   <div class="container">
-      <div class="row">
-          <div class="col">
-              michael:<span class="ml-2">123</span>
-          </div>
-      </div>
+    <div class="row m-2">
+      misha:<span class="ml-2">123</span>
+    </div>
+    <div class="row m-2">
+      yakov:<span class="ml-2">123</span>
+    </div>
+    <div class="row m-2">
+      pazit:<span class="ml-2">123</span>
+    </div>
+    <div class="row m-2">
+      david:<span class="ml-2">123</span>
+    </div>
   </div>
 </ng-template>

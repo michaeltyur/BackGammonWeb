@@ -1,12 +1,15 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
+import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './pages/login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NbThemeModule, NbLayoutModule, NbCardModule, NbButtonModule, NbInputModule, NbPopoverModule } from '@nebular/theme';
+import { NbThemeModule, NbLayoutModule, NbCardModule, NbButtonModule, NbInputModule, NbPopoverModule, NbToastrModule, NbSpinnerModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { JwtInterceptor } from './shared/helpers/auth-interceptor';
 
 const routes: Routes = [
 
@@ -20,7 +23,7 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   { path: '**', component: LoginComponent }
-]; 
+];
 
 @NgModule({
   declarations: [
@@ -37,9 +40,16 @@ const routes: Routes = [
     NbCardModule,
     NbButtonModule,
     NbInputModule,
-    NbPopoverModule
+    NbPopoverModule,
+    FormsModule ,
+    ReactiveFormsModule,
+    HttpClientModule,
+    NbToastrModule.forRoot(),
+    NbSpinnerModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
