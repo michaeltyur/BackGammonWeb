@@ -60,25 +60,34 @@ namespace BackGammonDb.Repositories
             else return result;
         }
 
-        public bool UpdateUser(User user)
+        public async Task<bool> UpdateUser(User user)
         {
             if (user != null)
             {
 
-                var oldUser = GetUserByName(user.UserName);
+                //var oldUser = GetUserByName(user.UserName);
 
                 //  oldUser.Password = user.Password;
                 //  oldUser.FirstName = user.FirstName;
                 //  oldUser.LastName = user.LastName;
                 //oldUser.Messages = user.Messages;Add(user);
-                _backnammonContextDb.Users.Update(user);
+                try
+                {
+                    _backnammonContextDb.Users.Update(user);
 
-                _backnammonContextDb.SaveChanges();
+                    _backnammonContextDb.SaveChanges();
+                    return await Task.FromResult(true);
+                }
+                catch (Exception)
+                {
 
-                return true;
+                    return await Task.FromResult(false);
+                }
+
+
 
             }
-            return false;
+            return await Task.FromResult(false);
         }
 
         public List<User> GetAllUsers()
@@ -113,9 +122,9 @@ namespace BackGammonDb.Repositories
         {
             try
             {
-                user.IsOnline = 1;
-                UpdateUser(user);
-                return await Task.FromResult(true);
+                user.IsOnline = true;
+                await  UpdateUser(user);
+                return await UpdateUser(user);
             }
             catch (Exception ex)
             {
@@ -128,9 +137,9 @@ namespace BackGammonDb.Repositories
         {
             try
             {
-                user.IsOnline = 0;
-                UpdateUser(user);
-                return await Task.FromResult(true);
+                user.IsOnline = false;
+                var result = await UpdateUser(user);
+                return result;
             }
             catch (Exception ex)
             {

@@ -26,7 +26,7 @@ export class AuthService {
       if (res['token']) {
         this.user = <User>res;
         localStorage.setItem('token', this.user.token);
-        localStorage.setItem('username', this.user.userName);
+        localStorage.setItem('userName', this.user.userName);
         this.isAuthenticated$.emit(true);
         this.signalRConnectionService.startConnection();
       }
@@ -34,20 +34,20 @@ export class AuthService {
   }
 
   logout(): void {
-    let url = "/api/authentication/logout";
-    let userName = localStorage.getItem('username');
+    let userName = localStorage.getItem('userName');
     if (userName) {
-      this.httpClient.post(url, userName).subscribe(res => {
+      let url = "/api/authentication/logout?userName=" + userName;
+      this.httpClient.get(url).subscribe(res => {
         if (res['success']) {
-          localStorage.clear();
-          this.signalRConnectionService.closeConnection();
-          this.user = null;
-          this.isAuthenticated$.emit(false);
-          this.router.navigate(['login']);
         }
       }, error => {
         console.log(error);
       })
+      localStorage.clear();
+      this.signalRConnectionService.closeConnection();
+      this.user = null;
+      this.isAuthenticated$.emit(false);
+      this.router.navigate(['login']);
     }
 
   }
