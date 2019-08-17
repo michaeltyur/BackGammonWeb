@@ -32,7 +32,12 @@
                 <input type="password" formControlName="password" fullWidth id="password" nbInput placeholder="Enter Password" />
               </div>
             </div>
-            <button nbButton outline status="warning" class="float-left">
+            <button
+            nbButton
+            outline
+            status="warning"
+            class="float-left"
+            (click)="registration()">
               registration
             </button>
             <button [disabled]="loginForm.invalid" nbButton hero status="success" class="float-right">

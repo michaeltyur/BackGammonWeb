@@ -1,0 +1,22 @@
+<div style="width: 100%;" class="d-flex justify-content-between">
+  <div class="top-menu-title align-self-center">
+    Welcome to Backgammon Talkback App
+    <span *ngIf="isAuthenticated">,
+      <span class="ml-2">
+        dear {{userName}}
+      </span>
+    </span>
+  </div>
+  <div
+  class="align-self-center"
+  [class.connected]="isConnected"
+  [class.disconnected]="!isConnected">
+    <i class="fas fa-wifi fa-2x"></i>
+  </div>
+  <div *ngIf="isAuthenticated" nbButton hero status="success" class="logout-button" (click)="logout()">
+      <i class="fas fa-sign-out-alt fa-2x"></i>
+  </div>
+  <!-- <button *ngIf="isAuthenticated" nbButton hero status="success" class="float-right" (click)="logout()">
+    <i class="fas fa-sign-out-alt fa-2x"></i>
+  </button> -->
+</div>

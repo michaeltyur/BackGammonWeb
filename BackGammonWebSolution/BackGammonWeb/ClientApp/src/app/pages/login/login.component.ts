@@ -4,6 +4,7 @@ import { onlyDigitsValidator } from 'src/app/shared/validators/only-digits.valid
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { NbToastrService } from '@nebular/theme';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private nbToastrService: NbToastrService) { }
+    private nbToastrService: NbToastrService,
+    private router: Router) { }
 
 
   ngOnInit() {
@@ -30,8 +32,8 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   initForm(): void {
     this.loginForm = this.fb.group({
-      userName: ['', [Validators.required, Validators.minLength(3)]],
-      password: ['', [Validators.required, Validators.minLength(3), onlyDigitsValidator()]],
+      userName: ['misha', [Validators.required, Validators.minLength(3)]],
+      password: ['123', [Validators.required, Validators.minLength(3), onlyDigitsValidator()]],
     });
   }
 
@@ -39,9 +41,13 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (this.loginForm.valid) {
       this.loginLoading = true;
       this.subscribtion.add(this.authService.login(this.loginForm.value).subscribe(res => {
-        if (res) {
+        if (res['token']) {
           this.nbToastrService.success('', 'You are logged successfully');
           this.loginLoading = false;
+          this.router.navigate(['lobby']);
+        }
+        else if (res['error']) {
+          this.nbToastrService.danger('', res['error']);
         }
       }, error => {
         console.error(error);
@@ -53,6 +59,10 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.nbToastrService.warning('', 'One or more parameters are incorrect');
     }
 
+  }
+
+  registration(): void {
+    this.router.navigate(['registration']);
   }
 
   get userName() {

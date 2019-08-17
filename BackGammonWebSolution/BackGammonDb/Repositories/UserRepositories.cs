@@ -33,7 +33,7 @@ namespace BackGammonDb.Repositories
             return user;
         }
 
-        public User GetUserByName(string username)
+        public async Task<User> GetUserByName(string username)
         {
             if (string.IsNullOrEmpty(username))
             {
@@ -42,22 +42,24 @@ namespace BackGammonDb.Repositories
             User user;
 
 
-            user = _backnammonContextDb.Users.FirstOrDefault(u => u.UserName == username);
+            user = await _backnammonContextDb.Users.FirstOrDefaultAsync(u => u.UserName == username);
             return user;
         }
 
-        public bool AddUser(User user)
+        public async Task<int> AddUser(User user)
         {
+            int result = 0;
             if (user != null)
             {
 
-                _backnammonContextDb.Users.Add(user);
-                _backnammonContextDb.SaveChanges();
-                return true;
+                await _backnammonContextDb.Users.AddAsync(user);
+                result = await _backnammonContextDb.SaveChangesAsync();
+                return result;
 
             }
-            else return false;
+            else return result;
         }
+
         public bool UpdateUser(User user)
         {
             if (user != null)
@@ -105,6 +107,36 @@ namespace BackGammonDb.Repositories
                 else return false;
             }
             else return false;
+        }
+
+        public async Task<bool> SetUserOnLine(User user)
+        {
+            try
+            {
+                user.IsOnline = 1;
+                UpdateUser(user);
+                return await Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                return await Task.FromResult(false);
+            }
+
+        }
+
+        public async Task<bool> SetUserOffLine(User user)
+        {
+            try
+            {
+                user.IsOnline = 0;
+                UpdateUser(user);
+                return await Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                return await Task.FromResult(false);
+            }
+
         }
 
     }

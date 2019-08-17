@@ -1,6 +1,8 @@
 using BackGammonDb;
+using BackGammonWeb.Helpers;
 using BackGammonWeb.Hubs;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -8,6 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace BackGammonWeb
 {
@@ -48,7 +53,6 @@ namespace BackGammonWeb
 
                 .WithOrigins("http://localhost:4300")
                 .WithOrigins("http://localhost:4200")
-                .WithOrigins("https://localhost:4200")
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials()
@@ -56,12 +60,40 @@ namespace BackGammonWeb
                 ;
             }));
 
-            services.AddSignalR(hubOptions =>
+            //services.AddSignalR(hubOptions =>
+            //{
+            //    hubOptions.EnableDetailedErrors = true;
+            //      hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(20);
+            //});
+            services.AddSignalR();
+
+            //JWT Config
+
+            var appSettingsSection = Configuration.GetSection("AppSetting");
+            services.Configure<AppSettings>(appSettingsSection);
+
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+
+            services.AddAuthentication(x =>
             {
-                hubOptions.EnableDetailedErrors = true;
-                //  hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(20);
-            }
-         );
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+            };
+            });
+            IdentityModelEventSource.ShowPII = true;
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
         }
@@ -88,6 +120,14 @@ namespace BackGammonWeb
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
+
+            app.UseCors(CorsPolicy);
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ServerHub>("/backgammon");
+            });
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -107,11 +147,6 @@ namespace BackGammonWeb
                     // spa.UseAngularCliServer(npmScript: "start");
                     spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
                 }
-            });
-
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<ServerNub>("/backgammon-chat");
             });
         }
     }

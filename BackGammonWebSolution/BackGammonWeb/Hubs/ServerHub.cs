@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace BackGammonWeb.Hubs
 {
-    public class ServerNub:Hub<ITypedHubClient>
+    public class ServerHub:Hub<ITypedHubClient>
     {
-        public ServerNub()
+        public ServerHub()
         {
 
         }

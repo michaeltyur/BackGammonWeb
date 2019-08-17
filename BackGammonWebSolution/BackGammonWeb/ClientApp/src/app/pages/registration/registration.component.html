@@ -1,0 +1,68 @@
+<div class="container h-100">
+  <div class="row h-100">
+    <div class="col-3 ml-auto mr-auto mb-auto mt-auto">
+      <nb-card [nbSpinner]="loginLoading" nbSpinnerStatus="info">
+        <nb-card-header>Registration</nb-card-header>
+        <nb-card-body>
+          <form [formGroup]="userForm" (ngSubmit)="registration()">
+
+             <!-- First Name -->
+             <div class="row form-group">
+                <div class="col">
+                  <div class="float-right mr-2" *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)">
+                    <span *ngIf="firstName.errors?.required" style="color: crimson;">required</span>
+                    <span *ngIf="firstName.errors?.minlength" style="color: crimson;">2 character minimum</span>
+                  </div>
+                  <label for="firstName">First Name</label>
+                  <input type="text" formControlName="firstName" fullWidth id="firstName" nbInput placeholder="Enter First Name" />
+                </div>
+
+              </div>
+            <!-- Last Name -->
+            <div class="row form-group">
+              <div class="col">
+                <div class="float-right mr-2" *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)">
+                  <span *ngIf="lastName.errors?.required" style="color: crimson;">required</span>
+                  <span *ngIf="lastName.errors?.minlength" style="color: crimson;">2 character minimum</span>
+                </div>
+                <label for="lastName">Last Name</label>
+                <input type="text" formControlName="lastName" fullWidth id="lastName" nbInput placeholder="Enter Last Name" />
+              </div>
+
+            </div>
+            <!-- User Name -->
+            <div class="row form-group">
+              <div class="col">
+                <div class="float-right mr-2" *ngIf="userName.invalid && (userName.dirty || userName.touched)">
+                  <span *ngIf="userName.errors?.required" style="color: crimson;">required</span>
+                  <span *ngIf="userName.errors?.minlength" style="color: crimson;">3 character minimum</span>
+                </div>
+                <label for="userName">User Name</label>
+                <input type="text" formControlName="userName" fullWidth id="userName" nbInput placeholder="Enter User Name" />
+              </div>
+
+            </div>
+            <!-- Password -->
+            <div class="row form-group">
+              <div class="col">
+                <div class="float-right mr-2 mb-2" *ngIf="password.invalid && (password.dirty || password.touched)">
+                  <div class="row"><span *ngIf="password.errors?.required" style="color: crimson;">required</span></div>
+                  <div class="row"><span *ngIf="password.errors?.minlength" style="color: crimson;">3 digits minimum</span></div>
+                  <div class="row"><span *ngIf="password.errors?.onlyDigits" style="color: crimson;">only digits and letters</span></div>
+                </div>
+                <label for="password">Password</label>
+                <input type="password" formControlName="password" fullWidth id="password" nbInput placeholder="Enter Password" />
+              </div>
+            </div>
+            <button nbButton outline status="info" class="float-left" [routerLink]="['login']">
+              back
+            </button>
+            <button [disabled]="userForm.invalid" nbButton hero status="success" class="float-right">
+              registration
+            </button>
+          </form>
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </div>
+</div>
