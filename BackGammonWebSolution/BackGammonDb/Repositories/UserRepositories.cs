@@ -90,13 +90,13 @@ namespace BackGammonDb.Repositories
             return await Task.FromResult(false);
         }
 
-        public List<User> GetAllUsers()
+        public async Task<List<User>> GetAllUsers()
         {
-            List<User> listUsers = new List<User>(); ;
+            List<User> listUsers = new List<User>();
 
-            listUsers = _backnammonContextDb.Users.ToList();
-
-            return listUsers;
+            listUsers = await _backnammonContextDb.Users.ToListAsync();
+            
+            return   listUsers;
         }
 
         public async Task<bool> DeleteUser(string userName, string password)

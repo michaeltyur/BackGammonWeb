@@ -50,6 +50,9 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.nbToastrService.danger('', res['error']);
         }
       }, error => {
+        if (error['status']===504) {
+          this.nbToastrService.danger('', 'The server not responding');
+        }
         console.error(error);
         this.loginLoading = false;
       }));

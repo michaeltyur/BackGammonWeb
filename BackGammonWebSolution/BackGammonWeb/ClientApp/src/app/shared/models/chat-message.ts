@@ -1,12 +1,13 @@
 export interface ChatMessage {
-  type;
-  message;
-  reply;
-  sender;
-  date;
-  files;
-  quote;
-  latitude;
-  longitude;
-  avatar;
+  type:string;
+  message:string;
+  reply:boolean;
+  sender:string;
+  date:Date;
+  files:Array<any>;
+  quote:string;
+  latitude:number;
+  longitude:number;
+  avatar:string;
+  user:any;
 }

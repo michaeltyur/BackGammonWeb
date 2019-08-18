@@ -96,7 +96,7 @@ namespace BackGammonWeb.Controllers
 
         }
 
-
+        [Authorize]
         [HttpGet("logout")]
         public async Task<string> Logout(string userName)
         {

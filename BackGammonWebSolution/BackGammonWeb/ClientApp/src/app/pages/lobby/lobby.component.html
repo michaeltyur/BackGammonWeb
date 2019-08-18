@@ -1,10 +1,47 @@
 <div class="container h-100">
   <div class="row h-100">
-    <div class="col mb-auto mt-auto">
-      <nb-card class="card ml-auto mr-auto" style="width: 35rem;">
+    <div class="col mt-auto mb-auto">
+      <nb-card class="card ml-auto mr-auto" style="width: 35rem;height: 35rem;">
         <nb-card-header>Lobby</nb-card-header>
-        <nb-card-body>
+        <nb-card-body style="overflow-y: hidden;">
+          <div class="row h-100">
+            <div class="col-8">
+              <app-chat [isPrivate]="false" style="height: 100%;"></app-chat>
+            </div>
+            <div class="col-4">
 
+              <div class="row h-50">
+                <div class="col">
+                  <nb-card style="height: 100%;">
+                    <nb-card-header>Users online</nb-card-header>
+                    <nb-card-body>
+                      <nb-list class="0">
+                        <nb-list-item *ngFor="let user of usersOnLine">
+                          {{ user.userName }}
+                        </nb-list-item>
+                      </nb-list>
+                    </nb-card-body>
+                  </nb-card>
+                </div>
+              </div>
+
+              <div class="row h-50">
+                <div class="col">
+                  <nb-card style="height: 100%;">
+                    <nb-card-header>Users offline</nb-card-header>
+                    <nb-card-body>
+                      <nb-list class="m-0">
+                        <nb-list-item *ngFor="let user of usersOffLine">
+                          {{ user.userName }}
+                        </nb-list-item>
+                      </nb-list>
+                    </nb-card-body>
+                  </nb-card>
+                </div>
+              </div>
+
+            </div>
+          </div>
         </nb-card-body>
       </nb-card>
     </div>

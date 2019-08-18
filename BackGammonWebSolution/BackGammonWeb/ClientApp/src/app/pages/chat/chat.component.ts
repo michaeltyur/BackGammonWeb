@@ -1,24 +1,31 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ChatMessage } from 'src/app/shared/models/chat-message';
 import { Subscription } from 'rxjs';
+import { UserService } from 'src/app/shared/services/user.service';
+import { User } from 'src/app/shared/models/user';
 
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
 })
-export class ChatComponent implements OnInit ,OnDestroy{
-  messages = new Array<ChatMessage>();
+export class ChatComponent implements OnInit, OnDestroy {
+
   subscription = new Subscription();
-  constructor() { }
+  messages = new Array<ChatMessage>();
+
+  @Input() isPrivate;
+  constructor(
+    private userService: UserService) { }
 
   ngOnInit() {
   }
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 
-  sendMessage(event):void{
+
+  sendMessage(event): void {
 
   }
 

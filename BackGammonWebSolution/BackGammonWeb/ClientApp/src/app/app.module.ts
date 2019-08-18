@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './pages/login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NbThemeModule, NbLayoutModule, NbCardModule, NbButtonModule, NbInputModule, NbPopoverModule, NbToastrModule, NbSpinnerModule, NbChatModule, NbWindowModule } from '@nebular/theme';
+import { NbThemeModule, NbLayoutModule, NbCardModule, NbButtonModule, NbInputModule, NbPopoverModule, NbToastrModule, NbSpinnerModule, NbChatModule, NbWindowModule, NbListModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -52,7 +52,7 @@ const routes: Routes = [
     RegistrationComponent,
     TopBarComponent,
     ChatComponent,
-    LobbyComponent
+    LobbyComponent,
   ],
   imports: [
     BrowserModule,
@@ -71,7 +71,8 @@ const routes: Routes = [
     NbToastrModule.forRoot(),
     NbSpinnerModule,
     NbChatModule,
-    NbWindowModule.forRoot()
+    NbWindowModule.forRoot(),
+    NbListModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
