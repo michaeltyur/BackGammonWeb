@@ -17,6 +17,7 @@ using Newtonsoft.Json;
 
 namespace BackGammonWeb.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthenticationController : ControllerBase
@@ -96,7 +97,6 @@ namespace BackGammonWeb.Controllers
 
         }
 
-        [Authorize]
         [HttpGet("logout")]
         public async Task<string> Logout(string userName)
         {

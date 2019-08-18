@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 
 namespace BackGammonWeb.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
 
@@ -26,8 +27,7 @@ namespace BackGammonWeb.Controllers
             _appSettings = appSettings.Value;
         }
 
-        [Authorize]
-        [HttpPost("getAllUsers")]
+        [HttpGet("getAllUsers")]
         public async Task<List<User>> GetAllUsers()
         {
             var listUsers = await _dbManager.UserRepositories.GetAllUsers();

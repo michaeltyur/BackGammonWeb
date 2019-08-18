@@ -67,10 +67,7 @@ export class AuthService {
   }
 
   public getToken(): string {
-    if (this.user) {
-      return this.user.token;
-    }
-
+      return localStorage.getItem('token');
   }
   isAuthenticated(): boolean {
     return localStorage.getItem('token') ? true : false;

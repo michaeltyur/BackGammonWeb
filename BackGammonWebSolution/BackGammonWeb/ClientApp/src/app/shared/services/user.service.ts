@@ -11,8 +11,8 @@ export class UserService {
   constructor(private httpClient:HttpClient) { }
 
 
-  getAllUser():Observable<Array<User>>{
-    let url="/api/user/getAllUser";
-    return this.httpClient.get<Array<User>>(url);
+  getAllUser():Observable<any>{
+    let url="/api/user/getAllUsers";
+    return this.httpClient.get(url);
   }
 }
