@@ -5,42 +5,42 @@
         <nb-card-header>Lobby</nb-card-header>
         <nb-card-body style="overflow-y: hidden;">
           <div class="row h-100">
-            <div class="col-8">
-              <app-chat [isPrivate]="false" style="height: 100%;"></app-chat>
+
+            <div class="col-8 h-100">
+              <app-chat [isPrivate]="false"></app-chat>
             </div>
-            <div class="col-4">
 
-              <div class="row h-50">
-                <div class="col">
-                  <nb-card class="h-100">
-                    <nb-card-header>Users online</nb-card-header>
-                    <nb-card-body>
-                      <nb-list class="m-0">
-                        <nb-list-item *ngFor="let user of usersOnLine">
-                          {{ user.userName }}
-                        </nb-list-item>
-                      </nb-list>
-                    </nb-card-body>
-                  </nb-card>
-                </div>
-              </div>
+            <div class="col-4 d-flex flex-column h-100">
 
-              <div class="row h-50">
-                <div class="col">
-                  <nb-card class="h-100">
-                    <nb-card-header>Users offline</nb-card-header>
-                    <nb-card-body>
-                      <nb-list class="m-0">
-                        <nb-list-item *ngFor="let user of usersOffLine">
-                          {{ user.userName }}
-                        </nb-list-item>
-                      </nb-list>
-                    </nb-card-body>
-                  </nb-card>
-                </div>
-              </div>
+
+                  <nb-card class="mb-1 h-50">
+                      <nb-card-header>Users online</nb-card-header>
+                      <nb-card-body>
+                        <nb-list class="m-0">
+                          <nb-list-item *ngFor="let user of usersOnLine" style="cursor: pointer;">
+                            {{ user.userName }}
+                          </nb-list-item>
+                        </nb-list>
+                      </nb-card-body>
+                    </nb-card>
+
+
+
+
+
+                  <nb-card class="mb-0 h-50">
+                      <nb-card-header>Users offline</nb-card-header>
+                      <nb-card-body>
+                        <nb-list class="m-0" style="cursor: default; ">
+                          <nb-list-item *ngFor="let user of usersOffLine" style="color: dimgray;">
+                            {{ user.userName }}
+                          </nb-list-item>
+                        </nb-list>
+                      </nb-card-body>
+                    </nb-card>
 
             </div>
+
           </div>
         </nb-card-body>
       </nb-card>

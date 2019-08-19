@@ -28,7 +28,7 @@ export class TopBarComponent implements OnInit, OnDestroy {
     this.subscription.add(this.authService.isAuthenticated$.subscribe(res => {
       this.isAuthenticated = res;
       if (res) {
-        this.userName = localStorage.getItem('username');
+        this.userName = localStorage.getItem('userName');
       }
       else {
         this.userName = null;
@@ -44,7 +44,7 @@ export class TopBarComponent implements OnInit, OnDestroy {
 
     if (this.authService.isAuthenticated()) {
       this.isAuthenticated = true;
-      this.userName = localStorage.getItem('username');
+      this.userName = localStorage.getItem('userName');
     }
 
     if (this.signalRConnectionService.isConnected) {
