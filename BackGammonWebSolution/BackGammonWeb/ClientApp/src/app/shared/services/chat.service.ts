@@ -1,24 +1,38 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { SignalRConnectionService } from './signal-r-connection.service';
-import { EventEmitter } from 'events';
+import { HubConnection } from '@aspnet/signalr';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
 
-  mwssage$ = new EventEmitter();
+  message$ = new EventEmitter();
+
+  private hubConnection: HubConnection;
+
   constructor(private signalRConnectionService: SignalRConnectionService) {
 
     signalRConnectionService.isConnected$.subscribe(res => {
       if (res) {
+
+        this.hubConnection = signalRConnectionService.connection;
+
         signalRConnectionService.connection.on("BroadcastMessage", (res) => {
           if (res) {
-            this.mwssage$.emit(res);
+            this.message$.emit(res);
           }
         })
       }
     })
+
+  }
+
+  sendMessage(message):Promise<any>{
+    if (this.hubConnection) {
+      return this.hubConnection.invoke("SendMessage",message);
+    }
+    else return Promise.reject('connection is null');
   }
 
 }

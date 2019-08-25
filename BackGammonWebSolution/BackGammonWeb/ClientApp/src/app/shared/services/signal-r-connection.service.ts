@@ -1,22 +1,23 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import * as signalR from '@aspnet/signalr';
+import { HubConnection, HubConnectionBuilder } from "@aspnet/signalr";
 
 @Injectable({
   providedIn: 'root'
 })
 export class SignalRConnectionService {
 
-  connection;
+  connection: HubConnection;
   isConnected: boolean = false;
   isConnected$ = new EventEmitter<boolean>();
-  serverUrl = "/backgammon";
+  serverUrl = "http://localhost:50740/backgammon";
 
   constructor() {
+
   }
 
   startConnection(): void {
-    this.connection = new signalR.HubConnectionBuilder()
-      .configureLogging(signalR.LogLevel.Information)
+
+    this.connection = new HubConnectionBuilder()
       .withUrl(this.serverUrl)
       .build();
 
@@ -27,6 +28,10 @@ export class SignalRConnectionService {
     }).catch(function (err) {
       this.isConnected$.emit(false);
       return console.error(err.toString());
+    });
+
+    this.connection.onclose(err => {
+      this.startConnection();
     });
 
   }

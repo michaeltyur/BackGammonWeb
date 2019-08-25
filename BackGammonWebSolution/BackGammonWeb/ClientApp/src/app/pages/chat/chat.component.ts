@@ -3,6 +3,7 @@ import { ChatMessage } from 'src/app/shared/models/chat-message';
 import { Subscription } from 'rxjs';
 import { UserService } from 'src/app/shared/services/user.service';
 import { User } from 'src/app/shared/models/user';
+import { ChatService } from 'src/app/shared/services/chat.service';
 
 @Component({
   selector: 'app-chat',
@@ -16,7 +17,8 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   @Input() isPrivate;
   constructor(
-    private userService: UserService) { }
+    private userService: UserService,
+    private chatService: ChatService) { }
 
   ngOnInit() {
   }
@@ -26,7 +28,13 @@ export class ChatComponent implements OnInit, OnDestroy {
 
 
   sendMessage(event): void {
+    this.chatService.sendMessage(event.message).catch(err => console.error(err));
+  }
 
+  receiveMsg(): void {
+    this.chatService.message$.subscribe(res => {
+      debugger;
+    });
   }
 
 }

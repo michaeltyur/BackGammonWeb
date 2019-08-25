@@ -1,16 +1,19 @@
 <div class="container h-100">
   <div class="row h-100">
     <div class="col mt-auto mb-auto">
-      <nb-card class="card ml-auto mr-auto" style="width: 35rem;height: 35rem;">
-        <nb-card-header>Lobby</nb-card-header>
+      <nb-card class="card ml-auto mr-auto" style="height: 35rem;max-width: 40rem;">
+        <nb-card-header>
+<span class="float-left">Lobby</span>
+<div class="float-right d-lg-none" style="cursor: pointer;"><i class="fas fa-bars fa-2x"></i></div>
+          </nb-card-header>
         <nb-card-body style="overflow-y: hidden;">
           <div class="row h-100">
 
-            <div class="col-8 h-100">
+            <div class="col-lg-8 col-12 h-100 ">
               <app-chat [isPrivate]="false"></app-chat>
             </div>
 
-            <div class="col-4 d-flex flex-column h-100">
+            <div class="col-lg-4 d-none d-lg-flex flex-column h-100 ">
 
 
                   <nb-card class="mb-1 h-50">
@@ -29,7 +32,7 @@
 
 
                   <nb-card class="mb-0 h-50">
-                      <nb-card-header>Users offline</nb-card-header>
+                      <nb-card-header style="color: rgb(134, 133, 133)">Users offline</nb-card-header>
                       <nb-card-body>
                         <nb-list class="m-0" style="cursor: default; ">
                           <nb-list-item *ngFor="let user of usersOffLine" style="color: dimgray;">

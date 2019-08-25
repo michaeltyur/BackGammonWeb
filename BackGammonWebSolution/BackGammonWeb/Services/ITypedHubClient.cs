@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,7 +10,8 @@ namespace BackGammonWeb.Services
     {
 
         Task BroadcastMessage(object message);
-        Task BroadcastTableState(object table);
+        Task UpdateTableState(object table);
+        Task UpdateUsers(List<User> users);
 
     }
 }
