@@ -29,8 +29,8 @@ namespace BackGammonDb.Repositories
             }
             User user;
 
-            user = await _backnammonContextDb.Users.FirstOrDefaultAsync(u => u.UserName == username && u.Password == password);
-            return user;
+            user = _backnammonContextDb.Users.FirstOrDefault(u => u.UserName == username && u.Password == password);
+            return await Task.FromResult(user);
         }
 
         public async Task<User> GetUserByName(string username)

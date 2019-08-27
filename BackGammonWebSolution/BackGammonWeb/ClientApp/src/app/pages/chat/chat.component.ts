@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { UserService } from 'src/app/shared/services/user.service';
 import { User } from 'src/app/shared/models/user';
 import { ChatService } from 'src/app/shared/services/chat.service';
+import { SendMessage } from 'src/app/shared/models/message-send';
 
 @Component({
   selector: 'app-chat',
@@ -21,6 +22,14 @@ export class ChatComponent implements OnInit, OnDestroy {
     private chatService: ChatService) { }
 
   ngOnInit() {
+    this.chatService.message$.subscribe(res => {
+      if (res) {
+
+        let msg = <SendMessage>res;
+        // let msg = <ChatMessage>res;
+        this.convertToChatMsg(msg);
+      }
+    });
   }
   ngOnDestroy() {
     this.subscription.unsubscribe();
@@ -31,10 +40,18 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatService.sendMessage(event.message).catch(err => console.error(err));
   }
 
-  receiveMsg(): void {
-    this.chatService.message$.subscribe(res => {
-      debugger;
-    });
+  convertToChatMsg(message: SendMessage): void {
+
+    let user = localStorage.getItem("userName");
+    let msg: ChatMessage =new ChatMessage();
+    msg.user.name = message.userName ? message.userName : "Nan";
+    msg.date = message.date ? new Date(message.date) : new Date(Date.now());
+    msg.message = message.content ? message.content : "Nan";
+    msg.reply = (msg.sender !== user) ? true : false;
+
+
+    this.messages.push(msg);
+
   }
 
 }

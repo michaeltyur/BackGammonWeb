@@ -10,6 +10,7 @@ export class SignalRConnectionService {
   isConnected: boolean = false;
   isConnected$ = new EventEmitter<boolean>();
   serverUrl = "http://localhost:50740/backgammon";
+  token:string;
 
   constructor() {
 
@@ -17,8 +18,12 @@ export class SignalRConnectionService {
 
   startConnection(): void {
 
+
     this.connection = new HubConnectionBuilder()
-      .withUrl(this.serverUrl)
+      .withUrl(this.serverUrl,
+        {
+          accessTokenFactory: () => localStorage.getItem('token')
+        })
       .build();
 
     this.connection.start().then(() => {

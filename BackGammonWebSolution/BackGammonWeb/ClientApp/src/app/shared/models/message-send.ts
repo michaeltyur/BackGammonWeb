@@ -1,13 +1,8 @@
 export interface SendMessage {
-  type:string;
-  message:string;
-  reply:boolean;
-  sender:string;
+  messageId:number;
+  userName:string;
+  content:string;
   date:Date;
-  files:Array<any>;
-  quote:string;
   latitude:number;
   longitude:number;
-  avatar:string;
-  user:any;
 }

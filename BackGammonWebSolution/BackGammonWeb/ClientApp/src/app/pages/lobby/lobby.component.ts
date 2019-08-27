@@ -12,6 +12,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
   subscription = new Subscription();
   usersOnLine: Array<User> = [];
   usersOffLine: Array<User> = [];
+  isChat: boolean = true;
   constructor(private userService: UserService) { }
 
   ngOnInit() {
@@ -22,18 +23,18 @@ export class LobbyComponent implements OnInit, OnDestroy {
   }
 
   getAllUser(): void {
-    this.userService.getAllUser().subscribe(res=>{
+    this.userService.getAllUser().subscribe(res => {
       if (res) {
         res.forEach(element => {
-           if (element.isOnline) {
+          if (element.isOnline) {
             this.usersOnLine.push(element);
-           }
-           else{
+          }
+          else {
             this.usersOffLine.push(element);
-           }
+          }
         });
       }
-    },error=>{
+    }, error => {
       console.error(error);
     })
   }

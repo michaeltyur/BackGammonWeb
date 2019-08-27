@@ -8,5 +8,6 @@ export interface User {
   firstName: string;
   lastName: string;
   isOnline:boolean;
+  avatar:any;
 }
 

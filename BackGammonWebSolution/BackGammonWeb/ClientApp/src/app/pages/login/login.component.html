@@ -1,12 +1,14 @@
 <div class="container h-100">
   <div class="row h-100">
-    <div class="col-3 ml-auto mr-auto mb-auto mt-auto">
+    <div class="col mb-auto mt-auto">
       <nb-card
+      class="col-3 ml-auto mr-auto"
       [nbPopover]="users"
       nbPopoverTrigger="hint"
       nbPopoverPlacement="right"
       [nbSpinner]="loginLoading"
-      nbSpinnerStatus="info">
+      nbSpinnerStatus="info"
+      style="max-width: 20rem;">
         <nb-card-header>Login</nb-card-header>
         <nb-card-body>
           <form [formGroup]="loginForm" (ngSubmit)="login()">

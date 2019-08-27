@@ -30,6 +30,7 @@ namespace BackGammonWeb.Controllers
         [HttpGet("getAllUsers")]
         public async Task<List<User>> GetAllUsers()
         {
+
             var listUsers = await _dbManager.UserRepositories.GetAllUsers();
             return listUsers.Select(u => new User
             {
