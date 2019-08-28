@@ -60,24 +60,23 @@ namespace BackGammonDb.Repositories
 
         }
 
-        public async Task<List<Message>> GetMessagesAsync(int numberOfMessages)
+        public List<Message> GetMessagesAsync(int numberOfMessages)
         {
-            try
+            lock (locker)
             {
-                semaphoreObject.WaitOne();
-                var result = _backnammonContextDb.Messages.OrderByDescending(m => m.MessageId).Take(numberOfMessages).ToList();
-                return await Task.FromResult(result);
+                try
+                {
+                    var result = _backnammonContextDb.Messages.OrderByDescending(m => m.MessageId).Take(numberOfMessages).ToList();
+                    return result;
 
-            }
-            catch (Exception ex)
-            {
+                }
+                catch (Exception ex)
+                {
 
-                throw ex;
+                    throw ex;
+                }
             }
-            finally
-            {
-                semaphoreObject.Release();
-            }
+
 
         }
 

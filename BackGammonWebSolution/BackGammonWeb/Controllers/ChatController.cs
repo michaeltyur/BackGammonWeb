@@ -23,9 +23,9 @@ namespace BackGammonWeb.Controllers
         }
 
         [HttpGet("getPublicMessages")]
-        public async Task<List<Message>> GetPublicMessages(int numberOfMessages)
+        public IEnumerable<Message> GetPublicMessages(int numberOfMessages)
         {
-            var messages = await _dbManager.MessageRepositories.GetMessagesAsync(numberOfMessages);
+            var messages =  _dbManager.MessageRepositories.GetMessagesAsync(numberOfMessages);
             return messages;
         }
     }

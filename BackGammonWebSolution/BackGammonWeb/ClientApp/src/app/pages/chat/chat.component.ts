@@ -56,7 +56,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   getNumberOfMessages(numberOfMsgs):void{
-    this.chatService.getNumberOfMessages(numberOfMsgs).subscribe((res:Array<any>)=>{
+    this.chatService.getNumberOfMessages(numberOfMsgs).subscribe((res:Array<SendMessage>)=>{
       if (res && res.length) {
         res.forEach(element => {
             this.convertToChatMsg(element);

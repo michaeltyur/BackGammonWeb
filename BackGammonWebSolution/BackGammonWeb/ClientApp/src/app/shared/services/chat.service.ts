@@ -41,9 +41,9 @@ export class ChatService {
     else return Promise.reject('connection is null');
   }
 
-  getNumberOfMessages(number:number):Observable<any>{
+  getNumberOfMessages(number:number):Observable<Array<SendMessage>>{
     let url ="/api/chat/getPublicMessages?numberOfMessages="+number;
-    return this.httpClient.get(url);
+    return this.httpClient.get<Array<SendMessage>>(url);
   }
 
 }
