@@ -2,7 +2,7 @@ import { User } from './user';
 
 export class ChatMessage {
   type: string;
-  message: string;
+  text: string;
   reply: boolean;
   sender: string;
   date: Date;

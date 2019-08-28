@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace BackGammonWeb.Hubs
 {
-    [Authorize]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     public class ServerHub : Hub<ITypedHubClient>
     {
         IUserIdProvider _userIdProvider;

@@ -22,6 +22,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     private chatService: ChatService) { }
 
   ngOnInit() {
+    this.getNumberOfMessages(50);
     this.chatService.message$.subscribe(res => {
       if (res) {
 
@@ -46,12 +47,24 @@ export class ChatComponent implements OnInit, OnDestroy {
     let msg: ChatMessage =new ChatMessage();
     msg.user.name = message.userName ? message.userName : "Nan";
     msg.date = message.date ? new Date(message.date) : new Date(Date.now());
-    msg.message = message.content ? message.content : "Nan";
+    msg.text = message.content ? message.content : "Nan";
     msg.reply = (msg.sender !== user) ? true : false;
 
 
     this.messages.push(msg);
 
+  }
+
+  getNumberOfMessages(numberOfMsgs):void{
+    this.chatService.getNumberOfMessages(numberOfMsgs).subscribe((res:Array<any>)=>{
+      if (res && res.length) {
+        res.forEach(element => {
+            this.convertToChatMsg(element);
+         });
+      }
+
+      }
+    )
   }
 
 }
