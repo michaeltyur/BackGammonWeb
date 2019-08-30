@@ -31,11 +31,11 @@ namespace BackGammonWeb.Controllers
         }
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<string> Login(UserLoginMv user)
+        public string Login(UserLoginMv user)
         {
             var response = JsonConvert.SerializeObject(new { error = "login or password is incorrect" });
 
-            User userAuth = await _dbManager.UserRepositories.GetUser(user.UserName, user.Password);
+            User userAuth = _dbManager.UserRepositories.GetUser(user.UserName, user.Password);
 
             if (userAuth != null)
             {
@@ -48,7 +48,7 @@ namespace BackGammonWeb.Controllers
                     token = tokenString
                 };
                 response = JsonConvert.SerializeObject(jsonUser);
-                await _dbManager.UserRepositories.SetUserOnLine(userAuth);
+                _dbManager.UserRepositories.SetUserOnLine(userAuth);
             }
 
             return response;
@@ -56,7 +56,7 @@ namespace BackGammonWeb.Controllers
 
         [AllowAnonymous]
         [HttpPost("registration")]
-        public async Task<string> Registration(User user)
+        public string Registration(User user)
         {
 
             if (string.IsNullOrEmpty(user.FirstName)
@@ -67,7 +67,7 @@ namespace BackGammonWeb.Controllers
                 return JsonConvert.SerializeObject(new { error = "one ore more parameters are missing" });
             }
 
-            var userFromDb = await _dbManager.UserRepositories.GetUserByName(user.UserName);
+            var userFromDb =  _dbManager.UserRepositories.GetUserByName(user.UserName);
 
             if (userFromDb != null)
             {
@@ -75,11 +75,11 @@ namespace BackGammonWeb.Controllers
             }
             else
             {
-                var userId = await _dbManager.UserRepositories.AddUser(user);
-                if (userId > 0)
+                var result =  _dbManager.UserRepositories.AddUser(user);
+                if (result)
                 {
 
-                    return await Login(new UserLoginMv
+                    return  Login(new UserLoginMv
                     {
                         UserName = user.UserName,
                         Password = user.Password
@@ -98,16 +98,16 @@ namespace BackGammonWeb.Controllers
         }
 
         [HttpGet("logout")]
-        public async Task<string> Logout(string userName)
+        public string Logout(string userName)
         {
             var response = "";
 
-            var userFromDb = await _dbManager.UserRepositories.GetUserByName(userName);
+            var userFromDb =  _dbManager.UserRepositories.GetUserByName(userName);
             if (userFromDb != null)
             {
                 try
                 {
-                    await _dbManager.UserRepositories.SetUserOffLine(userFromDb);
+                     _dbManager.UserRepositories.SetUserOffLine(userFromDb);
                     response = JsonConvert.SerializeObject(new { success = "The user did logged out" });
                 }
                 catch (Exception)

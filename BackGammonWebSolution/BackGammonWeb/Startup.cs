@@ -55,6 +55,7 @@ namespace BackGammonWeb
 
                 .WithOrigins("http://localhost:4300")
                 .WithOrigins("http://localhost:4200")
+                .WithOrigins("http://michaelt-001-site3.btempurl.com")
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials()
@@ -150,9 +151,12 @@ namespace BackGammonWeb
 
             app.UseMvc(routes =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action}/{id?}");
+            routes.MapRoute(
+                name: "default",
+                template: "{controller}/{action}/{id?}");
+
+                //routes.MapSpaFallbackRoute("spa-fallback", new { controller = "Authentication", action = "Login" });
+
             });
 
             app.UseSpa(spa =>

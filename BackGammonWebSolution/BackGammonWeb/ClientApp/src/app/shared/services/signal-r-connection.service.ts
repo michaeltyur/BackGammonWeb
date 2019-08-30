@@ -10,7 +10,7 @@ export class SignalRConnectionService {
   isConnected: boolean = false;
   isConnected$ = new EventEmitter<boolean>();
   serverUrl = "http://localhost:50740/backgammon";
-  token:string;
+  token: string;
 
   constructor() {
 
@@ -37,12 +37,20 @@ export class SignalRConnectionService {
 
     this.connection.onclose(err => {
       this.startConnection();
+      this.isConnected$.emit(false);
     });
 
   }
 
   closeConnection(): void {
-    this.connection = null;
-    this.isConnected$.emit(false);
+    if (this.connection) {
+      this.connection.stop().then(() => {
+        this.connection = null;
+        this.isConnected$.emit(false);
+      })
+      this.isConnected$.emit(false);
+    }
+
+
   }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { User } from 'src/app/shared/models/user';
 import { Subscription } from 'rxjs';
 import { UserService } from 'src/app/shared/services/user.service';
+import { SignalRConnectionService } from 'src/app/shared/services/signal-r-connection.service';
 
 @Component({
   selector: 'app-lobby',
@@ -13,9 +14,10 @@ export class LobbyComponent implements OnInit, OnDestroy {
   usersOnLine: Array<User> = [];
   usersOffLine: Array<User> = [];
   isChat: boolean = true;
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService,private signalRConnectionService:SignalRConnectionService) { }
 
   ngOnInit() {
+    this.signalRConnectionService.startConnection();
     this.getAllUser();
   }
   ngOnDestroy() {

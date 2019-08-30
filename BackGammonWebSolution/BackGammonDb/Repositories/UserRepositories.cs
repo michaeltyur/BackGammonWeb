@@ -21,7 +21,7 @@ namespace BackGammonDb.Repositories
             _backnammonContextDb.Dispose();
         }
 
-        public async Task<User> GetUser(string username, string password)
+        public User GetUser(string username, string password)
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
@@ -30,10 +30,10 @@ namespace BackGammonDb.Repositories
             User user;
 
             user = _backnammonContextDb.Users.FirstOrDefault(u => u.UserName == username && u.Password == password);
-            return await Task.FromResult(user);
+            return  user;
         }
 
-        public async Task<User> GetUserByName(string username)
+        public User GetUserByName(string username)
         {
             if (string.IsNullOrEmpty(username))
             {
@@ -42,25 +42,25 @@ namespace BackGammonDb.Repositories
             User user;
 
 
-            user = await _backnammonContextDb.Users.FirstOrDefaultAsync(u => u.UserName == username);
+            user =  _backnammonContextDb.Users.FirstOrDefault(u => u.UserName == username);
             return user;
         }
 
-        public async Task<int> AddUser(User user)
+        public bool AddUser(User user)
         {
             int result = 0;
             if (user != null)
             {
 
-                await _backnammonContextDb.Users.AddAsync(user);
-                result = await _backnammonContextDb.SaveChangesAsync();
-                return result;
+                 _backnammonContextDb.Users.AddAsync(user);
+                result =  _backnammonContextDb.SaveChanges();
+                return result>0;
 
             }
-            else return result;
+            else return false;
         }
 
-        public async Task<bool> UpdateUser(User user)
+        public bool UpdateUser(User user)
         {
             if (user != null)
             {
@@ -75,26 +75,27 @@ namespace BackGammonDb.Repositories
                 {
                     _backnammonContextDb.Users.Update(user);
 
-                    _backnammonContextDb.SaveChanges();
-                    return await Task.FromResult(true);
+                    var result =  _backnammonContextDb.SaveChanges();
+
+                    return result > 0;
                 }
                 catch (Exception)
                 {
 
-                    return await Task.FromResult(false);
+                    return false;
                 }
 
 
 
             }
-            return await Task.FromResult(false);
+            return false;
         }
 
-        public async Task<List<User>> GetAllUsers()
+        public IEnumerable<User> GetAllUsers()
         {
             List<User> listUsers = new List<User>();
 
-            listUsers = await _backnammonContextDb.Users.ToListAsync();
+            listUsers = _backnammonContextDb.Users.ToList();
             
             return   listUsers;
         }
@@ -103,14 +104,14 @@ namespace BackGammonDb.Repositories
         {
             if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
             {
-                User user = await GetUser(userName, password);
+                User user = GetUser(userName, password);
                 if (user != null)
                 {
 
                     _backnammonContextDb.Users.Remove(user);
-                    _backnammonContextDb.SaveChanges();
+                    var res = _backnammonContextDb.SaveChanges();
 
-                    return true;
+                    return res > 0;
 
                 }
                 else return false;
@@ -118,32 +119,32 @@ namespace BackGammonDb.Repositories
             else return false;
         }
 
-        public async Task<bool> SetUserOnLine(User user)
+        public bool SetUserOnLine(User user)
         {
             try
             {
-                user.IsOnline = true;
-                await  UpdateUser(user);
-                return await UpdateUser(user);
+                 user.IsOnline = true;
+                 UpdateUser(user);
+                 return  UpdateUser(user);
             }
             catch (Exception ex)
             {
-                return await Task.FromResult(false);
+                return false;
             }
 
         }
 
-        public async Task<bool> SetUserOffLine(User user)
+        public bool SetUserOffLine(User user)
         {
             try
             {
                 user.IsOnline = false;
-                var result = await UpdateUser(user);
+                var result = UpdateUser(user);
                 return result;
             }
             catch (Exception ex)
             {
-                return await Task.FromResult(false);
+                return false;
             }
 
         }

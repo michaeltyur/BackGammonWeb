@@ -28,7 +28,7 @@ export class AuthService {
         localStorage.setItem('token', this.user.token);
         localStorage.setItem('userName', this.user.userName);
         this.isAuthenticated$.emit(true);
-        this.signalRConnectionService.startConnection();
+        //this.signalRConnectionService.startConnection();
       }
     }));
   }
@@ -39,15 +39,16 @@ export class AuthService {
       let url = "/api/authentication/logout?userName=" + userName;
       this.httpClient.get(url).subscribe(res => {
         if (res['success']) {
+
         }
       }, error => {
         console.log(error);
       })
-      localStorage.clear();
       this.signalRConnectionService.closeConnection();
       this.user = null;
       this.isAuthenticated$.emit(false);
       this.router.navigate(['login']);
+      localStorage.clear();
     }
 
   }

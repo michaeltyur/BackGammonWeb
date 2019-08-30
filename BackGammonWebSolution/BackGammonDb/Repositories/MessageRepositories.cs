@@ -66,7 +66,7 @@ namespace BackGammonDb.Repositories
             {
                 try
                 {
-                    var result = _backnammonContextDb.Messages.OrderByDescending(m => m.MessageId).Take(numberOfMessages).ToList();
+                    var result = _backnammonContextDb.Messages.OrderBy(m => m.MessageId).Take(numberOfMessages).ToList();
                     return result;
 
                 }
