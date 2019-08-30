@@ -1,7 +1,7 @@
 <div class="container h-100">
   <div class="row h-100">
     <div class="col p-0 mt-auto mb-auto">
-      <nb-card class="card ml-auto mr-auto" style="height: 35rem;max-width: 40rem;">
+      <nb-card class="card ml-auto mr-auto mb-2" >
         <nb-card-header>
           <span class="float-left">Lobby</span>
           <div
@@ -19,12 +19,12 @@
             <i class="far fa-comment fa-2x"></i>
           </div>
         </nb-card-header>
-        <nb-card-body style="overflow-y: hidden;">
+        <nb-card-body style="overflow: hidden; padding: 0;">
 
-            <div class="row h-100" *ngIf="isChat">
+            <div class="row h-100 p-1" *ngIf="isChat">
 
               <div class="col-lg-8 col-12 h-100 ">
-                <app-chat [isPrivate]="false"></app-chat>
+                <app-chat [chatTitle]="chatTitle" [messages]="currentChat"></app-chat>
               </div>
 
               <div class="col-lg-4 d-none d-lg-flex flex-column h-100 ">

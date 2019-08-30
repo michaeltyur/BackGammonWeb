@@ -1,14 +1,7 @@
-<div class="container h-100">
+<div class="container p-0 h-100">
   <div class="row h-100">
     <div class="col mb-auto mt-auto">
-      <nb-card
-      class="col-3 ml-auto mr-auto"
-      [nbPopover]="users"
-      nbPopoverTrigger="hint"
-      nbPopoverPlacement="right"
-      [nbSpinner]="loginLoading"
-      nbSpinnerStatus="info"
-      style="max-width: 20rem;">
+      <nb-card class="col-3 ml-auto mr-auto" [nbPopover]="users" nbPopoverTrigger="hint" nbPopoverPlacement="right" [nbSpinner]="loginLoading" nbSpinnerStatus="info" style="max-width: 20rem;">
         <nb-card-header>Login</nb-card-header>
         <nb-card-body>
           <form [formGroup]="loginForm" (ngSubmit)="login()">
@@ -34,17 +27,16 @@
                 <input type="password" formControlName="password" fullWidth id="password" nbInput placeholder="Enter Password" />
               </div>
             </div>
-            <button
-            nbButton
-            outline
-            status="warning"
-            class="float-left"
-            (click)="registration()">
-              registration
-            </button>
-            <button [disabled]="loginForm.invalid" nbButton hero status="success" class="float-right">
-              LogIn
-            </button>
+
+            <div class="d-flex flex-column d-sm-block">
+              <button nbButton outline status="warning" class="float-left mb-3 mb-sm-0" (click)="registration()">
+                registration
+              </button>
+              <button [disabled]="loginForm.invalid" nbButton hero status="success" class="float-right">
+                LogIn
+              </button>
+            </div>
+
           </form>
         </nb-card-body>
       </nb-card>

@@ -1,10 +1,11 @@
-<div class="container h-100">
+<div class="container p-0 h-100">
   <div class="row h-100">
     <div class="col mb-auto mt-auto">
       <nb-card
+      class="col-3 ml-auto mr-auto"
       [nbSpinner]="loginLoading"
       nbSpinnerStatus="info"
-      class="ml-auto mr-auto">
+      style="max-width: 20rem;">
         <nb-card-header>Registration</nb-card-header>
         <nb-card-body>
           <form [formGroup]="userForm" (ngSubmit)="registration()">

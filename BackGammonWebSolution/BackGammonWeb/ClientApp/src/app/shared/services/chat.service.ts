@@ -4,11 +4,13 @@ import { HubConnection } from '@aspnet/signalr';
 import { SendMessage } from '../models/message-send';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { ChatMessage } from '../models/chat-message';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
+
 
   message$ = new EventEmitter();
 
@@ -30,7 +32,7 @@ export class ChatService {
           }
         })
       }
-    })
+    });
 
   }
 
@@ -44,6 +46,20 @@ export class ChatService {
   getNumberOfMessages(number:number):Observable<Array<SendMessage>>{
     let url ="/api/chat/getPublicMessages?numberOfMessages="+number;
     return this.httpClient.get<Array<SendMessage>>(url);
+  }
+
+  convertToChatMsg(message: SendMessage): ChatMessage {
+
+    let user = localStorage.getItem("userName");
+    let msg: ChatMessage =new ChatMessage();
+    msg.user.name = message.userName ? message.userName : "Nan";
+    msg.date = message.date ? new Date(message.date) : new Date(Date.now());
+    msg.text = message.content ? message.content : "Nan";
+    msg.reply = (message.userName !== user) ? true : false;
+
+
+    return msg;
+
   }
 
 }

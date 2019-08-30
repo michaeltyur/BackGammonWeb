@@ -32,6 +32,8 @@ namespace BackGammonWeb
         {
             services.AddSingleton<DbManager>();
 
+           // services.AddSingleton<ServerHub>();
+
             services.AddSingleton(Configuration);
 
             services.AddSingleton<IUserIdProvider, NameUserIdProvider>();

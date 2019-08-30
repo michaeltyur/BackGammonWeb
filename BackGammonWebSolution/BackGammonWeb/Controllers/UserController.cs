@@ -30,16 +30,24 @@ namespace BackGammonWeb.Controllers
         [HttpGet("getAllUsers")]
         public IEnumerable<User> GetAllUsers()
         {
-
-            var listUsers = _dbManager.UserRepositories.GetAllUsers();
-            return listUsers.Select(u => new User
+            try
             {
-                UserId = u.UserId,
-                FirstName = u.FirstName,
-                LastName = u.LastName,
-                UserName = u.UserName,
-                IsOnline = u.IsOnline
-            }).ToList();
+                var listUsers = _dbManager.UserRepositories.GetAllUsers();
+                return listUsers.Select(u => new User
+                {
+                    UserId = u.UserId,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    UserName = u.UserName,
+                    IsOnline = u.IsOnline
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
         }
     }
 }

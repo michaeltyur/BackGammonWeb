@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SignalRConnectionService } from './shared/services/signal-r-connection.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Backgammon-Chat';
+  constructor(private signalRConnectionService:SignalRConnectionService){
+
+  }
 }

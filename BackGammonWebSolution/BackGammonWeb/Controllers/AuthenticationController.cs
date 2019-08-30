@@ -1,14 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using BackGammonDb;
 using BackGammonWeb.Helpers;
+using BackGammonWeb.Hubs;
 using BackGammonWeb.Models;
+using BackGammonWeb.Services;
 using Common.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -24,34 +29,57 @@ namespace BackGammonWeb.Controllers
     {
         private readonly AppSettings _appSettings;
         private readonly DbManager _dbManager;
-        public AuthenticationController(DbManager dbManager, IOptions<AppSettings> appSettings)
+        IHubContext<ServerHub, ITypedHubClient> _serverHub;
+        public AuthenticationController(DbManager dbManager, IOptions<AppSettings> appSettings, IHubContext<ServerHub, ITypedHubClient> serverHub)
         {
             _dbManager = dbManager;
+            _serverHub = serverHub;
             _appSettings = appSettings.Value;
         }
         [AllowAnonymous]
         [HttpPost("login")]
         public string Login(UserLoginMv user)
         {
-            var response = JsonConvert.SerializeObject(new { error = "login or password is incorrect" });
-
-            User userAuth = _dbManager.UserRepositories.GetUser(user.UserName, user.Password);
-
-            if (userAuth != null)
+            try
             {
-                var tokenString = GenerateJSONWebToken(userAuth);
-                var jsonUser = new
+                var response = JsonConvert.SerializeObject(new { error = "login or password is incorrect" });
+
+                User userAuth = _dbManager.UserRepositories.GetUser(user.UserName, user.Password);
+
+                if (userAuth != null)
                 {
-                    userName = userAuth.UserName,
-                    firstName = userAuth.FirstName,
-                    lastName = userAuth.LastName,
-                    token = tokenString
-                };
-                response = JsonConvert.SerializeObject(jsonUser);
-                _dbManager.UserRepositories.SetUserOnLine(userAuth);
+                    var tokenString = GenerateJSONWebToken(userAuth);
+                    var jsonUser = new
+                    {
+                        userName = userAuth.UserName,
+                        firstName = userAuth.FirstName,
+                        lastName = userAuth.LastName,
+                        token = tokenString
+                    };
+                    response = JsonConvert.SerializeObject(jsonUser);
+
+
+                    var task1 = Task.Run(() =>
+                    {
+                        _dbManager.UserRepositories.SetUserOnLine(userAuth);
+                    });
+
+
+                    var task2 = Task.Run(() =>
+                    {
+                         UpdateUsers();
+                    });
+
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
             }
 
-            return response;
         }
 
         [AllowAnonymous]
@@ -67,7 +95,7 @@ namespace BackGammonWeb.Controllers
                 return JsonConvert.SerializeObject(new { error = "one ore more parameters are missing" });
             }
 
-            var userFromDb =  _dbManager.UserRepositories.GetUserByName(user.UserName);
+            var userFromDb = _dbManager.UserRepositories.GetUserByName(user.UserName);
 
             if (userFromDb != null)
             {
@@ -75,11 +103,11 @@ namespace BackGammonWeb.Controllers
             }
             else
             {
-                var result =  _dbManager.UserRepositories.AddUser(user);
+                var result = _dbManager.UserRepositories.AddUser(user);
                 if (result)
                 {
 
-                    return  Login(new UserLoginMv
+                    return Login(new UserLoginMv
                     {
                         UserName = user.UserName,
                         Password = user.Password
@@ -102,13 +130,20 @@ namespace BackGammonWeb.Controllers
         {
             var response = "";
 
-            var userFromDb =  _dbManager.UserRepositories.GetUserByName(userName);
+            var userFromDb = _dbManager.UserRepositories.GetUserByName(userName);
             if (userFromDb != null)
             {
                 try
                 {
-                     _dbManager.UserRepositories.SetUserOffLine(userFromDb);
+                    _dbManager.UserRepositories.SetUserOffLine(userFromDb);
+
                     response = JsonConvert.SerializeObject(new { success = "The user did logged out" });
+
+                    var task2 = Task.Run(() =>
+                    {
+                        UpdateUsers();
+                    });
+
                 }
                 catch (Exception)
                 {
@@ -149,6 +184,22 @@ namespace BackGammonWeb.Controllers
             string encodedJwt = new JwtSecurityTokenHandler().WriteToken(token);
 
             return encodedJwt;
+        }
+        private void UpdateUsers()
+        {
+            try
+            {
+                List<User> users = _dbManager.UserRepositories.GetAllUsers().ToList();
+                if (users != null && users.Count > 0)
+                {
+                    _serverHub.Clients.All.UpdateUsers(users);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
         }
 
 

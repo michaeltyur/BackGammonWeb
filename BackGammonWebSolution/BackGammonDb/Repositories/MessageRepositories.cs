@@ -10,57 +10,43 @@ namespace BackGammonDb.Repositories
 {
     public class MessageRepositories : IDisposable
     {
-        private static readonly Object locker = new Object();
-        Semaphore semaphoreObject = new Semaphore(initialCount: 1, maximumCount: 1);
+        private readonly object locker;
         private BacknammonContextDb _backnammonContextDb;
-        public MessageRepositories(BacknammonContextDb backnammonContextDb)
+        public MessageRepositories(BacknammonContextDb backnammonContextDb, object locker)
         {
             _backnammonContextDb = backnammonContextDb;
+            this.locker = locker;
         }
         public void Dispose()
         {
             _backnammonContextDb.Dispose();
         }
 
-        public async Task<bool> AddMessage(Message msg)
+        public bool AddMessage(Message msg)
         {
-
-            if (msg != null)
+            lock (locker)
             {
-                try
+                if (msg != null)
                 {
-                    // var user =  _backnammonContextDb.Users.FirstOrDefault(u=>u.UserName == msg.UserName);
+                    try
+                    {
+                        var addedMsg = _backnammonContextDb.Messages.Add(msg);
+                        var result = _backnammonContextDb.SaveChanges();
 
-                    //var count = _backnammonContextDb.Messages.Count();
-                    //if (count > 1000)
-                    //{
-                    //    DeleteAllMessage();
-                    //}
-                    //msg.MessageId = _backnammonContextDb.Messages.Count();
-                    semaphoreObject.WaitOne();
-                    var addedMsg = await _backnammonContextDb.Messages.AddAsync(msg);
-                    var result = await _backnammonContextDb.SaveChangesAsync();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
 
-                    return await Task.FromResult(true);
+                        throw ex;
+                    }
+
                 }
-                catch (Exception ex)
-                {
-
-                    throw ex;
-                }
-                finally
-                {
-                    semaphoreObject.Release();
-                }
-
+                else return false;
             }
-            else return await Task.FromResult(false);
-
-
-
         }
 
-        public List<Message> GetMessagesAsync(int numberOfMessages)
+        public List<Message> GetMessages(int numberOfMessages)
         {
             lock (locker)
             {
@@ -91,10 +77,6 @@ namespace BackGammonDb.Repositories
             {
 
                 throw ex;
-            }
-            finally
-            {
-                semaphoreObject.Release();
             }
         }
     }

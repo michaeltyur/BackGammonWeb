@@ -13,7 +13,7 @@ export class SignalRConnectionService {
   token: string;
 
   constructor() {
-
+    this.isConnected$ = new EventEmitter<boolean>();
   }
 
   startConnection(): void {
@@ -31,24 +31,28 @@ export class SignalRConnectionService {
       this.isConnected = true;
       this.isConnected$.emit(true);
     }).catch(function (err) {
-      this.isConnected$.emit(false);
+      //this.isConnected$.emit(false);
       return console.error(err.toString());
     });
 
     this.connection.onclose(err => {
-      this.startConnection();
+
+      if (localStorage.getItem('token')) {
+        this.startConnection();
+      }
       this.isConnected$.emit(false);
     });
+
+    this.connection.state
 
   }
 
   closeConnection(): void {
     if (this.connection) {
       this.connection.stop().then(() => {
-        this.connection = null;
+        console.log("SignalR disconnected");
         this.isConnected$.emit(false);
-      })
-      this.isConnected$.emit(false);
+      }).catch(err=>console.error(err))
     }
 
 
