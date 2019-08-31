@@ -2,10 +2,6 @@
     "/api": {
       "target": "http://localhost:50740",
       "secure": false
-    },
-    "/backgammon": {
-      "target": "http://localhost:50740",
-      "secure": false
     }
 
   }

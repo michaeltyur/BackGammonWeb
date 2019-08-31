@@ -10,6 +10,7 @@ export class SignalRConnectionService {
   isConnected: boolean = false;
   isConnected$ = new EventEmitter<boolean>();
   serverUrl = "http://localhost:50740/backgammon";
+  //serverUrl = "http://michaelt-001-site3.btempurl.com/backgammon";
   token: string;
 
   constructor() {
