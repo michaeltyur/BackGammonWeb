@@ -16,7 +16,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   subscription = new Subscription();
 
   @Input() messages: Array<ChatMessage>=[];
-  @Input() chatTitle:string;
 
   constructor(
     private userService: UserService,

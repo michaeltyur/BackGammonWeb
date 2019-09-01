@@ -1,88 +1,67 @@
-<div class="container h-100">
+<div class="container h-100 d-none d-sm-block">
   <div class="row h-100">
     <div class="col p-0 mt-auto mb-auto">
-      <nb-card class="card ml-auto mr-auto mb-2" >
+      <nb-card class="card ml-auto mr-auto mb-2"
+      style="width: 40rem; height: 40rem;">
         <nb-card-header>
-          <span class="float-left">Lobby</span>
-          <div
-          class="float-right d-lg-none"
-          style="cursor: pointer; color: goldenrod;"
-          (click)="isChat=false"
-          *ngIf="isChat">
-            <i class="fas fa-users fa-2x"></i>
-          </div>
-          <div
-          class="float-right d-lg-none"
-          style="cursor: pointer; color: greenyellow;"
-          (click)="isChat=true"
-          *ngIf="!isChat">
-            <i class="far fa-comment fa-2x"></i>
-          </div>
+          <span class="float-left">{{chatTitle}}</span>
+
         </nb-card-header>
+
         <nb-card-body style="overflow: hidden; padding: 0;">
 
-            <div class="row h-100 p-1" *ngIf="isChat">
+          <div class="row h-100 p-1">
 
-              <div class="col-lg-8 col-12 h-100 ">
-                <app-chat [chatTitle]="chatTitle" [messages]="currentChat"></app-chat>
-              </div>
-
-              <div class="col-lg-4 d-none d-lg-flex flex-column h-100 ">
-                <nb-card class="mb-1 h-50">
-                  <nb-card-header>Users online</nb-card-header>
-                  <nb-card-body>
-                    <nb-list class="m-0">
-                      <nb-list-item *ngFor="let user of usersOnLine" style="cursor: pointer;">
-                        {{ user.userName }}
-                      </nb-list-item>
-                    </nb-list>
-                  </nb-card-body>
-                </nb-card>
-                <nb-card class="mb-0 h-50">
-                  <nb-card-header style="color: rgb(134, 133, 133)">Users offline</nb-card-header>
-                  <nb-card-body>
-                    <nb-list class="m-0" style="cursor: default; ">
-                      <nb-list-item *ngFor="let user of usersOffLine" style="color: dimgray;">
-                        {{ user.userName }}
-                      </nb-list-item>
-                    </nb-list>
-                  </nb-card-body>
-                </nb-card>
-
-              </div>
-
+            <div class="col-lg-8 col-12 h-100 ">
+              <app-chat [messages]="currentChat"></app-chat>
             </div>
 
-            <div class="row h-100" *ngIf="!isChat">
 
-                <div class="col d-lg-flex flex-column h-100 ">
-                    <nb-card class="mb-1 h-50">
-                      <nb-card-header>Users online</nb-card-header>
-                      <nb-card-body>
-                        <nb-list class="m-0">
-                          <nb-list-item *ngFor="let user of usersOnLine" style="cursor: pointer;">
-                            {{ user.userName }}
-                          </nb-list-item>
-                        </nb-list>
-                      </nb-card-body>
-                    </nb-card>
-                    <nb-card class="mb-0 h-50">
-                      <nb-card-header style="color: rgb(134, 133, 133)">Users offline</nb-card-header>
-                      <nb-card-body>
-                        <nb-list class="m-0" style="cursor: default; ">
-                          <nb-list-item *ngFor="let user of usersOffLine" style="color: dimgray;">
-                            {{ user.userName }}
-                          </nb-list-item>
-                        </nb-list>
-                      </nb-card-body>
-                    </nb-card>
-
-                  </div>
-
+            <div class="col-4 h-100">
+              <app-users></app-users>
             </div>
+
+          </div>
 
         </nb-card-body>
       </nb-card>
     </div>
   </div>
+</div>
+
+<!-- Mobile -->
+<div class="d-block d-sm-none">
+
+  <nb-card class="card mb-1">
+    <nb-card-header>
+      <span class="float-left">{{chatTitle}}</span>
+
+      <div *ngIf="!isChat" class="float-right" style="cursor: pointer; color: greenyellow;" (click)="isChat=true">
+        <i class="far fa-comment fa-2x"></i>
+      </div>
+
+      <div *ngIf="isChat" class="float-right" style="cursor: pointer; color: goldenrod;" (click)="isChat=false">
+        <i class="fas fa-users fa-2x"></i>
+      </div>
+
+    </nb-card-header>
+
+    <nb-card-body style="padding: 0; overflow-x: hidden;">
+
+      <div *ngIf="isChat" class="row m-0">
+
+        <app-chat [messages]="currentChat" style="width: 100%;"></app-chat>
+
+      </div>
+
+      <div *ngIf="!isChat" class="row">
+
+        <app-users
+        style="width: 100%;"></app-users>
+
+      </div>
+
+    </nb-card-body>
+  </nb-card>
+
 </div>

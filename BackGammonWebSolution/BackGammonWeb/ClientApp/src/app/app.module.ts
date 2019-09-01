@@ -14,8 +14,9 @@ import { BackgammonGameComponent } from './pages/backgammon-game/backgammon-game
 import { RegistrationComponent } from './pages/registration/registration.component';
 import { AuthGuard } from './shared/guardes/auth-guard.service';
 import { TopBarComponent } from './pages/top-bar/top-bar.component';
-import { ChatComponent } from './pages/chat/chat.component';
+import { ChatComponent } from './elements/chat/chat.component';
 import { LobbyComponent } from './pages/lobby/lobby.component';
+import { UsersComponent } from './elements/users/users.component';
 
 const routes: Routes = [
 
@@ -53,6 +54,7 @@ const routes: Routes = [
     TopBarComponent,
     ChatComponent,
     LobbyComponent,
+    UsersComponent,
   ],
   imports: [
     BrowserModule,

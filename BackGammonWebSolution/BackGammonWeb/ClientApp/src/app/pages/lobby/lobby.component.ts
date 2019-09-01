@@ -16,8 +16,8 @@ import { ChatMessage } from 'src/app/shared/models/chat-message';
 export class LobbyComponent implements OnInit, OnDestroy {
 
   subscription = new Subscription();
-  usersOnLine: Array<User> = [];
-  usersOffLine: Array<User> = [];
+  // usersOnLine: Array<User> = [];
+  // usersOffLine: Array<User> = [];
   currentChat: Array<ChatMessage> = [];
   allChatDictionary: IDictionary;
   chatTitle: string = "Public Chat";
@@ -26,21 +26,22 @@ export class LobbyComponent implements OnInit, OnDestroy {
   constructor(
     private userService: UserService,
     private signalRConnectionService: SignalRConnectionService,
-    private chatService: ChatService) {
+    private chatService: ChatService
+    ) {
     this.signalRConnectionService.startConnection();
   }
 
   ngOnInit() {
 
-    this.subscription.add(this.userService.users$.subscribe(res => {
-      if (res) {
-        this.setUsersArrays(res);
-      }
-    }));
+    // this.subscription.add(this.userService.users$.subscribe(res => {
+    //   if (res) {
+    //     this.setUsersArrays(res);
+    //   }
+    // }));
 
     this.allChatDictionary = new Dictionary<ChatMessage>();
     this.getNumberOfMessages("public", 50);
-    this.getAllUser();
+    //this.getAllUser();
 
   }
 
@@ -48,35 +49,35 @@ export class LobbyComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  getAllUser(): void {
+  // getAllUser(): void {
 
-    this.subscription.add(this.userService.getAllUser().subscribe(res => {
-      if (res) {
-        this.setUsersArrays(res);
-      }
-    }, error => {
-      console.error(error);
-    }));
+  //   this.subscription.add(this.userService.getAllUser().subscribe(res => {
+  //     if (res) {
+  //       this.setUsersArrays(res);
+  //     }
+  //   }, error => {
+  //     console.error(error);
+  //   }));
 
-  }
+  // }
 
-  setUsersArrays(allUsers: Array<User>): void {
-    if (allUsers && allUsers.length) {
+  // setUsersArrays(allUsers: Array<User>): void {
+  //   if (allUsers && allUsers.length) {
 
-      this.usersOnLine = [];
-      this.usersOffLine = [];
+  //     this.usersOnLine = [];
+  //     this.usersOffLine = [];
 
-      allUsers.forEach(element => {
-        if (element.isOnline) {
-          this.usersOnLine.push(element);
-        }
-        else {
-          this.usersOffLine.push(element);
-        }
-      });
-    }
+  //     allUsers.forEach(element => {
+  //       if (element.isOnline) {
+  //         this.usersOnLine.push(element);
+  //       }
+  //       else {
+  //         this.usersOffLine.push(element);
+  //       }
+  //     });
+  //   }
 
-  }
+  // }
 
   getNumberOfMessages(key: string, numberOfMsgs: number): void {
 
@@ -97,6 +98,14 @@ export class LobbyComponent implements OnInit, OnDestroy {
           }
         }, err => console.error(err)));
 
+  }
+
+  openPrivateChat(user: User): void {
+    if (user && this.signalRConnectionService.connection) {
+      this.signalRConnectionService.connection.invoke('AddToGroup',user.userName).then(res=>{
+        let chatArray = new Array<ChatMessage>();
+      }).catch(err=>console.error(err));
+    }
   }
 
 }
