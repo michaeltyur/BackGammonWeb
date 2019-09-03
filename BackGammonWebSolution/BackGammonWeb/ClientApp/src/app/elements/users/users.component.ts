@@ -28,11 +28,17 @@ export class UsersComponent implements OnInit, OnDestroy {
       }
     }));
 
-    this.subscription.add(this.chatService.inviterToChat$.subscribe(res=>{
+    this.chatService.users$.subscribe(res=>{
+      if (res) {
+        this.setUsersArrays(res);
+      }
+    })
+
+    this.subscription.add(this.chatService.inviterToChat$.subscribe(res => {
       if (res) {
         this.openPrivateChatFromRemote(res);
       }
-     },error=>console.error(error)));
+    }, error => console.error(error)));
 
     this.getAllUser();
   }
@@ -71,9 +77,12 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   }
 
-  openPrivateChatFromRemote(userName:string):void{
-    if (userName && this.usersOnLine.find(el=>el.userName===userName)) {
-      
+  openPrivateChatFromRemote(userName: string): void {
+    if (userName) {
+      let user = this.usersOnLine.find(el => el.userName === userName)
+      if (user) {
+        user.haveNewPrivateChat = true;
+      }
     }
   }
 

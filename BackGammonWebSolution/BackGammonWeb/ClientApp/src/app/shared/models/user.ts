@@ -9,5 +9,7 @@ export interface User {
   lastName: string;
   isOnline:boolean;
   avatar:any;
+  haveNewMessage:boolean;
+  haveNewPrivateChat:boolean;
 }
 

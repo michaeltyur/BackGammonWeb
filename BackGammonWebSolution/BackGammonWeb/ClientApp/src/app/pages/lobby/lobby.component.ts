@@ -37,16 +37,11 @@ export class LobbyComponent implements OnInit, OnDestroy {
     if (window.innerWidth < 800) {
       this.openFullscreen();
     }
-    // else{
-    //   this.closeFullscreen();
-    // }
 
     this.allChatDictionary = new Dictionary<ChatMessage>();
 
-
-
-
     this.getNumberOfMessages("public", 50);
+
   }
 
   ngOnDestroy() {

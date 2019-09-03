@@ -1,5 +1,5 @@
-
-<nb-card class="h-50 w-100 mb-1 p-0">
+<div class="h-100 d-flex flex-column justify-content-between">
+  <nb-card class="w-100 m-0 p-0" style="height: 49%">
     <nb-card-header style="padding-top: 3px; padding-bottom: 3px;">Users online</nb-card-header>
     <nb-card-body>
       <nb-list>
@@ -9,15 +9,17 @@
       </nb-list>
     </nb-card-body>
   </nb-card>
-  <nb-card class="h-50 w-100 m-0 p-0">
+  <nb-card class="w-100 m-0 p-0" style="height: 49%">
     <nb-card-header style="color: rgb(134, 133, 133);padding-top: 3px; padding-bottom: 3px;">Users offline</nb-card-header>
     <nb-card-body>
       <nb-list style="cursor: default; ">
-        <nb-list-item *ngFor="let user of usersOffLine" style="color: dimgray;">
+        <nb-list-item
+        *ngFor="let user of usersOffLine"
+        style="color: dimgray;"
+        [class.haveNewPrivateChat]="user.haveNewPrivateChat">
           {{ user.userName }}
         </nb-list-item>
       </nb-list>
     </nb-card-body>
   </nb-card>
-
-
+</div>
