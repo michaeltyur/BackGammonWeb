@@ -13,7 +13,7 @@ export class ChatService {
 
 
   message$ = new EventEmitter();
-
+  inviterToChat$ = new EventEmitter();
   private hubConnection: HubConnection;
 
   constructor(
@@ -30,7 +30,15 @@ export class ChatService {
             res = JSON.parse(res);
             this.message$.emit(res);
           }
-        })
+        });
+
+        signalRConnectionService.connection.on("InviteToPrivateChat", res=> {
+          if (res) {
+            this.inviterToChat$.emit(res);
+           // res = JSON.parse(res);
+           // this.message$.emit(res);
+          }
+        });
       }
     });
 

@@ -28,12 +28,19 @@ export class UsersComponent implements OnInit, OnDestroy {
       }
     }));
 
+    this.subscription.add(this.chatService.inviterToChat$.subscribe(res=>{
+      if (res) {
+        this.openPrivateChatFromRemote(res);
+      }
+     },error=>console.error(error)));
+
     this.getAllUser();
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
+
   getAllUser(): void {
 
     this.subscription.add(this.userService.getAllUser().subscribe(res => {
@@ -45,6 +52,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     }));
 
   }
+
   setUsersArrays(allUsers: Array<User>): void {
     if (allUsers && allUsers.length) {
 
@@ -63,5 +71,10 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   }
 
+  openPrivateChatFromRemote(userName:string):void{
+    if (userName && this.usersOnLine.find(el=>el.userName===userName)) {
+      
+    }
+  }
 
 }

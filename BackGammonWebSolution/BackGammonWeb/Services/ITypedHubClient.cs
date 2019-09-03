@@ -9,6 +9,7 @@ namespace BackGammonWeb.Services
    public interface ITypedHubClient
     {
 
+        Task InviteToPrivateChat(object message);
         Task BroadcastMessage(object message);
         Task UpdateTableState(object table);
         Task UpdateUsers(List<User> users);

@@ -29,14 +29,14 @@ namespace BackGammonWeb.Hubs
         {
             try
             {
-              var userName = GetUserName();
-              _dbManager.UserRepositories.SetSignalRConnection(Context.ConnectionId, userName);
+                var userName = GetUserName();
+                _dbManager.UserRepositories.SetSignalRConnection(Context.ConnectionId, userName);
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-            
+
             await base.OnConnectedAsync();
         }
 
@@ -45,7 +45,7 @@ namespace BackGammonWeb.Hubs
             try
             {
                 var userName = GetUserName();
-                _dbManager.UserRepositories.DeleteSignalRConnection( userName);
+                _dbManager.UserRepositories.DeleteSignalRConnection(userName);
             }
             catch (Exception ex)
             {
@@ -106,8 +106,12 @@ namespace BackGammonWeb.Hubs
         {
             var userName = GetUserName();
             var secondUserConnectionId = _dbManager.UserRepositories.GetSignalRConnection(secondUserName);
-            await Groups.AddToGroupAsync(Context.ConnectionId, userName +"/"+ secondUserName);
-             await Groups.AddToGroupAsync(secondUserConnectionId, userName + "/" + secondUserName);
+            string groupName = $"{userName}/{secondUserName}";
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+            await Groups.AddToGroupAsync(secondUserConnectionId, groupName);
+
+            string inviterName = GetUserName();
+            await Clients.Client(secondUserConnectionId).InviteToPrivateChat(inviterName);
         }
     }
 }

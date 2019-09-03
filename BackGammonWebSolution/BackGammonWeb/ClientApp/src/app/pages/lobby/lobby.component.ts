@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { User } from 'src/app/shared/models/user';
 import { Subscription } from 'rxjs';
 import { UserService } from 'src/app/shared/services/user.service';
@@ -7,6 +7,7 @@ import { SendMessage } from 'src/app/shared/models/message-send';
 import { ChatService } from 'src/app/shared/services/chat.service';
 import { IDictionary, Dictionary } from 'src/app/shared/models/dictionary';
 import { ChatMessage } from 'src/app/shared/models/chat-message';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-lobby',
@@ -14,10 +15,8 @@ import { ChatMessage } from 'src/app/shared/models/chat-message';
   styleUrls: ['./lobby.component.scss']
 })
 export class LobbyComponent implements OnInit, OnDestroy {
-
+  elem;
   subscription = new Subscription();
-  // usersOnLine: Array<User> = [];
-  // usersOffLine: Array<User> = [];
   currentChat: Array<ChatMessage> = [];
   allChatDictionary: IDictionary;
   chatTitle: string = "Public Chat";
@@ -26,58 +25,33 @@ export class LobbyComponent implements OnInit, OnDestroy {
   constructor(
     private userService: UserService,
     private signalRConnectionService: SignalRConnectionService,
-    private chatService: ChatService
-    ) {
+    private chatService: ChatService,
+    @Inject(DOCUMENT) private document: any
+  ) {
     this.signalRConnectionService.startConnection();
   }
 
   ngOnInit() {
-
-    // this.subscription.add(this.userService.users$.subscribe(res => {
-    //   if (res) {
-    //     this.setUsersArrays(res);
-    //   }
-    // }));
+    // Full Screen Browser
+    this.elem = document.documentElement;
+    if (window.innerWidth < 800) {
+      this.openFullscreen();
+    }
+    // else{
+    //   this.closeFullscreen();
+    // }
 
     this.allChatDictionary = new Dictionary<ChatMessage>();
-    this.getNumberOfMessages("public", 50);
-    //this.getAllUser();
 
+
+
+
+    this.getNumberOfMessages("public", 50);
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
-
-  // getAllUser(): void {
-
-  //   this.subscription.add(this.userService.getAllUser().subscribe(res => {
-  //     if (res) {
-  //       this.setUsersArrays(res);
-  //     }
-  //   }, error => {
-  //     console.error(error);
-  //   }));
-
-  // }
-
-  // setUsersArrays(allUsers: Array<User>): void {
-  //   if (allUsers && allUsers.length) {
-
-  //     this.usersOnLine = [];
-  //     this.usersOffLine = [];
-
-  //     allUsers.forEach(element => {
-  //       if (element.isOnline) {
-  //         this.usersOnLine.push(element);
-  //       }
-  //       else {
-  //         this.usersOffLine.push(element);
-  //       }
-  //     });
-  //   }
-
-  // }
 
   getNumberOfMessages(key: string, numberOfMsgs: number): void {
 
@@ -102,9 +76,40 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   openPrivateChat(user: User): void {
     if (user && this.signalRConnectionService.connection) {
-      this.signalRConnectionService.connection.invoke('AddToGroup',user.userName).then(res=>{
+      this.signalRConnectionService.connection.invoke('AddToGroup', user.userName).then(res => {
         let chatArray = new Array<ChatMessage>();
-      }).catch(err=>console.error(err));
+      }).catch(err => console.error(err));
+    }
+  }
+
+  openFullscreen() {
+    if (this.elem.requestFullscreen) {
+      this.elem.requestFullscreen();
+    } else if (this.elem.mozRequestFullScreen) {
+      /* Firefox */
+      this.elem.mozRequestFullScreen();
+    } else if (this.elem.webkitRequestFullscreen) {
+      /* Chrome, Safari and Opera */
+      this.elem.webkitRequestFullscreen();
+    } else if (this.elem.msRequestFullscreen) {
+      /* IE/Edge */
+      this.elem.msRequestFullscreen();
+    }
+  }
+
+  /* Close fullscreen */
+  closeFullscreen() {
+    if (this.document.exitFullscreen) {
+      this.document.exitFullscreen();
+    } else if (this.document.mozCancelFullScreen) {
+      /* Firefox */
+      this.document.mozCancelFullScreen();
+    } else if (this.document.webkitExitFullscreen) {
+      /* Chrome, Safari and Opera */
+      this.document.webkitExitFullscreen();
+    } else if (this.document.msExitFullscreen) {
+      /* IE/Edge */
+      this.document.msExitFullscreen();
     }
   }
 
