@@ -11,7 +11,7 @@ export class AppComponent {
   title = 'Backgammon-Chat';
   @HostListener('window:beforeunload', ['$event'])
   public beforeunloadHandler($event) {
-  $event.returnValue = "Are you sure?";
+  //$event.returnValue = "Are you sure?";
   this.authService.logout();
  }
 
@@ -20,4 +20,6 @@ export class AppComponent {
     private authService:AuthService){
 
   }
+
+
 }

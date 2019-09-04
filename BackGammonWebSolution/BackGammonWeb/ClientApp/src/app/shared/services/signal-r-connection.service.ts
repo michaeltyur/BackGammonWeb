@@ -44,8 +44,6 @@ export class SignalRConnectionService {
       this.isConnected$.emit(false);
     });
 
-    this.connection.state
-
   }
 
   closeConnection(): void {

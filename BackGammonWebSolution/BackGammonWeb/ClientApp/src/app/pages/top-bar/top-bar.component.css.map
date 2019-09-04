@@ -1,9 +1,0 @@
-{
-    "version": 3,
-    "mappings": "AAAA,AAAA,eAAe,CAAC;EACd,SAAS,EAAE,MAAM;CAClB;;AACD,AAAA,cAAc,CAAC;EACb,KAAK,EAAE,SAAS;CACjB;;AACD,AAAA,aAAa,CAAC;EACZ,KAAK,EAAE,OAAO;CACf;;AACD,AAAA,UAAU,CAAC;EACT,KAAK,EAAE,WAAW;CACnB",
-    "sources": [
-        "top-bar.component.scss"
-    ],
-    "names": [],
-    "file": "top-bar.component.css"
-}

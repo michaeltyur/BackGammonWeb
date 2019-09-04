@@ -22,6 +22,21 @@
   <div class="align-self-center" [class.connected]="isConnected" [class.disconnected]="!isConnected">
     <i class="fas fa-wifi fa-2x"></i>
   </div>
+
+  <div
+  *ngIf="!fullScreen"
+  class="align-self-center screen-size"
+  (click)="openFullscreen()">
+    <i class="fas fa-arrows-alt fa-2x"></i>
+  </div>
+
+  <div
+  *ngIf="fullScreen"
+  class="align-self-center screen-size"
+  (click)="closeFullscreen()">
+    <i class="fas fa-compress-arrows-alt fa-2x"></i>
+  </div>
+
   <div *ngIf="isAuthenticated" nbButton hero status="success" class="logout-button" (click)="logout()">
     <i class="fas fa-sign-out-alt fa-2x"></i>
   </div>

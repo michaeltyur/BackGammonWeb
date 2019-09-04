@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { NbToastrService } from '@nebular/theme';
 import { SignalRConnectionService } from 'src/app/shared/services/signal-r-connection.service';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-top-bar',
@@ -12,6 +13,8 @@ import { SignalRConnectionService } from 'src/app/shared/services/signal-r-conne
 })
 export class TopBarComponent implements OnInit, OnDestroy {
 
+  elem;
+  fullScreen:boolean;
   subscription = new Subscription();
   isConnected: boolean = false;
   isAuthenticated: boolean = false;
@@ -21,9 +24,18 @@ export class TopBarComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private router: Router,
     private nbToastrService: NbToastrService,
-    private signalRConnectionService: SignalRConnectionService) { }
+    private signalRConnectionService: SignalRConnectionService,
+    @Inject(DOCUMENT) private document: any) { }
 
   ngOnInit() {
+
+    // Full Screen Browser
+    this.elem = document.documentElement;
+    if (window.innerWidth < 800) {
+
+      this.openFullscreen();
+    }
+
 
     this.subscription.add(this.authService.isAuthenticated$.subscribe(res => {
       this.isAuthenticated = res;
@@ -61,6 +73,39 @@ export class TopBarComponent implements OnInit, OnDestroy {
     this.authService.logout();
     this.nbToastrService.warning('', 'You are logged out');
 
+  }
+
+  openFullscreen() {
+    this.fullScreen=true;
+    if (this.elem.requestFullscreen) {
+      this.elem.requestFullscreen();
+    } else if (this.elem.mozRequestFullScreen) {
+      /* Firefox */
+      this.elem.mozRequestFullScreen();
+    } else if (this.elem.webkitRequestFullscreen) {
+      /* Chrome, Safari and Opera */
+      this.elem.webkitRequestFullscreen();
+    } else if (this.elem.msRequestFullscreen) {
+      /* IE/Edge */
+      this.elem.msRequestFullscreen();
+    }
+  }
+
+  /* Close fullscreen */
+  closeFullscreen() {
+    this.fullScreen=false;
+    if (this.document.exitFullscreen) {
+      this.document.exitFullscreen();
+    } else if (this.document.mozCancelFullScreen) {
+      /* Firefox */
+      this.document.mozCancelFullScreen();
+    } else if (this.document.webkitExitFullscreen) {
+      /* Chrome, Safari and Opera */
+      this.document.webkitExitFullscreen();
+    } else if (this.document.msExitFullscreen) {
+      /* IE/Edge */
+      this.document.msExitFullscreen();
+    }
   }
 
 }

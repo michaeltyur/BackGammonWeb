@@ -12,10 +12,11 @@ import { User } from '../models/user';
 })
 export class ChatService {
 
-  users$ = new EventEmitter();
-  message$ = new EventEmitter();
-  inviterToChat$ = new EventEmitter();
-  private hubConnection: HubConnection;
+  users$ = new EventEmitter(true);
+  message$ = new EventEmitter(true);
+  inviterToChat$ = new EventEmitter(true);
+  hubConnection: HubConnection;
+  test=0;
 
   constructor(
     private signalRConnectionService: SignalRConnectionService,
@@ -29,7 +30,6 @@ export class ChatService {
         signalRConnectionService.connection.on("BroadcastMessage", res => {
           if (res) {
             res = JSON.parse(res);
-            this.message$.emit(res);
           }
         });
 
@@ -42,8 +42,6 @@ export class ChatService {
         signalRConnectionService.connection.on("InviteToPrivateChat", res => {
           if (res) {
             this.inviterToChat$.emit(res);
-            // res = JSON.parse(res);
-            // this.message$.emit(res);
           }
         });
       }
