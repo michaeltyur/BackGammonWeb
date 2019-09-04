@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackGammonWeb", "BackGammonWeb\BackGammonWeb.csproj", "{B5C143F5-4647-4A19-A2C5-BC3DC1DA846F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "..\..\TalkBack_Backgammon\Common\Common.csproj", "{EF248FFD-9BB3-4F03-999C-2A2C684E5BB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackGammonDb", "BackGammonDb\BackGammonDb.csproj", "{0806DD54-815F-4D26-9FB1-36BF88949633}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackGammonDb", "BackGammonDb\BackGammonDb.csproj", "{0806DD54-815F-4D26-9FB1-36BF88949633}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{EF248FFD-9BB3-4F03-999C-2A2C684E5BB2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +19,14 @@ Global
 		{B5C143F5-4647-4A19-A2C5-BC3DC1DA846F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5C143F5-4647-4A19-A2C5-BC3DC1DA846F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5C143F5-4647-4A19-A2C5-BC3DC1DA846F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EF248FFD-9BB3-4F03-999C-2A2C684E5BB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF248FFD-9BB3-4F03-999C-2A2C684E5BB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF248FFD-9BB3-4F03-999C-2A2C684E5BB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF248FFD-9BB3-4F03-999C-2A2C684E5BB2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0806DD54-815F-4D26-9FB1-36BF88949633}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0806DD54-815F-4D26-9FB1-36BF88949633}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0806DD54-815F-4D26-9FB1-36BF88949633}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0806DD54-815F-4D26-9FB1-36BF88949633}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF248FFD-9BB3-4F03-999C-2A2C684E5BB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF248FFD-9BB3-4F03-999C-2A2C684E5BB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF248FFD-9BB3-4F03-999C-2A2C684E5BB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF248FFD-9BB3-4F03-999C-2A2C684E5BB2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
