@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AACA,AAAA,SAAS,CAAC,UAAU,CAAA;EAClB,KAAK,EAAE,UAAU;CAClB",
+    "sources": [
+        "registration.component.scss"
+    ],
+    "names": [],
+    "file": "registration.component.css"
+}

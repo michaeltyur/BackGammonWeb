@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,YAAY,CACZ;EACE,QAAQ,EAAE,KAAK;EACf,MAAM,EAAE,IAAI;EACZ,KAAK,EAAE,IAAI;EACX,KAAK,EAAE,KAAK;EACZ,MAAM,EAAE,OAAO;CAChB",
+    "sources": [
+        "backgammon-game.component.scss"
+    ],
+    "names": [],
+    "file": "backgammon-game.component.css"
+}
