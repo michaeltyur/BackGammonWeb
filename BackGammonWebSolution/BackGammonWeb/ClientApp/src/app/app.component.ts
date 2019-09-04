@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { SignalRConnectionService } from './shared/services/signal-r-connection.service';
+import { AuthService } from './shared/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +9,15 @@ import { SignalRConnectionService } from './shared/services/signal-r-connection.
 })
 export class AppComponent {
   title = 'Backgammon-Chat';
-  constructor(private signalRConnectionService:SignalRConnectionService){
+  @HostListener('window:beforeunload', ['$event'])
+  public beforeunloadHandler($event) {
+  $event.returnValue = "Are you sure?";
+  this.authService.logout();
+ }
+
+  constructor(
+    private signalRConnectionService:SignalRConnectionService,
+    private authService:AuthService){
 
   }
 }
