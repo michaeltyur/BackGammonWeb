@@ -1,4 +1,4 @@
-<div class="container desktop-container h-100">
+<div *ngIf="!isMobile" class="container desktop-container h-100">
   <div class="row h-100">
     <div class="col p-0 mt-auto mb-auto">
       <nb-card class="card ml-auto mr-auto mb-2"
@@ -30,7 +30,7 @@
 </div>
 
 <!-- Mobile -->
-<div class="mobile-container">
+<div *ngIf="isMobile" class="mobile-container">
 
   <nb-card class="card mb-1">
     <nb-card-header>

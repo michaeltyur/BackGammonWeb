@@ -1,17 +1,18 @@
-import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, AfterViewInit } from '@angular/core';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { NbToastrService } from '@nebular/theme';
 import { SignalRConnectionService } from 'src/app/shared/services/signal-r-connection.service';
 import { DOCUMENT } from '@angular/common';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-top-bar',
   templateUrl: './top-bar.component.html',
   styleUrls: ['./top-bar.component.scss']
 })
-export class TopBarComponent implements OnInit, OnDestroy {
+export class TopBarComponent implements OnInit, OnDestroy,AfterViewInit {
 
   elem;
   fullScreen:boolean;
@@ -31,11 +32,6 @@ export class TopBarComponent implements OnInit, OnDestroy {
 
     // Full Screen Browser
     this.elem = document.documentElement;
-    if (window.innerWidth < 800) {
-
-      this.openFullscreen();
-    }
-
 
     this.subscription.add(this.authService.isAuthenticated$.subscribe(res => {
       this.isAuthenticated = res;
@@ -64,6 +60,14 @@ export class TopBarComponent implements OnInit, OnDestroy {
     }
 
   }
+
+  ngAfterViewInit(){
+    // if (window.innerWidth < 800) {
+    //     document.getElementById("fullScreen-button").click();
+    //    }
+
+  }
+
 
   ngOnDestroy() {
     this.subscription.unsubscribe();

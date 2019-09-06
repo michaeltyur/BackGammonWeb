@@ -104,14 +104,23 @@ namespace BackGammonWeb.Hubs
 
         public async Task AddToGroup(string secondUserName)
         {
-            var userName = GetUserName();
-            var secondUserConnectionId = _dbManager.UserRepositories.GetSignalRConnection(secondUserName);
-            string groupName = $"{userName}/{secondUserName}";
-            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-            await Groups.AddToGroupAsync(secondUserConnectionId, groupName);
+            try
+            {
+                var userName = GetUserName();
+                var secondUserConnectionId = _dbManager.UserRepositories.GetSignalRConnection(secondUserName);
+                string groupName = $"{userName}/{secondUserName}";
+                await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+                await Groups.AddToGroupAsync(secondUserConnectionId, groupName);
 
-            string inviterName = GetUserName();
-            await Clients.Client(secondUserConnectionId).InviteToPrivateChat(inviterName);
+                string inviterName = GetUserName();
+                await Clients.Client(secondUserConnectionId).InviteToPrivateChat(inviterName);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
         }
     }
 }

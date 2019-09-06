@@ -33,6 +33,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       }
     });
 
+
   }
   ngOnDestroy() {
     this.subscription.unsubscribe();
@@ -41,7 +42,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   sendMessage(event): void {
     if (event.message) {
       this.chatService.sendMessage(event.message).then().catch(err => console.error(err));
-
     }
   }
 

@@ -10,31 +10,40 @@ import { HubConnection } from '@aspnet/signalr';
 })
 export class UserService {
 
-  private hubConnection: HubConnection;
-   users$ = new EventEmitter();
+  users$ = new EventEmitter();
+  inviterToChat$ = new EventEmitter();
+
   constructor(
-    private httpClient:HttpClient,
-    private signalRConnectionService:SignalRConnectionService) {
+    private httpClient: HttpClient,
+    private signalRConnectionService: SignalRConnectionService) {
 
-      signalRConnectionService.isConnected$.subscribe(res => {
-        if (res) {
+    signalRConnectionService.isConnected$.subscribe(res => {
+      if (res) {
 
-          this.hubConnection = signalRConnectionService.connection;
+        signalRConnectionService.connection.on("UpdateUsers", res => {
+          if (res) {
+            //res = JSON.parse(res);
+            this.users$.emit(res);
+          }
+        });
 
-          signalRConnectionService.connection.on("UpdateUsers", res=> {
-            if (res) {
-              //res = JSON.parse(res);
-              this.users$.emit(res);
-            }
-          })
-        }
-      });
+        signalRConnectionService.connection.on("InviteToPrivateChat", res => {
+          if (res) {
+            this.inviterToChat$.emit(res);
+          }
+        });
+      }
+    });
 
-     }
+  }
+
+  openPrivateChat(userName: string):Promise<any>{
+   return this.signalRConnectionService.connection.invoke("AddToGroup",userName);
+  }
 
 
-  getAllUser():Observable<any>{
-    let url="/api/user/getAllUsers";
+  getAllUser(): Observable<any> {
+    let url = "/api/user/getAllUsers";
     return this.httpClient.get(url);
   }
 }

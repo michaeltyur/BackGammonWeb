@@ -3,8 +3,12 @@
     <nb-card-header style="padding-top: 3px; padding-bottom: 3px;">Users online</nb-card-header>
     <nb-card-body>
       <nb-list>
-        <nb-list-item *ngFor="let user of usersOnLine" style="cursor: pointer;">
-          {{ user.userName }}
+        <nb-list-item
+        *ngFor="let user of usersOnLine"
+        style="cursor: pointer;"
+        (click)="openPrivateChat(user.userName)">
+          <div *ngIf="owner===user.userName" disabled>{{ user.userName }} (owner)</div>
+          <div *ngIf="owner!==user.userName">{{ user.userName }}</div>
         </nb-list-item>
       </nb-list>
     </nb-card-body>

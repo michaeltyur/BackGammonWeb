@@ -2,10 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace BackGammonDb.Repositories
 {
     public class MessageRepositories : IDisposable
@@ -52,7 +48,8 @@ namespace BackGammonDb.Repositories
             {
                 try
                 {
-                    var result = _backnammonContextDb.Messages.OrderBy(m => m.MessageId).Take(numberOfMessages).ToList();
+                    var result = _backnammonContextDb.Messages.OrderByDescending(m => m.MessageId).Take(numberOfMessages).ToList();
+                    result.Reverse();
                     return result;
 
                 }

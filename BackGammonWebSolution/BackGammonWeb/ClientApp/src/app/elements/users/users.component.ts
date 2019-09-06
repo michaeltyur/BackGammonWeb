@@ -14,6 +14,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   subscription = new Subscription();
   usersOnLine: Array<User> = [];
   usersOffLine: Array<User> = [];
+  owner:string;
   constructor(
     private userService: UserService,
     private signalRConnectionService: SignalRConnectionService,
@@ -21,7 +22,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-
+    this.owner=localStorage.getItem("userName");
     this.subscription.add(this.userService.users$.subscribe(res => {
       if (res) {
         this.setUsersArrays(res);
@@ -75,6 +76,12 @@ export class UsersComponent implements OnInit, OnDestroy {
       });
     }
 
+  }
+
+  openPrivateChat(userName: string):void{
+   if (userName) {
+     this.userService.openPrivateChat(userName).then().catch(error=>console.error(error));
+   }
   }
 
   openPrivateChatFromRemote(userName: string): void {

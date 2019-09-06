@@ -15,8 +15,6 @@ export class ChatService {
   users$ = new EventEmitter(true);
   message$ = new EventEmitter(true);
   inviterToChat$ = new EventEmitter(true);
-  hubConnection: HubConnection;
-  test=0;
 
   constructor(
     private signalRConnectionService: SignalRConnectionService,
@@ -25,33 +23,25 @@ export class ChatService {
     signalRConnectionService.isConnected$.subscribe(res => {
       if (res) {
 
-        this.hubConnection = signalRConnectionService.connection;
+        // signalRConnectionService.connection.on("UpdateUsers", (res: Array<User>) => {
+        //   if (res && res.length) {
+        //     this.users$.emit(res);
+        //   }
+        // });
 
-        signalRConnectionService.connection.on("BroadcastMessage", res => {
-          if (res) {
-            res = JSON.parse(res);
-          }
-        });
-
-        signalRConnectionService.connection.on("UpdateUsers", (res: Array<User>) => {
-          if (res && res.length) {
-            this.users$.emit(res);
-          }
-        });
-
-        signalRConnectionService.connection.on("InviteToPrivateChat", res => {
-          if (res) {
-            this.inviterToChat$.emit(res);
-          }
-        });
+        // signalRConnectionService.connection.on("InviteToPrivateChat", res => {
+        //   if (res) {
+        //     this.inviterToChat$.emit(res);
+        //   }
+        // });
       }
     });
 
   }
 
   sendMessage(message): Promise<any> {
-    if (this.hubConnection) {
-      return this.hubConnection.invoke("SendMessage", message);
+    if (this.signalRConnectionService.connection) {
+      return this.signalRConnectionService.connection.invoke("SendMessage", message);
     }
     else return Promise.reject('connection is null');
   }

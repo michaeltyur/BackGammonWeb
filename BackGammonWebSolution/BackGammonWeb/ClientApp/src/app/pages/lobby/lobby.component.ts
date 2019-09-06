@@ -15,12 +15,13 @@ import { DOCUMENT } from '@angular/common';
   styleUrls: ['./lobby.component.scss']
 })
 export class LobbyComponent implements OnInit, OnDestroy {
-  
+
   subscription = new Subscription();
   currentChat: Array<ChatMessage> = [];
   allChatDictionary: IDictionary;
   chatTitle: string = "Public Chat";
   isChat: boolean = true;
+  isMobile: boolean = false;
 
   constructor(
     private userService: UserService,
@@ -32,6 +33,10 @@ export class LobbyComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
+    if (window.innerWidth < 600) {
+      this.isMobile = true;
+    }
 
     this.allChatDictionary = new Dictionary<ChatMessage>();
 

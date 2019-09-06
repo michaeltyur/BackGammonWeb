@@ -11,14 +11,13 @@ export class AppComponent {
   title = 'Backgammon-Chat';
   @HostListener('window:beforeunload', ['$event'])
   public beforeunloadHandler($event) {
-  //$event.returnValue = "Are you sure?";
+  $event.returnValue = "Are you sure?";
   this.authService.logout();
  }
 
   constructor(
     private signalRConnectionService:SignalRConnectionService,
     private authService:AuthService){
-
   }
 
 
