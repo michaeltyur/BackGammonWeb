@@ -37,11 +37,6 @@ export class UserService {
 
   }
 
-  openPrivateChat(userName: string):Promise<any>{
-   return this.signalRConnectionService.connection.invoke("AddToGroup",userName);
-  }
-
-
   getAllUser(): Observable<any> {
     let url = "/api/user/getAllUsers";
     return this.httpClient.get(url);

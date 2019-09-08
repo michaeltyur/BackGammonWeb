@@ -123,7 +123,7 @@ namespace BackGammonDb.Repositories
                         _backnammonContextDb.Users.Remove(user);
                         var res = SaveChanges();
 
-                        return res > 0;
+                        return res;
 
                     }
                     else return false;
@@ -133,9 +133,9 @@ namespace BackGammonDb.Repositories
 
         }
 
-        private int SaveChanges()
+        private bool SaveChanges()
         {
-            return _backnammonContextDb.SaveChanges();
+            return _backnammonContextDb.SaveChanges() > 0;
         }
 
         public bool SetUserOnLine(User user)
@@ -172,7 +172,7 @@ namespace BackGammonDb.Repositories
             }
         }
 
-        public bool SetSignalRConnection(string connectionId, string userName )
+        public bool SetSignalRConnection(string connectionId, string userName)
         {
             lock (locker)
             {
@@ -183,7 +183,7 @@ namespace BackGammonDb.Repositories
                     {
                         user.SignalRConnectionID = connectionId;
                         _backnammonContextDb.Users.Update(user);
-                        return SaveChanges() > 0;
+                        return SaveChanges();
                     }
                     else return false;
                 }
@@ -207,7 +207,7 @@ namespace BackGammonDb.Repositories
                     {
                         user.SignalRConnectionID = null;
                         _backnammonContextDb.Users.Update(user);
-                        return SaveChanges() > 0;
+                        return SaveChanges();
                     }
                     else return false;
                 }
@@ -227,7 +227,7 @@ namespace BackGammonDb.Repositories
                 try
                 {
                     User user = _backnammonContextDb.Users.FirstOrDefault(u => u.UserName == userName);
-                    if (user != null && user.SignalRConnectionID!=null)
+                    if (user != null && user.SignalRConnectionID != null)
                     {
                         return user.SignalRConnectionID;
                     }
@@ -238,6 +238,79 @@ namespace BackGammonDb.Repositories
 
                     throw ex;
                 }
+            }
+        }
+
+        public bool AddPrivateChat(string firstUserName, string secondUserName, string groupName)
+        {
+            lock (locker)
+            {
+                var result = false;
+                try
+                {
+                    var firstUser = _backnammonContextDb.Users.FirstOrDefault(user => user.UserName == firstUserName);
+                    var secondUser = _backnammonContextDb.Users.FirstOrDefault(user => user.UserName == secondUserName);
+                    if (firstUser != null && secondUser != null && !string.IsNullOrEmpty(groupName))
+                    {
+                        PrivateChat privatChat = new PrivateChat();
+                        privatChat.FirstUserID = firstUser.UserId;
+                        privatChat.FirstUserName = firstUser.UserName;
+                        privatChat.SecondUserID = secondUser.UserId;
+                        privatChat.SecondUserName = secondUser.UserName;
+                        privatChat.GroupName = groupName;
+                        _backnammonContextDb.PrivateChats.Add(privatChat);
+                        return SaveChanges();
+                    }
+                    return result;
+                }
+                catch (Exception)
+                {
+
+                    return result;
+                }
+
+            }
+
+        }
+
+        public PrivateChat GetPrivateChat(string firstUserName, string secondUserName)
+        {
+            lock (locker)
+            {
+                try
+                {
+                    var privateChat = _backnammonContextDb.PrivateChats.FirstOrDefault(chat => (chat.FirstUserName == firstUserName && chat.SecondUserName == secondUserName)
+                                                                                               || (chat.FirstUserName == secondUserName && chat.SecondUserName == firstUserName));
+                    return privateChat;
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
+        }
+
+        public bool DeletePrivateChat(string userName)
+        {
+            lock (locker)
+            {
+                try
+                {
+                    var privateChats = _backnammonContextDb.PrivateChats.Where(chat => chat.FirstUserName == userName || chat.SecondUserName == userName).ToList();
+                    if (privateChats == null || privateChats.Count()==0) return false;
+                    foreach (var item in privateChats)
+                    {
+                      _backnammonContextDb.PrivateChats.Remove(item);
+                    }
+                    return SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    return false;
+
+                }
+
             }
         }
     }

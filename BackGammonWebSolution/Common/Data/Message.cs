@@ -17,7 +17,6 @@ namespace Common.Data
         public string UserName { get; set; }
         [DataMember]
         public string Content { get; set; }
-
         [DataMember]
         public DateTime Date { get; set; }
 

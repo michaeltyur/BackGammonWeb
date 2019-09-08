@@ -1,6 +1,7 @@
 export interface IDictionary {
   add(key: string, value: any): void;
   remove(key: string): void;
+  getByKey(key:string):any;
   containsKey(key: string): boolean;
   keys(): string[];
   values(): any[];
@@ -27,6 +28,14 @@ export class Dictionary<T>{
     this._values.splice(index, 1);
 
     delete this[key];
+  }
+
+  getByKey(key:string):any{
+    let index = this._keys.indexOf(key);
+    if (index>-1) {
+      return this._values[index];
+    }
+    else return null;
   }
 
   keys(): string[] {

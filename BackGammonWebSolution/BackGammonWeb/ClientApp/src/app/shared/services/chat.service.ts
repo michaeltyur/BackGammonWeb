@@ -6,15 +6,17 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ChatMessage } from '../models/chat-message';
 import { User } from '../models/user';
+import { ChatInvitation } from '../models/chat-invitation';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
 
-  users$ = new EventEmitter(true);
-  message$ = new EventEmitter(true);
-  inviterToChat$ = new EventEmitter(true);
+  users$ = new EventEmitter();
+  message$ = new EventEmitter();
+  inviterToChat$ = new EventEmitter();
+  switchToChat$ = new EventEmitter();
 
   constructor(
     private signalRConnectionService: SignalRConnectionService,
@@ -29,11 +31,12 @@ export class ChatService {
         //   }
         // });
 
-        // signalRConnectionService.connection.on("InviteToPrivateChat", res => {
-        //   if (res) {
-        //     this.inviterToChat$.emit(res);
-        //   }
-        // });
+        signalRConnectionService.connection.on("InviteToPrivateChat", res => {
+          if (res) {
+            res = <ChatInvitation>res;
+            this.inviterToChat$.emit(res);
+          }
+        });
       }
     });
 
@@ -60,9 +63,15 @@ export class ChatService {
     msg.text = message.content ? message.content : "Nan";
     msg.reply = (message.userName !== user) ? true : false;
 
-
     return msg;
 
+  }
+
+  openPrivateChat(userName: string): Promise<any> {
+    return this.signalRConnectionService.connection.invoke("AddToGroup", userName).then((res: ChatInvitation) => {
+      this.switchToChat$.emit({ userName: res.invaterName, groupName: res.groupName });
+      return res;
+    });
   }
 
 }

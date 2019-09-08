@@ -3,8 +3,16 @@
     <div class="col p-0 mt-auto mb-auto">
       <nb-card class="card ml-auto mr-auto mb-2"
       style="width: 40rem; height: 40rem;">
-        <nb-card-header>
-          <span class="float-left">{{chatTitle}}</span>
+        <nb-card-header
+        class="w-100 d-flex justify-content-between"
+        style="padding-top: 10px; padding-bottom: 10px;">
+            <span class="align-self-center">{{chatTitle}}</span>
+            <div
+            [style.color]="chatTitle === 'Public Chat' ? 'greenyellow' : 'dimgray'"
+            style="cursor: pointer;"
+            (click)="swichToChat('public')">
+                <i class="far fa-comments fa-2x"></i>
+              </div>
 
         </nb-card-header>
 
@@ -32,15 +40,23 @@
 <!-- Mobile -->
 <div *ngIf="isMobile" class="mobile-container">
 
-  <nb-card class="card mb-1">
-    <nb-card-header>
-      <span class="float-left">{{chatTitle}}</span>
+  <nb-card class="card mb-1" style="padding-top: 10px; padding-bottom: 10px;">
+    <nb-card-header class="pt-2 pb-2 d-flex justify-content-between">
 
-      <div *ngIf="!isChat" class="float-right" style="cursor: pointer; color: greenyellow;" (click)="isChat=true">
+      <span>{{chatTitle}}</span>
+
+      <div
+      [style.color]="chatTitle === 'Public Chat' ? 'greenyellow' : 'dimgray'"
+      style="cursor: pointer;"
+      (click)="swichToChat('public')">
+          <i class="far fa-comments fa-2x"></i>
+        </div>
+
+      <div *ngIf="!isChat" style="cursor: pointer; color: greenyellow;" (click)="isChat=true">
         <i class="far fa-comment fa-2x"></i>
       </div>
 
-      <div *ngIf="isChat" class="float-right" style="cursor: pointer; color: goldenrod;" (click)="isChat=false">
+      <div *ngIf="isChat" style="cursor: pointer; color: goldenrod;" (click)="isChat=false">
         <i class="fas fa-users fa-2x"></i>
       </div>
 

@@ -5,4 +5,5 @@ export interface SendMessage {
   date:Date;
   latitude:number;
   longitude:number;
+  groupName:string;
 }

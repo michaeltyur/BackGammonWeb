@@ -36,6 +36,7 @@ namespace BackGammonWeb.Controllers
             _serverHub = serverHub;
             _appSettings = appSettings.Value;
         }
+
         [AllowAnonymous]
         [HttpPost("login")]
         public string Login(UserLoginMv user)
@@ -58,14 +59,13 @@ namespace BackGammonWeb.Controllers
                     };
                     response = JsonConvert.SerializeObject(jsonUser);
 
-
-                    var task1 = Task.Run(() =>
+                    Task.Run(() =>
                     {
                         _dbManager.UserRepositories.SetUserOnLine(userAuth);
                     });
 
 
-                    var task2 = Task.Run(() =>
+                    Task.Run(() =>
                     {
                          UpdateUsers();
                     });
@@ -117,12 +117,7 @@ namespace BackGammonWeb.Controllers
                 {
                     return JsonConvert.SerializeObject(new { error = "An error occurred please try again" });
                 }
-
             }
-
-
-
-
         }
 
         [HttpGet("logout")]
@@ -139,9 +134,13 @@ namespace BackGammonWeb.Controllers
 
                     response = JsonConvert.SerializeObject(new { success = "The user did logged out" });
 
-                    var task2 = Task.Run(() =>
+                     Task.Run(() =>
                     {
                         UpdateUsers();
+                    });
+                    Task.Run(() =>
+                    {
+                        _dbManager.UserRepositories.DeletePrivateChat(userName);
                     });
 
                 }

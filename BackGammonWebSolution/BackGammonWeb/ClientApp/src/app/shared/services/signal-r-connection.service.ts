@@ -31,9 +31,11 @@ export class SignalRConnectionService {
       console.log('SignalR Connected!');
       this.isConnected = true;
       this.isConnected$.emit(true);
-    }).catch(function (err) {
-      //this.isConnected$.emit(false);
-      return console.error(err.toString());
+    }).catch( (err)=> {
+      this.isConnected$.emit(false);
+     // this.serverUrl = "http://michaelt-001-site3.btempurl.com/backgammon";
+       console.error(err.toString());
+       this.startConnection();
     });
 
     this.connection.onclose(err => {

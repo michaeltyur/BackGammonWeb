@@ -4,6 +4,8 @@ import { SignalRConnectionService } from 'src/app/shared/services/signal-r-conne
 import { ChatService } from 'src/app/shared/services/chat.service';
 import { Subscription } from 'rxjs';
 import { User } from 'src/app/shared/models/user';
+import { NbToastrService } from '@nebular/theme';
+import { ChatInvitation } from 'src/app/shared/models/chat-invitation';
 
 @Component({
   selector: 'app-users',
@@ -14,22 +16,24 @@ export class UsersComponent implements OnInit, OnDestroy {
   subscription = new Subscription();
   usersOnLine: Array<User> = [];
   usersOffLine: Array<User> = [];
-  owner:string;
+  owner: string;
+  loading: boolean = false;
   constructor(
+    private nbToastrService: NbToastrService,
     private userService: UserService,
     private signalRConnectionService: SignalRConnectionService,
     private chatService: ChatService
   ) { }
 
   ngOnInit() {
-    this.owner=localStorage.getItem("userName");
+    this.owner = localStorage.getItem("userName");
     this.subscription.add(this.userService.users$.subscribe(res => {
       if (res) {
         this.setUsersArrays(res);
       }
     }));
 
-    this.chatService.users$.subscribe(res=>{
+    this.chatService.users$.subscribe(res => {
       if (res) {
         this.setUsersArrays(res);
       }
@@ -78,10 +82,35 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   }
 
-  openPrivateChat(userName: string):void{
-   if (userName) {
-     this.userService.openPrivateChat(userName).then().catch(error=>console.error(error));
-   }
+  openPrivateChat(user: User): void {
+    if (user) {
+
+      if (user.userName === localStorage.getItem('userName')) {
+        this.nbToastrService.warning('', 'Are you sure about that? You want to chat with your-self?');
+        return;
+      }
+      else if(user.haveNewPrivateChat){
+        this.chatService.switchToChat$.emit({userName:user.userName,groupName:null});
+      }
+      this.loading = true;
+      this.chatService.openPrivateChat(user.userName).then((res:ChatInvitation) => {
+        if (res) {
+          this.loading = false;
+          if (!res.error) {
+             user.haveNewPrivateChat = true;
+             this.chatService.switchToChat$.emit({userName:res.invaterName,groupName:res.groupName});
+             this.nbToastrService.default('', res.message);
+          }
+          else if(res.error){
+            this.nbToastrService.danger('', 'Error');
+          }
+        }
+      }).catch(error => {
+        console.error(error)
+        this.loading = false;
+        ;
+      });
+    }
   }
 
   openPrivateChatFromRemote(userName: string): void {

@@ -8,6 +8,7 @@ import { ChatService } from 'src/app/shared/services/chat.service';
 import { IDictionary, Dictionary } from 'src/app/shared/models/dictionary';
 import { ChatMessage } from 'src/app/shared/models/chat-message';
 import { DOCUMENT } from '@angular/common';
+import { ChatInvitation } from 'src/app/shared/models/chat-invitation';
 
 @Component({
   selector: 'app-lobby',
@@ -20,14 +21,14 @@ export class LobbyComponent implements OnInit, OnDestroy {
   currentChat: Array<ChatMessage> = [];
   allChatDictionary: IDictionary;
   chatTitle: string = "Public Chat";
+  groupName: string = "";
   isChat: boolean = true;
   isMobile: boolean = false;
 
   constructor(
     private userService: UserService,
-    private signalRConnectionService: SignalRConnectionService,
     private chatService: ChatService,
-
+    private signalRConnectionService: SignalRConnectionService
   ) {
     this.signalRConnectionService.startConnection();
   }
@@ -37,6 +38,13 @@ export class LobbyComponent implements OnInit, OnDestroy {
     if (window.innerWidth < 600) {
       this.isMobile = true;
     }
+
+    this.subscription.add(this.chatService.switchToChat$.subscribe(res => {
+      if (res) {
+        this.swichToChat(res.userName,res.groupName);
+      }
+    }));
+
 
     this.allChatDictionary = new Dictionary<ChatMessage>();
 
@@ -69,14 +77,35 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   }
 
-  openPrivateChat(user: User): void {
-    if (user && this.signalRConnectionService.connection) {
-      this.signalRConnectionService.connection.invoke('AddToGroup', user.userName).then(res => {
-        let chatArray = new Array<ChatMessage>();
-      }).catch(err => console.error(err));
+  // openPrivateChat(user: User): void {
+  //   if (user && this.signalRConnectionService.connection) {
+  //     this.signalRConnectionService.connection.invoke('AddToGroup', user.userName).then(res => {
+  //       let chatArray = new Array<ChatMessage>();
+  //     }).catch(err => console.error(err));
+  //   }
+  // }
+  swichToChat(userName:string,groupName:string): void {
+    if (userName&&groupName) {
+      if (userName === 'public') {
+        this.groupName = "";
+        this.chatTitle = "Public Chat";
+      }
+      else {
+        this.groupName = groupName;
+        this.chatTitle = "Chat with " + userName;
+      }
+
+      let chat = <ChatMessage[]>this.allChatDictionary.getByKey(groupName);
+      if (chat) {
+        this.currentChat = chat;
+      }
+      else {
+        let chat = new Array<ChatMessage>();
+        this.currentChat = chat;
+        this.allChatDictionary.add(groupName, chat);
+      }
     }
   }
-
 
 
 }

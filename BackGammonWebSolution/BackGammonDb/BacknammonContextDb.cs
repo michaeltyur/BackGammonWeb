@@ -22,6 +22,8 @@ namespace BackGammonDb
 
         public DbSet<Message> Messages { get; set; }
 
+        public DbSet<PrivateChat> PrivateChats { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var connection = @"Data Source=SQL5041.site4now.net;Initial Catalog=DB_A4A6EE_BackgamonChatDb;User Id=DB_A4A6EE_BackgamonChatDb_admin;Password=1950t03b03;";

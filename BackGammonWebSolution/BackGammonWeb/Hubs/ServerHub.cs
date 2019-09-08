@@ -101,24 +101,46 @@ namespace BackGammonWeb.Hubs
             var userName = claimsIdentity.Claims.FirstOrDefault(u => u.Type == "UserName").Value;
             return userName;
         }
-
-        public async Task AddToGroup(string secondUserName)
+        private string GetUserID()
         {
+            var claimsIdentity = (ClaimsIdentity)Context.User.Identity;
+            var userName = claimsIdentity.Claims.FirstOrDefault(u => u.Type == "UserID").Value;
+            return userName;
+        }
+        public async Task<ChatInvitation> AddToGroup(string secondUserName)
+        {
+            ChatInvitation chatInvitation = new ChatInvitation();
             try
             {
                 var userName = GetUserName();
+                PrivateChat privateChat = _dbManager.UserRepositories.GetPrivateChat(userName, secondUserName);
+
+                if (privateChat != null)
+                {
+                    chatInvitation.GroupName = privateChat.GroupName;
+                    chatInvitation.Message = "Switch to chat";
+                    return chatInvitation;
+                }
+
                 var secondUserConnectionId = _dbManager.UserRepositories.GetSignalRConnection(secondUserName);
-                string groupName = $"{userName}/{secondUserName}";
+                var groupName = Guid.NewGuid().ToString();
                 await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
                 await Groups.AddToGroupAsync(secondUserConnectionId, groupName);
 
-                string inviterName = GetUserName();
-                await Clients.Client(secondUserConnectionId).InviteToPrivateChat(inviterName);
+
+                var result = _dbManager.UserRepositories.AddPrivateChat(userName, secondUserName, groupName);
+
+                await Clients.Client(secondUserConnectionId).InviteToPrivateChat(userName);
+
+                chatInvitation.InvaterName = userName;
+                chatInvitation.GroupName = groupName;
+                chatInvitation.Message = "Success: The Chat is successfully started";
+                return chatInvitation;
             }
             catch (Exception ex)
             {
-
-                throw ex;
+                chatInvitation.Message = "The Error";
+                return  chatInvitation;
             }
 
         }
