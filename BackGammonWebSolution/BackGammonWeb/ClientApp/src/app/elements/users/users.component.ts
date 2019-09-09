@@ -39,9 +39,9 @@ export class UsersComponent implements OnInit, OnDestroy {
       }
     })
 
-    this.subscription.add(this.chatService.inviterToChat$.subscribe(res => {
+    this.subscription.add(this.chatService.invitationToChat$.subscribe(res => {
       if (res) {
-        this.openPrivateChatFromRemote(res);
+        this.openPrivateChatFromRemote(res.userName,res.groupName);
       }
     }, error => console.error(error)));
 
@@ -90,7 +90,7 @@ export class UsersComponent implements OnInit, OnDestroy {
         return;
       }
       else if(user.haveNewPrivateChat){
-        this.chatService.switchToChat$.emit({userName:user.userName,groupName:null});
+        this.chatService.switchToChat$.emit({userName:user.userName,groupName:user.groupName});
       }
       this.loading = true;
       this.chatService.openPrivateChat(user.userName).then((res:ChatInvitation) => {
@@ -113,11 +113,12 @@ export class UsersComponent implements OnInit, OnDestroy {
     }
   }
 
-  openPrivateChatFromRemote(userName: string): void {
+  openPrivateChatFromRemote(userName: string,groupName:string): void {
     if (userName) {
       let user = this.usersOnLine.find(el => el.userName === userName)
       if (user) {
         user.haveNewPrivateChat = true;
+        user.groupName = groupName;
       }
     }
   }

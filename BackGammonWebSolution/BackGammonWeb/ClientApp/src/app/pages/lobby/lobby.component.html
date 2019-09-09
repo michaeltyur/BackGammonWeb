@@ -10,7 +10,7 @@
             <div
             [style.color]="chatTitle === 'Public Chat' ? 'greenyellow' : 'dimgray'"
             style="cursor: pointer;"
-            (click)="swichToChat('public')">
+            (click)="swichToChat('public','public')">
                 <i class="far fa-comments fa-2x"></i>
               </div>
 
@@ -21,7 +21,7 @@
           <div class="row h-100 p-1">
 
             <div class="col-8 h-100 ">
-              <app-chat [messages]="currentChat"></app-chat>
+              <app-chat [messages]="currentChat" [groupName]="groupName"></app-chat>
             </div>
 
 
@@ -66,7 +66,7 @@
 
       <div *ngIf="isChat" class="row m-0">
 
-        <app-chat [messages]="currentChat" style="width: 100%;"></app-chat>
+        <app-chat [messages]="currentChat" [groupName]="groupName" style="width: 100%;"></app-chat>
 
       </div>
 

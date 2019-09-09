@@ -1,9 +1,14 @@
-export interface SendMessage {
+export interface ISendMessage {
   messageId:number;
   userName:string;
   content:string;
   date:Date;
-  latitude:number;
-  longitude:number;
+  groupName:string;
+}
+export class SendMessage implements ISendMessage {
+  messageId:number;
+  userName:string;
+  content:string;
+  date:Date;
   groupName:string;
 }

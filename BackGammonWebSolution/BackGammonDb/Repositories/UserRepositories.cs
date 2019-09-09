@@ -303,6 +303,8 @@ namespace BackGammonDb.Repositories
                     {
                       _backnammonContextDb.PrivateChats.Remove(item);
                     }
+
+                   // var messages=_backnammonContextDb.Messages.Where()
                     return SaveChanges();
                 }
                 catch (Exception ex)

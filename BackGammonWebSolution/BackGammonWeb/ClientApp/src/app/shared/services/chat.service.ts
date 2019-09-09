@@ -1,7 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { SignalRConnectionService } from './signal-r-connection.service';
 import { HubConnection } from '@aspnet/signalr';
-import { SendMessage } from '../models/message-send';
+import { SendMessage,ISendMessage } from '../models/message-send';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ChatMessage } from '../models/chat-message';
@@ -15,7 +15,7 @@ export class ChatService {
 
   users$ = new EventEmitter();
   message$ = new EventEmitter();
-  inviterToChat$ = new EventEmitter();
+  invitationToChat$ = new EventEmitter();
   switchToChat$ = new EventEmitter();
 
   constructor(
@@ -31,10 +31,9 @@ export class ChatService {
         //   }
         // });
 
-        signalRConnectionService.connection.on("InviteToPrivateChat", res => {
+        signalRConnectionService.connection.on("InviteToPrivateChat", (res:ChatInvitation) => {
           if (res) {
-            res = <ChatInvitation>res;
-            this.inviterToChat$.emit(res);
+            this.invitationToChat$.emit({userName:res.invaterName,groupName:res.groupName});
           }
         });
       }
@@ -42,19 +41,19 @@ export class ChatService {
 
   }
 
-  sendMessage(message): Promise<any> {
+  sendMessage(message:ISendMessage): Promise<any> {
     if (this.signalRConnectionService.connection) {
       return this.signalRConnectionService.connection.invoke("SendMessage", message);
     }
     else return Promise.reject('connection is null');
   }
 
-  getNumberOfMessages(number: number): Observable<Array<SendMessage>> {
+  getNumberOfMessages(number: number): Observable<Array<ISendMessage>> {
     let url = "/api/chat/getPublicMessages?numberOfMessages=" + number;
-    return this.httpClient.get<Array<SendMessage>>(url);
+    return this.httpClient.get<Array<ISendMessage>>(url);
   }
 
-  convertToChatMsg(message: SendMessage): ChatMessage {
+  convertToChatMsg(message: ISendMessage): ChatMessage {
 
     let user = localStorage.getItem("userName");
     let msg: ChatMessage = new ChatMessage();

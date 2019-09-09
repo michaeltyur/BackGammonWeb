@@ -11,5 +11,6 @@ export interface User {
   avatar:any;
   haveNewMessage:boolean;
   haveNewPrivateChat:boolean;
+  groupName:string;
 }
 

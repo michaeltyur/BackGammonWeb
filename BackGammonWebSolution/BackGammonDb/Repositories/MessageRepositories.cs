@@ -42,13 +42,13 @@ namespace BackGammonDb.Repositories
             }
         }
 
-        public List<Message> GetMessages(int numberOfMessages)
+        public List<Message> GetMessages(int numberOfMessages, string groupName)
         {
             lock (locker)
             {
                 try
                 {
-                    var result = _backnammonContextDb.Messages.OrderByDescending(m => m.MessageId).Take(numberOfMessages).ToList();
+                    var result = _backnammonContextDb.Messages.Where(m => m.GroupName == groupName).OrderByDescending(m => m.MessageId).Take(numberOfMessages).ToList();
                     result.Reverse();
                     return result;
 

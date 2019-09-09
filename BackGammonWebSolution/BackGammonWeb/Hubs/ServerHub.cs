@@ -73,25 +73,28 @@ namespace BackGammonWeb.Hubs
 
         }
 
-        public void SendMessage(string message)
+        public void SendMessage(Message message)
         {
             var userName = GetUserName();
             //_userIdProvider.GetUserId(Context.);
 
-            if (!string.IsNullOrEmpty(message))
+            if (message!=null)
             {
-                Message newMessage = new Message
+                message.Date = DateTime.Now;
+
+                var json = new JavaScriptSerializer().Serialize(message);
+
+                _dbManager.MessageRepositories.AddMessage(message);
+
+                if (message.GroupName=="public")
                 {
-                    Content = message,
-                    Date = DateTime.Now,
-                    UserName = userName
-                };
+                    Clients.All.BroadcastMessage(json);
+                }
+                else
+                {
+                    Clients.Group(message.GroupName).BroadcastMessage(json);
+                }
 
-                var json = new JavaScriptSerializer().Serialize(newMessage);
-
-                _dbManager.MessageRepositories.AddMessage(newMessage);
-
-                Clients.All.BroadcastMessage(json);
             }
         }
 
@@ -117,6 +120,7 @@ namespace BackGammonWeb.Hubs
 
                 if (privateChat != null)
                 {
+                    chatInvitation.InvaterName = secondUserName;
                     chatInvitation.GroupName = privateChat.GroupName;
                     chatInvitation.Message = "Switch to chat";
                     return chatInvitation;
@@ -129,18 +133,24 @@ namespace BackGammonWeb.Hubs
 
 
                 var result = _dbManager.UserRepositories.AddPrivateChat(userName, secondUserName, groupName);
-
-                await Clients.Client(secondUserConnectionId).InviteToPrivateChat(userName);
+                if (!result)
+                {
+                    chatInvitation.Message = "The Error";
+                    return chatInvitation;
+                }
 
                 chatInvitation.InvaterName = userName;
                 chatInvitation.GroupName = groupName;
                 chatInvitation.Message = "Success: The Chat is successfully started";
+                await Clients.Client(secondUserConnectionId).InviteToPrivateChat(chatInvitation);
+
+                chatInvitation.InvaterName = secondUserName;
                 return chatInvitation;
             }
             catch (Exception ex)
             {
                 chatInvitation.Message = "The Error";
-                return  chatInvitation;
+                return chatInvitation;
             }
 
         }

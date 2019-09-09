@@ -27,7 +27,7 @@ namespace BackGammonWeb.Controllers
         {
             try
             {
-                var messages = _dbManager.MessageRepositories.GetMessages(numberOfMessages);
+                var messages = _dbManager.MessageRepositories.GetMessages(numberOfMessages,"public");
                 return messages;
             }
             catch (Exception ex)

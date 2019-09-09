@@ -3,12 +3,13 @@ import { User } from 'src/app/shared/models/user';
 import { Subscription } from 'rxjs';
 import { UserService } from 'src/app/shared/services/user.service';
 import { SignalRConnectionService } from 'src/app/shared/services/signal-r-connection.service';
-import { SendMessage } from 'src/app/shared/models/message-send';
+import { ISendMessage } from 'src/app/shared/models/message-send';
 import { ChatService } from 'src/app/shared/services/chat.service';
 import { IDictionary, Dictionary } from 'src/app/shared/models/dictionary';
 import { ChatMessage } from 'src/app/shared/models/chat-message';
 import { DOCUMENT } from '@angular/common';
 import { ChatInvitation } from 'src/app/shared/models/chat-invitation';
+import { NbToastrService } from '@nebular/theme';
 
 @Component({
   selector: 'app-lobby',
@@ -21,11 +22,12 @@ export class LobbyComponent implements OnInit, OnDestroy {
   currentChat: Array<ChatMessage> = [];
   allChatDictionary: IDictionary;
   chatTitle: string = "Public Chat";
-  groupName: string = "";
+  groupName: string = "public";
   isChat: boolean = true;
   isMobile: boolean = false;
 
   constructor(
+    private nbToastrService:NbToastrService,
     private userService: UserService,
     private chatService: ChatService,
     private signalRConnectionService: SignalRConnectionService
@@ -39,12 +41,21 @@ export class LobbyComponent implements OnInit, OnDestroy {
       this.isMobile = true;
     }
 
+    this.signalRConnectionService.connection.on("BroadcastMessage", res => {
+      if (res) {
+        res = JSON.parse(res);
+        let sendMessage=<ISendMessage>res;
+        let msg = this.chatService.convertToChatMsg(sendMessage);
+        let chat=this.allChatDictionary.getByKey(sendMessage.groupName)
+        chat.push(msg);
+      }
+    });
+
     this.subscription.add(this.chatService.switchToChat$.subscribe(res => {
       if (res) {
-        this.swichToChat(res.userName,res.groupName);
+        this.swichToChat(res.userName, res.groupName);
       }
     }));
-
 
     this.allChatDictionary = new Dictionary<ChatMessage>();
 
@@ -60,7 +71,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
     this.subscription
       .add(this.chatService.getNumberOfMessages(numberOfMsgs)
-        .subscribe((res: Array<SendMessage>) => {
+        .subscribe((res: Array<ISendMessage>) => {
           if (res && res.length) {
 
             let chatArray = new Array<ChatMessage>();
@@ -77,18 +88,12 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   }
 
-  // openPrivateChat(user: User): void {
-  //   if (user && this.signalRConnectionService.connection) {
-  //     this.signalRConnectionService.connection.invoke('AddToGroup', user.userName).then(res => {
-  //       let chatArray = new Array<ChatMessage>();
-  //     }).catch(err => console.error(err));
-  //   }
-  // }
-  swichToChat(userName:string,groupName:string): void {
-    if (userName&&groupName) {
-      if (userName === 'public') {
-        this.groupName = "";
+  swichToChat(userName: string, groupName: string): void {
+    if (groupName) {
+      if (groupName === 'public') {
+        this.groupName = "public";
         this.chatTitle = "Public Chat";
+        this.nbToastrService.default('','switch to public chat');
       }
       else {
         this.groupName = groupName;

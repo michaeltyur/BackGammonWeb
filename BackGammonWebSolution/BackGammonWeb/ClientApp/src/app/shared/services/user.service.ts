@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { User } from '../models/user';
 import { SignalRConnectionService } from './signal-r-connection.service';
 import { HubConnection } from '@aspnet/signalr';
+import { ChatInvitation } from '../models/chat-invitation';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,6 @@ import { HubConnection } from '@aspnet/signalr';
 export class UserService {
 
   users$ = new EventEmitter();
-  inviterToChat$ = new EventEmitter();
 
   constructor(
     private httpClient: HttpClient,
@@ -24,12 +24,6 @@ export class UserService {
           if (res) {
             //res = JSON.parse(res);
             this.users$.emit(res);
-          }
-        });
-
-        signalRConnectionService.connection.on("InviteToPrivateChat", res => {
-          if (res) {
-            this.inviterToChat$.emit(res);
           }
         });
       }
