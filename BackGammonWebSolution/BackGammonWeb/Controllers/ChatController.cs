@@ -43,6 +43,23 @@ namespace BackGammonWeb.Controllers
 
         }
 
+        [HttpGet("getPrivateMessages")]
+        public IEnumerable<Message> GetPrivateMessages(int numberOfMessages,string groupName)
+        {
+            try
+            {
+                var messages = _dbManager.MessageRepositories.GetMessages(numberOfMessages, groupName);
+                return messages;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+
         [HttpGet("closePrivateChat")]
         public bool ClosePrivateChat(string groupName)
         {

@@ -12,7 +12,7 @@ namespace Common.Data
     {
 
         [DataMember]
-        public string InvaterName { get; set; }
+        public string InviterName { get; set; }
 
         [DataMember]
         public string GroupName { get; set; }

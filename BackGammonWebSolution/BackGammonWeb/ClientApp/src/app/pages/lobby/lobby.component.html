@@ -26,7 +26,9 @@
 
 
             <div class="col-4 h-100">
-              <app-users></app-users>
+              <app-users
+              [usersOnLine]="usersOnLine"
+              [usersOffLine]="usersOffLine"></app-users>
             </div>
 
           </div>
@@ -73,6 +75,8 @@
       <div *ngIf="!isChat" class="row">
 
         <app-users
+        [usersOnLine]="usersOnLine"
+        [usersOffLine]="usersOffLine"
         style="width: 100%;"></app-users>
 
       </div>

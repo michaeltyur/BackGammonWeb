@@ -5,18 +5,25 @@
       <nb-list>
         <nb-list-item
         *ngFor="let user of usersOnLine"
-        style="cursor: pointer;"
-        (click)="openPrivateChat(user)"
         [class.haveNewPrivateChat]="user.haveNewPrivateChat">
-          <div *ngIf="owner===user.userName" disabled>{{ user.userName }} (owner)</div>
+          <div
+          *ngIf="owner===user.userName"
+          class="float-left user user-owner"
+          disabled>{{ user.userName }}</div>
+          <div
+          *ngIf="owner===user.userName"
+          class="d-inline-block float-right close-chat-button"
+          style="color:darkgoldenrod;">
+          <i class="fas fa-crown user-owner"></i>
+          </div>
           <div
           *ngIf="owner!==user.userName"
-           class="float-left"
-           style="width: 70%">{{ user.userName }}</div>
+           class="float-left user clickable"
+           (click)="openPrivateChat(user)">{{ user.userName }}</div>
           <div
           *ngIf="user.haveNewPrivateChat"
-          class="d-inline-block float-right"
-          style="color: crimson;width: 30%;"
+          class="d-inline-block float-right close-chat-button clickable"
+          style="color: crimson;"
           (click)="closePrivateChat(user)">
             <i class="far fa-times-circle float-right"></i>
           </div>

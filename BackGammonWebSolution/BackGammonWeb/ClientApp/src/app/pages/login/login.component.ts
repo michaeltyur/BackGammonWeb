@@ -41,7 +41,11 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (this.loginForm.valid) {
       this.loginLoading = true;
       this.subscribtion.add(this.authService.login(this.loginForm.value).subscribe(res => {
-        if (res['token']) {
+        if (res['error']) {
+          this.nbToastrService.danger('', res['error']);
+          this.loginLoading = false;
+        }
+        else if (res['token']) {
           this.nbToastrService.success('', 'You are logged successfully');
           this.loginLoading = false;
           this.router.navigate(['lobby']);

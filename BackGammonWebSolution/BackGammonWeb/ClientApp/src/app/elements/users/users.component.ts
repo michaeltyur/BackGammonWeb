@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { UserService } from 'src/app/shared/services/user.service';
 import { SignalRConnectionService } from 'src/app/shared/services/signal-r-connection.service';
 import { ChatService } from 'src/app/shared/services/chat.service';
@@ -14,8 +14,8 @@ import { ChatInvitation } from 'src/app/shared/models/chat-invitation';
 })
 export class UsersComponent implements OnInit, OnDestroy {
   subscription = new Subscription();
-  usersOnLine: Array<User> = [];
-  usersOffLine: Array<User> = [];
+  @Input() usersOnLine: Array<User>;
+  @Input() usersOffLine: Array<User>;
   owner: string;
   loading: boolean = false;
   constructor(
@@ -27,42 +27,50 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.owner = localStorage.getItem("userName");
-    this.subscription.add(this.userService.users$.subscribe(res => {
-      if (res) {
-        this.setUsersArrays(res);
-      }
-    }));
 
-    this.chatService.users$.subscribe(res => {
-      if (res) {
-        this.setUsersArrays(res);
-      }
-    })
+    // this.subscription.add(this.userService.users$.subscribe(res => {
+    //   if (res) {
+    //     this.setUsersArrays(res);
+    //   }
+    // }));
 
-    this.subscription.add(this.chatService.invitationToChat$.subscribe(res => {
-      if (res) {
-        this.openPrivateChatFromRemote(res.userName, res.groupName);
-      }
-    }, error => console.error(error)));
+    // this.subscription.add(this.chatService.users$.subscribe(res => {
+    //   if (res) {
+    //     this.setUsersArrays(res);
+    //   }
+    // }));
 
-    this.getAllUser();
+    // this.subscription.add(this.chatService.invitationToChat$.subscribe(res => {
+    //   if (res) {
+    //     this.openPrivateChatFromRemote(res.userName, res.groupName);
+    //   }
+    // }, error => console.error(error)));
+
+    // this.subscription.add(this.chatService.privateChatClosedByOtherUser$.subscribe(res => {
+    //   if (res) {
+    //     this.closePrivateChatByRemote(res.userName, res.groupName);
+    //   }
+    // }, err => console.error(err)
+    // ));
+
+    // this.getAllUser();
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 
-  getAllUser(): void {
+  // getAllUser(): void {
 
-    this.subscription.add(this.userService.getAllUser().subscribe(res => {
-      if (res) {
-        this.setUsersArrays(res);
-      }
-    }, error => {
-      console.error(error);
-    }));
+  //   this.subscription.add(this.userService.getAllUser().subscribe(res => {
+  //     if (res) {
+  //       this.setUsersArrays(res);
+  //     }
+  //   }, error => {
+  //     console.error(error);
+  //   }));
 
-  }
+  // }
 
   setUsersArrays(allUsers: Array<User>): void {
     if (allUsers && allUsers.length) {
@@ -98,7 +106,8 @@ export class UsersComponent implements OnInit, OnDestroy {
           this.loading = false;
           if (!res.error) {
             user.haveNewPrivateChat = true;
-            this.chatService.switchToChat$.emit({ userName: res.invaterName, groupName: res.groupName });
+            user.groupName = res.groupName;
+            this.chatService.switchToChat$.emit({ userName: res.inviterName, groupName: res.groupName });
             this.nbToastrService.default('', res.message);
           }
           else if (res.error) {
@@ -113,17 +122,31 @@ export class UsersComponent implements OnInit, OnDestroy {
     }
   }
 
+  // openPrivateChatFromRemote(userName: string, groupName: string): void {
+  //   if (userName) {
+  //     let user = this.usersOnLine.find(el => el.userName === userName)
+  //     if (user) {
+  //       user.haveNewPrivateChat = true;
+  //       user.groupName = groupName;
+  //     }
+  //   }
+  //   else console.error("user name is null");
+  // }
 
-
-  openPrivateChatFromRemote(userName: string, groupName: string): void {
-    if (userName) {
-      let user = this.usersOnLine.find(el => el.userName === userName)
-      if (user) {
-        user.haveNewPrivateChat = true;
-        user.groupName = groupName;
-      }
-    }
-  }
+  // closePrivateChatByRemote(userName: string, groupName: string): void {
+  //   if (!userName) {
+  //     console.error("userName is null");
+  //     return;
+  //   }
+  //   if (!groupName) {
+  //     console.error("groupName is null");
+  //     return;
+  //   }
+  //   let user = this.usersOnLine.find(user => user.userName === userName);
+  //   if (user) {
+  //     user.haveNewPrivateChat = false;
+  //   }
+  // }
 
   closePrivateChat(user: User): void {
     if (user) {

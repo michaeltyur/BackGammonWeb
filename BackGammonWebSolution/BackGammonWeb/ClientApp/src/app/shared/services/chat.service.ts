@@ -18,6 +18,7 @@ export class ChatService {
   invitationToChat$ = new EventEmitter();
   switchToChat$ = new EventEmitter();
   closePrivateChat$ = new EventEmitter<string>();
+  privateChatClosedByOtherUser$ = new EventEmitter<any>();
   constructor(
     private signalRConnectionService: SignalRConnectionService,
     private httpClient: HttpClient) {
@@ -25,15 +26,16 @@ export class ChatService {
     signalRConnectionService.isConnected$.subscribe(res => {
       if (res) {
 
-        // signalRConnectionService.connection.on("UpdateUsers", (res: Array<User>) => {
-        //   if (res && res.length) {
-        //     this.users$.emit(res);
-        //   }
-        // });
-
         signalRConnectionService.connection.on("InviteToPrivateChat", (res: ChatInvitation) => {
           if (res) {
-            this.message$.emit({ userName: res.invaterName, groupName: res.groupName });
+            this.invitationToChat$.emit({ userName: res.inviterName, groupName: res.groupName });
+          }
+        });
+
+        signalRConnectionService.connection.on("PrivateChatClosed", res => {
+          if (res) {
+            res = JSON.parse(res);
+            this.privateChatClosedByOtherUser$.emit({ userName: res['userName'], groupName: res['groupName'] });
           }
         });
       }
@@ -53,6 +55,11 @@ export class ChatService {
     return this.httpClient.get<Array<ISendMessage>>(url);
   }
 
+  getNumberOfMessagesOfPrivateChat(number: number,groupName): Observable<Array<ISendMessage>> {
+    let url = `/api/chat/getPrivateMessages?numberOfMessages=number&groupName=groupName`;
+    return this.httpClient.get<Array<ISendMessage>>(url);
+  }
+
   convertToChatMsg(message: ISendMessage): ChatMessage {
 
     let user = localStorage.getItem("userName");
@@ -68,7 +75,7 @@ export class ChatService {
 
   openPrivateChat(userName: string): Promise<any> {
     return this.signalRConnectionService.connection.invoke("AddToGroup", userName).then((res: ChatInvitation) => {
-      this.switchToChat$.emit({ userName: res.invaterName, groupName: res.groupName });
+      this.switchToChat$.emit({ userName: res.inviterName, groupName: res.groupName });
       return res;
     });
   }

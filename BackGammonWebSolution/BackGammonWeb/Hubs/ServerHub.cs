@@ -120,7 +120,7 @@ namespace BackGammonWeb.Hubs
 
                 if (privateChat != null)
                 {
-                    chatInvitation.InvaterName = secondUserName;
+                    chatInvitation.InviterName = secondUserName;
                     chatInvitation.GroupName = privateChat.GroupName;
                     chatInvitation.Message = "Switch to chat";
                     return chatInvitation;
@@ -139,12 +139,12 @@ namespace BackGammonWeb.Hubs
                     return chatInvitation;
                 }
 
-                chatInvitation.InvaterName = userName;
+                chatInvitation.InviterName = userName;
                 chatInvitation.GroupName = groupName;
                 chatInvitation.Message = "Success: The Chat is successfully started";
                 await Clients.Client(secondUserConnectionId).InviteToPrivateChat(chatInvitation);
 
-                chatInvitation.InvaterName = secondUserName;
+                chatInvitation.InviterName = secondUserName;
                 return chatInvitation;
             }
             catch (Exception ex)
@@ -157,7 +157,7 @@ namespace BackGammonWeb.Hubs
 
         public async Task<bool> ClosePrivateChat(string groupName)
         {
-            if (string.IsNullOrEmpty(groupName))
+            if (!string.IsNullOrEmpty(groupName))
             {
                 try
                 {
@@ -165,6 +165,8 @@ namespace BackGammonWeb.Hubs
                     var userName = GetUserName();
 
                     var msg = new Message();
+
+                    msg.UserName = "auto generated";
                     msg.Content = "The Chat was closed by user";
                     msg.Date = DateTime.Now;
                     msg.GroupName = groupName;
@@ -173,7 +175,7 @@ namespace BackGammonWeb.Hubs
 
                     await Clients.Group(groupName).BroadcastMessage(json);
 
-                    await Clients.Group(groupName).PrivateChatClosed(groupName, groupName);
+                    await Clients.Group(groupName).PrivateChatClosed(new JavaScriptSerializer().Serialize(new { userName, groupName }));
 
                     await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
 
