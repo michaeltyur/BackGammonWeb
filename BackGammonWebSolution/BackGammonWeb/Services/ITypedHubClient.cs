@@ -10,6 +10,8 @@ namespace BackGammonWeb.Services
     {
 
         Task InviteToPrivateChat(ChatInvitation chatInvitation);
+
+        Task PrivateChatClosed(string userName,string groupName);
         Task BroadcastMessage(object message);
         Task UpdateTableState(object table);
         Task UpdateUsers(List<User> users);

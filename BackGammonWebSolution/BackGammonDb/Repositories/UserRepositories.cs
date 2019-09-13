@@ -291,30 +291,59 @@ namespace BackGammonDb.Repositories
             }
         }
 
-        public bool DeletePrivateChat(string userName)
+        public List<PrivateChat> DeletePrivateChatsAll(string userName)
         {
             lock (locker)
             {
                 try
                 {
                     var privateChats = _backnammonContextDb.PrivateChats.Where(chat => chat.FirstUserName == userName || chat.SecondUserName == userName).ToList();
-                    if (privateChats == null || privateChats.Count()==0) return false;
+                    if (privateChats == null || privateChats.Count() == 0) return null;
                     foreach (var item in privateChats)
                     {
-                      _backnammonContextDb.PrivateChats.Remove(item);
+                        _backnammonContextDb.PrivateChats.Remove(item);
                     }
-
-                   // var messages=_backnammonContextDb.Messages.Where()
-                    return SaveChanges();
+                    var result = SaveChanges();
+                    // var messages=_backnammonContextDb.Messages.Where()
+                    if (result) return privateChats;
+                    else return null;
                 }
                 catch (Exception ex)
                 {
-                    return false;
+                    return null;
 
                 }
 
             }
         }
+
+        public PrivateChat DeletePrivateChat(string groupName)
+        {
+            lock (locker)
+            {
+                try
+                {
+                    var privateChat = _backnammonContextDb.PrivateChats.FirstOrDefault(chat => chat.GroupName == groupName);
+                    if (privateChat == null) return null;
+
+                    _backnammonContextDb.PrivateChats.Remove(privateChat);
+                    var result = SaveChanges();
+                    if (result)
+                    {
+                        return privateChat;
+                    }
+                    else return null;
+
+                }
+                catch (Exception ex)
+                {
+                    return null;
+
+                }
+
+            }
+        }
+
     }
 }
 

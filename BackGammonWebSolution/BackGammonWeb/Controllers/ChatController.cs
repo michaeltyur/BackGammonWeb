@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BackGammonDb;
+using BackGammonWeb.Hubs;
+using BackGammonWeb.Services;
 using Common.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace BackGammonWeb.Controllers
 {
@@ -17,9 +20,11 @@ namespace BackGammonWeb.Controllers
     public class ChatController : ControllerBase
     {
         private readonly DbManager _dbManager;
-        public ChatController(DbManager dbManager)
+        IHubContext<ServerHub, ITypedHubClient> _serverHub;
+        public ChatController(DbManager dbManager, IHubContext<ServerHub, ITypedHubClient> serverHub)
         {
             _dbManager = dbManager;
+            _serverHub = serverHub;
         }
 
         [HttpGet("getPublicMessages")]
@@ -35,6 +40,23 @@ namespace BackGammonWeb.Controllers
 
                 throw ex;
             }
+
+        }
+
+        [HttpGet("closePrivateChat")]
+        public bool ClosePrivateChat(string groupName)
+        {
+            if (string.IsNullOrEmpty(groupName))
+            {
+                var privateChat = _dbManager.UserRepositories.DeletePrivateChat(groupName);
+                if (privateChat!=null)
+                {
+                    return true;
+                }
+                return false;
+            }
+            else return false;
+            
 
         }
     }

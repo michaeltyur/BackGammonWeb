@@ -33,7 +33,7 @@ export class SignalRConnectionService {
       this.isConnected$.emit(true);
     }).catch( (err)=> {
       this.isConnected$.emit(false);
-     // this.serverUrl = "http://michaelt-001-site3.btempurl.com/backgammon";
+       this.serverUrl = "http://michaelt-001-site3.btempurl.com/backgammon";
        console.error(err.toString());
        this.startConnection();
     });

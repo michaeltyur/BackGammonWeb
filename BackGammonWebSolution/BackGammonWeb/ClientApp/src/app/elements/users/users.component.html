@@ -9,7 +9,17 @@
         (click)="openPrivateChat(user)"
         [class.haveNewPrivateChat]="user.haveNewPrivateChat">
           <div *ngIf="owner===user.userName" disabled>{{ user.userName }} (owner)</div>
-          <div *ngIf="owner!==user.userName">{{ user.userName }}</div>
+          <div
+          *ngIf="owner!==user.userName"
+           class="float-left"
+           style="width: 70%">{{ user.userName }}</div>
+          <div
+          *ngIf="user.haveNewPrivateChat"
+          class="d-inline-block float-right"
+          style="color: crimson;width: 30%;"
+          (click)="closePrivateChat(user)">
+            <i class="far fa-times-circle float-right"></i>
+          </div>
         </nb-list-item>
       </nb-list>
     </nb-card-body>

@@ -57,6 +57,15 @@ export class LobbyComponent implements OnInit, OnDestroy {
       }
     }));
 
+    this.subscription.add(this.chatService.closePrivateChat$.subscribe(res=>{
+       if (res) {
+        this.closePrivateChat(res);
+       }
+    },error=>{
+      console.error(error)
+    }));
+
+
     this.allChatDictionary = new Dictionary<ChatMessage>();
 
     this.getNumberOfMessages("public", 50);
@@ -112,5 +121,9 @@ export class LobbyComponent implements OnInit, OnDestroy {
     }
   }
 
-
+  closePrivateChat(groupName: string):void{
+    if (this.allChatDictionary.containsKey(groupName)) {
+      this.allChatDictionary.remove(groupName);
+    }
+  }
 }

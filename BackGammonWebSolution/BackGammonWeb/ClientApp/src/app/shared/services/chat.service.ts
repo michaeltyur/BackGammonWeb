@@ -1,7 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { SignalRConnectionService } from './signal-r-connection.service';
 import { HubConnection } from '@aspnet/signalr';
-import { SendMessage,ISendMessage } from '../models/message-send';
+import { SendMessage, ISendMessage } from '../models/message-send';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ChatMessage } from '../models/chat-message';
@@ -17,7 +17,7 @@ export class ChatService {
   message$ = new EventEmitter();
   invitationToChat$ = new EventEmitter();
   switchToChat$ = new EventEmitter();
-
+  closePrivateChat$ = new EventEmitter<string>();
   constructor(
     private signalRConnectionService: SignalRConnectionService,
     private httpClient: HttpClient) {
@@ -31,9 +31,9 @@ export class ChatService {
         //   }
         // });
 
-        signalRConnectionService.connection.on("InviteToPrivateChat", (res:ChatInvitation) => {
+        signalRConnectionService.connection.on("InviteToPrivateChat", (res: ChatInvitation) => {
           if (res) {
-            this.invitationToChat$.emit({userName:res.invaterName,groupName:res.groupName});
+            this.message$.emit({ userName: res.invaterName, groupName: res.groupName });
           }
         });
       }
@@ -41,7 +41,7 @@ export class ChatService {
 
   }
 
-  sendMessage(message:ISendMessage): Promise<any> {
+  sendMessage(message: ISendMessage): Promise<any> {
     if (this.signalRConnectionService.connection) {
       return this.signalRConnectionService.connection.invoke("SendMessage", message);
     }
@@ -72,5 +72,11 @@ export class ChatService {
       return res;
     });
   }
+
+  closePrivateChat(groupName: string): Promise<any> {
+
+    return this.signalRConnectionService.connection.invoke("ClosePrivateChat", groupName);
+   }
+
 
 }

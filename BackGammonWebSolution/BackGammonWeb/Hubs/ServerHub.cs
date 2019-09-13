@@ -78,7 +78,7 @@ namespace BackGammonWeb.Hubs
             var userName = GetUserName();
             //_userIdProvider.GetUserId(Context.);
 
-            if (message!=null)
+            if (message != null)
             {
                 message.Date = DateTime.Now;
 
@@ -86,7 +86,7 @@ namespace BackGammonWeb.Hubs
 
                 _dbManager.MessageRepositories.AddMessage(message);
 
-                if (message.GroupName=="public")
+                if (message.GroupName == "public")
                 {
                     Clients.All.BroadcastMessage(json);
                 }
@@ -152,6 +152,43 @@ namespace BackGammonWeb.Hubs
                 chatInvitation.Message = "The Error";
                 return chatInvitation;
             }
+
+        }
+
+        public async Task<bool> ClosePrivateChat(string groupName)
+        {
+            if (string.IsNullOrEmpty(groupName))
+            {
+                try
+                {
+                    var privateChat = _dbManager.UserRepositories.DeletePrivateChat(groupName);
+                    var userName = GetUserName();
+
+                    var msg = new Message();
+                    msg.Content = "The Chat was closed by user";
+                    msg.Date = DateTime.Now;
+                    msg.GroupName = groupName;
+
+                    var json = new JavaScriptSerializer().Serialize(msg);
+
+                    await Clients.Group(groupName).BroadcastMessage(json);
+
+                    await Clients.Group(groupName).PrivateChatClosed(groupName, groupName);
+
+                    await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
+
+                    return true;
+                }
+                catch (Exception)
+                {
+
+                    return false;
+                }
+
+               
+            }
+            else return false;
+
 
         }
     }

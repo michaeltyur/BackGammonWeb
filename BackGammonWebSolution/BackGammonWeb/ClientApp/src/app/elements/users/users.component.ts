@@ -41,7 +41,7 @@ export class UsersComponent implements OnInit, OnDestroy {
 
     this.subscription.add(this.chatService.invitationToChat$.subscribe(res => {
       if (res) {
-        this.openPrivateChatFromRemote(res.userName,res.groupName);
+        this.openPrivateChatFromRemote(res.userName, res.groupName);
       }
     }, error => console.error(error)));
 
@@ -89,19 +89,19 @@ export class UsersComponent implements OnInit, OnDestroy {
         this.nbToastrService.warning('', 'Are you sure about that? You want to chat with your-self?');
         return;
       }
-      else if(user.haveNewPrivateChat){
-        this.chatService.switchToChat$.emit({userName:user.userName,groupName:user.groupName});
+      else if (user.haveNewPrivateChat) {
+        this.chatService.switchToChat$.emit({ userName: user.userName, groupName: user.groupName });
       }
       this.loading = true;
-      this.chatService.openPrivateChat(user.userName).then((res:ChatInvitation) => {
+      this.chatService.openPrivateChat(user.userName).then((res: ChatInvitation) => {
         if (res) {
           this.loading = false;
           if (!res.error) {
-             user.haveNewPrivateChat = true;
-             this.chatService.switchToChat$.emit({userName:res.invaterName,groupName:res.groupName});
-             this.nbToastrService.default('', res.message);
+            user.haveNewPrivateChat = true;
+            this.chatService.switchToChat$.emit({ userName: res.invaterName, groupName: res.groupName });
+            this.nbToastrService.default('', res.message);
           }
-          else if(res.error){
+          else if (res.error) {
             this.nbToastrService.danger('', 'Error');
           }
         }
@@ -113,7 +113,9 @@ export class UsersComponent implements OnInit, OnDestroy {
     }
   }
 
-  openPrivateChatFromRemote(userName: string,groupName:string): void {
+
+
+  openPrivateChatFromRemote(userName: string, groupName: string): void {
     if (userName) {
       let user = this.usersOnLine.find(el => el.userName === userName)
       if (user) {
@@ -121,6 +123,20 @@ export class UsersComponent implements OnInit, OnDestroy {
         user.groupName = groupName;
       }
     }
+  }
+
+  closePrivateChat(user: User): void {
+    if (user) {
+      this.chatService.closePrivateChat(user.groupName).then(res => {
+        if (res) {
+          this.chatService.closePrivateChat$.emit(user.groupName);
+          user.haveNewPrivateChat = false
+          this.nbToastrService.success('', 'Chat was close successfully');
+        }
+        else this.nbToastrService.danger('', 'Error');
+      });
+    }
+
   }
 
 }

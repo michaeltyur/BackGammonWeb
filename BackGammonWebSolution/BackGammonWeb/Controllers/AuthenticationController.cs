@@ -140,7 +140,17 @@ namespace BackGammonWeb.Controllers
                     });
                     Task.Run(() =>
                     {
-                        _dbManager.UserRepositories.DeletePrivateChat(userName);
+                        var privateChats= _dbManager.UserRepositories.DeletePrivateChatsAll(userName);
+                
+                        if (privateChats!=null && privateChats.Count>0)
+                        {
+                            foreach (var privateChat in privateChats)
+                            {
+                                _serverHub.Groups.RemoveFromGroupAsync(userFromDb.SignalRConnectionID, privateChat.GroupName);
+                            }
+                           
+                        }
+                        
                     });
 
                 }
