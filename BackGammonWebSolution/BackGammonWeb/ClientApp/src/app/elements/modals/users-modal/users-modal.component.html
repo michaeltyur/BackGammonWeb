@@ -1,0 +1,44 @@
+<div class="h-100 d-flex flex-column justify-content-between users-window-card">
+    <nb-card class="w-100 m-0 p-0 h-100" [nbSpinner]="loading" nbSpinnerStatus="info">
+      <nb-card-header style="padding-top: 3px; padding-bottom: 3px;">Users online</nb-card-header>
+      <nb-card-body>
+        <nb-list>
+          <nb-list-item
+          *ngFor="let user of usersOnLine"
+          [class.haveNewPrivateChat]="user.haveNewPrivateChat"
+          class="d-flex justify-content-between">
+
+            <div
+            *ngIf="owner===user.userName"
+            class="user user-owner"
+            disabled>
+            {{ user.userName }}
+          </div>
+
+            <div
+            *ngIf="owner===user.userName"
+            class="d-inline-block close-chat-button"
+            style="color:darkgoldenrod;">
+            <i class="fas fa-crown user-owner"></i>
+            </div>
+
+            <div
+            *ngIf="owner!==user.userName"
+             class="user clickable"
+             (click)="openPrivateChat(user)">
+             {{ user.userName }}
+            </div>
+
+            <div
+            *ngIf="user.haveNewPrivateChat"
+            class="d-inline-block close-chat-button clickable"
+            style="color: crimson;"
+            (click)="closePrivateChat(user)">
+              <i class="far fa-times-circle"></i>
+            </div>
+
+          </nb-list-item>
+        </nb-list>
+      </nb-card-body>
+    </nb-card>
+  </div>

@@ -6,23 +6,28 @@ import { NbToastrService } from '@nebular/theme';
 import { SignalRConnectionService } from 'src/app/shared/services/signal-r-connection.service';
 import { DOCUMENT } from '@angular/common';
 import * as $ from 'jquery';
+import { GameService } from 'src/app/shared/services/game.service';
+import { ChatService } from 'src/app/shared/services/chat.service';
 
 @Component({
   selector: 'app-top-bar',
   templateUrl: './top-bar.component.html',
   styleUrls: ['./top-bar.component.scss']
 })
-export class TopBarComponent implements OnInit, OnDestroy,AfterViewInit {
+export class TopBarComponent implements OnInit, OnDestroy, AfterViewInit {
 
   elem;
-  fullScreen:boolean;
+  isGameMode: boolean = false;
+  fullScreen: boolean;
   subscription = new Subscription();
   isConnected: boolean = false;
   isAuthenticated: boolean = false;
   userName: string;
 
   constructor(
+    private gameService: GameService,
     private authService: AuthService,
+    private chatService: ChatService,
     private router: Router,
     private nbToastrService: NbToastrService,
     private signalRConnectionService: SignalRConnectionService,
@@ -46,7 +51,7 @@ export class TopBarComponent implements OnInit, OnDestroy,AfterViewInit {
 
     this.subscription.add(this.signalRConnectionService.isConnected$.subscribe(res => {
 
-        this.isConnected = res;
+      this.isConnected = res;
 
     }));
 
@@ -61,7 +66,7 @@ export class TopBarComponent implements OnInit, OnDestroy,AfterViewInit {
 
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     // if (window.innerWidth < 800) {
     //     document.getElementById("fullScreen-button").click();
     //    }
@@ -80,7 +85,7 @@ export class TopBarComponent implements OnInit, OnDestroy,AfterViewInit {
   }
 
   openFullscreen() {
-    this.fullScreen=true;
+    this.fullScreen = true;
     if (this.elem.requestFullscreen) {
       this.elem.requestFullscreen();
     } else if (this.elem.mozRequestFullScreen) {
@@ -97,7 +102,7 @@ export class TopBarComponent implements OnInit, OnDestroy,AfterViewInit {
 
   /* Close fullscreen */
   closeFullscreen() {
-    this.fullScreen=false;
+    this.fullScreen = false;
     if (this.document.exitFullscreen) {
       this.document.exitFullscreen();
     } else if (this.document.mozCancelFullScreen) {
@@ -110,6 +115,18 @@ export class TopBarComponent implements OnInit, OnDestroy,AfterViewInit {
       /* IE/Edge */
       this.document.msExitFullscreen();
     }
+  }
+
+  switchToGame(): void {
+    this.router.navigate(['game-lobby']);
+    this.isGameMode = true;
+    this.gameService.gameModeOn$.emit(true);
+  }
+
+  switchToChat(): void {
+    this.router.navigate(['lobby']);
+    this.isGameMode = false;
+    this.gameService.gameModeOn$.emit(false);
   }
 
 }

@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './pages/login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NbThemeModule, NbLayoutModule, NbCardModule, NbButtonModule, NbInputModule, NbPopoverModule, NbToastrModule, NbSpinnerModule, NbChatModule, NbWindowModule, NbListModule } from '@nebular/theme';
+import { NbThemeModule, NbLayoutModule, NbCardModule, NbButtonModule, NbInputModule, NbPopoverModule, NbToastrModule, NbSpinnerModule, NbChatModule, NbWindowModule, NbListModule, NbDialogModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -17,6 +17,9 @@ import { TopBarComponent } from './pages/top-bar/top-bar.component';
 import { ChatComponent } from './elements/chat/chat.component';
 import { LobbyComponent } from './pages/lobby/lobby.component';
 import { UsersComponent } from './elements/users/users.component';
+import { GameComponent } from './elements/game/game.component';
+import { GameLobbyComponent } from './pages/game-lobby/game-lobby.component';
+import { UsersModalComponent } from './elements/modals/users-modal/users-modal.component';
 
 const routes: Routes = [
 
@@ -38,8 +41,8 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'game',
-    component: BackgammonGameComponent,
+    path: 'game-lobby',
+    component: GameLobbyComponent,
     canActivate: [AuthGuard]
   },
   { path: '**', component: LoginComponent }
@@ -55,6 +58,9 @@ const routes: Routes = [
     ChatComponent,
     LobbyComponent,
     UsersComponent,
+    GameComponent,
+    GameLobbyComponent,
+    UsersModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -75,10 +81,12 @@ const routes: Routes = [
     NbChatModule,
     NbWindowModule.forRoot(),
     NbListModule,
+    NbDialogModule.forRoot()
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents:[UsersComponent,UsersModalComponent]
 })
 export class AppModule { }

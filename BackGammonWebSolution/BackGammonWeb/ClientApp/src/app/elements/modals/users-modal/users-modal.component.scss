@@ -1,0 +1,18 @@
+.users-window-card{
+  min-width: 30rem;
+}
+:host ::ng-deep .haveNewPrivateChat{
+  color: crimson;
+}
+.user{
+  font-size: x-large;
+}
+.close-chat-button{
+  font-size: x-large;
+}
+.user-owner{
+  cursor: default;
+}
+.clickable{
+  cursor: pointer;
+}

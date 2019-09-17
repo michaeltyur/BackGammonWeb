@@ -32,7 +32,6 @@ namespace BackGammonDb.Repositories
                     return null;
                 }
                 User user;
-
                 user = _backnammonContextDb.Users.FirstOrDefault(u => u.UserName == username && u.Password == password);
                 return user;
             }

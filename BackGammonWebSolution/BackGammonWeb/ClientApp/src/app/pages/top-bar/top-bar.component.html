@@ -1,47 +1,60 @@
 <div style="width: 100%;" class="d-flex justify-content-between">
 
+  <!-- Title -->
   <div class="top-menu-title align-self-center d-none d-lg-block">
-      Welcome to Backgammon App
-      <span *ngIf="isAuthenticated">,
-        <span class="ml-2">
-          dear {{userName}}
-        </span>
+    Welcome to Backgammon App
+    <span *ngIf="isAuthenticated">,
+      <span class="ml-2">
+        dear {{userName}}
       </span>
+    </span>
   </div>
 
   <div class="top-menu-title align-self-center d-lg-none">
-      Hi
-      <span *ngIf="isAuthenticated">,
-        <span class="ml-2">
-          dear {{userName}}
-        </span>
+    Hi
+    <span *ngIf="isAuthenticated">,
+      <span class="ml-2">
+        dear {{userName}}
       </span>
+    </span>
   </div>
 
+   <!-- Game Mode -->
+   <div
+   *ngIf="isAuthenticated && !isGameMode"
+   class="align-self-center"
+   (click)="switchToGame()"
+   style="cursor: pointer;color: deeppink;">
+    <i class="fas fa-gamepad fa-2x"></i>
+  </div>
 
+    <!-- Chat Mode -->
+    <div
+    *ngIf="isAuthenticated && isGameMode"
+    class="align-self-center"
+    style="cursor: pointer;color: deeppink;"
+    (click)="switchToChat()">
+      <i class="far fa-comment-alt fa-2x"></i>
+    </div>
+
+  <!-- isConnected -->
   <div class="align-self-center" [class.connected]="isConnected" [class.disconnected]="!isConnected">
     <i class="fas fa-wifi fa-2x"></i>
   </div>
 
-  <div
-  *ngIf="!fullScreen"
-  class="align-self-center screen-size"
-  id="fullScreen-button"
-  (click)="openFullscreen()">
+  <!-- fullScreen -->
+  <div *ngIf="!fullScreen" class="align-self-center screen-size" id="fullScreen-button" (click)="openFullscreen()">
     <i class="fas fa-arrows-alt fa-2x"></i>
   </div>
 
-  <div
-  *ngIf="fullScreen"
-  class="align-self-center screen-size"
-  (click)="closeFullscreen()">
+  <!-- fullScreen -->
+  <div *ngIf="fullScreen" class="align-self-center screen-size" (click)="closeFullscreen()">
     <i class="fas fa-compress-arrows-alt fa-2x"></i>
   </div>
 
+  <!-- isAuthenticated -->
   <div *ngIf="isAuthenticated" nbButton hero status="success" class="logout-button" (click)="logout()">
     <i class="fas fa-sign-out-alt fa-2x"></i>
   </div>
-  <!-- <button *ngIf="isAuthenticated" nbButton hero status="success" class="float-right" (click)="logout()">
-    <i class="fas fa-sign-out-alt fa-2x"></i>
-  </button> -->
+
 </div>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,12 +9,14 @@ namespace Common.Data
 {
    public class PrivateChat
     {
+        [DataMember]
         public int PrivateChatID { get; set; }
-        public int FirstUserID { get; set; }
-        public string FirstUserName { get; set; }
-        public int SecondUserID { get; set; }
-        public string SecondUserName { get; set; }
+
+        [DataMember]
         public string GroupName { get; set; }
+
+        [DataMember]
+        public DateTime TimeCreation { get; set; }
 
 
     }

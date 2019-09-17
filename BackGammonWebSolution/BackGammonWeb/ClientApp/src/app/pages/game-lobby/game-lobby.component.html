@@ -1,0 +1,22 @@
+<section *ngIf="!isMobile">
+  <nb-card class="game-lobby-card mb-1">
+    <nb-card-header class="pt-2 pb-2 d-flex justify-content-between">
+
+      <!-- Title -->
+      <div class="title"> Game</div>
+
+      <!-- Users -->
+      <div style="cursor: pointer; color: goldenrod;" (click)="openUserWindow()">
+          <i class="fas fa-users fa-2x"></i>
+        </div>
+
+    </nb-card-header>
+    <nb-card-body>
+
+    </nb-card-body>
+    <nb-card-footer>
+
+    </nb-card-footer>
+  </nb-card>
+</section>
+<section *ngIf="isMobile"></section>

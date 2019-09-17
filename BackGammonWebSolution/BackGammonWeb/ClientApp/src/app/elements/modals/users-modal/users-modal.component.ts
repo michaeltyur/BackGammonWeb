@@ -8,14 +8,13 @@ import { NbToastrService } from '@nebular/theme';
 import { ChatInvitation } from 'src/app/shared/models/chat-invitation';
 
 @Component({
-  selector: 'app-users',
-  templateUrl: './users.component.html',
-  styleUrls: ['./users.component.scss']
+  selector: 'app-users-modal',
+  templateUrl: './users-modal.component.html',
+  styleUrls: ['./users-modal.component.scss']
 })
-export class UsersComponent implements OnInit, OnDestroy {
+export class UsersModalComponent implements OnInit, OnDestroy {
   subscription = new Subscription();
-  @Input() usersOnLine: Array<User>;
-  @Input() usersOffLine: Array<User>;
+  usersOnLine: User[] = [];
   owner: string;
   loading: boolean = false;
   constructor(
@@ -27,24 +26,21 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.owner = localStorage.getItem("userName");
+    if (this.userService.users && this.userService.users.length) {
+      this.setUsersArrays(this.userService.users);
+    }
   }
-
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
-
   setUsersArrays(allUsers: Array<User>): void {
     if (allUsers && allUsers.length) {
 
       this.usersOnLine = [];
-      this.usersOffLine = [];
 
       allUsers.forEach(element => {
         if (element.isOnline) {
           this.usersOnLine.push(element);
-        }
-        else {
-          this.usersOffLine.push(element);
         }
       });
     }

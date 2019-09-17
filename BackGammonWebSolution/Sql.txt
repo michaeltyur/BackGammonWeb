@@ -1,0 +1,76 @@
+Store Pres
+
+CREATE PROCEDURE InsertPrivateChat
+       -- Add the parameters for the stored procedure here
+       @UserOneID int,
+       @UserTwoID int,
+       @GroupName varchar(50),
+	   @TimeCreation DateTime,
+	   @PrivateChatID int OUTPUT
+
+AS
+BEGIN
+       -- SET NOCOUNT ON added to prevent extra result sets from
+       -- interfering with SELECT statements.
+       SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+       INSERT INTO PrivateChats
+              (GroupName, TimeCreation)
+       VALUES
+              (@GroupName,@TimeCreation)
+			  SET @PrivateChatID = SCOPE_IDENTITY()
+
+	    INSERT INTO UserPrivateChats
+              (UserOneID, PrivateChatID)
+        VALUES
+              (@UserOneID,@PrivateChatID)
+END
+
+UserID	PrivateChatID
+
+Query:
+
+select * from Users
+
+select * from Messages
+
+select * from UserPrivateChats
+
+delete from Messages
+
+select * from PrivateChats
+
+--delete from PrivateChats
+
+update Users
+set IsOnline=0
+
+CREATE TABLE PrivateChats (
+    PrivateChatID int IDENTITY(1,1) PRIMARY KEY,
+    FirstUserID int NOT NULL,
+    FirstUserName varchar(255),
+	SecondUserID int NOT NULL,
+    SecondUserName varchar(255),
+	GroupName varchar(255)
+    
+);
+
+ALTER TABLE Users
+ADD UserID  INT  NOT NULL IDENTITY    PRIMARY KEY
+
+--ALTER TABLE Users
+--DROP PK  UsersID;
+
+ALTER TABLE Users
+DROP CONSTRAINT UsersID
+
+CREATE TABLE UserPrivateChats(
+    UserID int NOT NULL,
+    PrivateChatID int NOT NULL,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID), 
+    FOREIGN KEY (PrivateChatID) REFERENCES PrivateChats(PrivateChatID),
+    UNIQUE (UserID, PrivateChatID)
+);
+
+PrivateChatID	GroupName	TimeCreation

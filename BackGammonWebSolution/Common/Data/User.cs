@@ -13,7 +13,7 @@ namespace Common.Data
     public class User
     {
         [DataMember]
-        public int UserId { get; set; }
+        public int UserID { get; set; }
         [DataMember]
         public string UserName { get; set; }
        // public ClaimsIdentity Username { get; set; }
@@ -24,6 +24,9 @@ namespace Common.Data
         public string LastName { get; set; }
         [DataMember]
         public bool IsOnline { get; set; }
+
+        [DataMember]
+        public virtual ICollection<PrivateChat> PrivateChats { get; set; }
 
         public string SignalRConnectionID { get; set;}
 
