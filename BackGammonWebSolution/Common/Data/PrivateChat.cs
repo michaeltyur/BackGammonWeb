@@ -18,6 +18,8 @@ namespace Common.Data
         [DataMember]
         public DateTime TimeCreation { get; set; }
 
+        public virtual ICollection<User> Users { get; set; }
+
 
     }
 }

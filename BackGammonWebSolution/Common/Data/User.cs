@@ -25,7 +25,6 @@ namespace Common.Data
         [DataMember]
         public bool IsOnline { get; set; }
 
-        [DataMember]
         public virtual ICollection<PrivateChat> PrivateChats { get; set; }
 
         public string SignalRConnectionID { get; set;}

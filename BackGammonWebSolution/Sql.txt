@@ -1,31 +1,3 @@
-Store Pres
-
-CREATE PROCEDURE InsertPrivateChat
-       -- Add the parameters for the stored procedure here
-       @UserOneID int,
-       @UserTwoID int,
-       @GroupName varchar(50),
-	   @TimeCreation DateTime,
-	   @PrivateChatID int OUTPUT
-
-AS
-BEGIN
-       -- SET NOCOUNT ON added to prevent extra result sets from
-       -- interfering with SELECT statements.
-       SET NOCOUNT ON;
-
-    -- Insert statements for procedure here
-       INSERT INTO PrivateChats
-              (GroupName, TimeCreation)
-       VALUES
-              (@GroupName,@TimeCreation)
-			  SET @PrivateChatID = SCOPE_IDENTITY()
-
-	    INSERT INTO UserPrivateChats
-              (UserOneID, PrivateChatID)
-        VALUES
-              (@UserOneID,@PrivateChatID)
-END
 
 UserID	PrivateChatID
 
