@@ -53,6 +53,7 @@
     <Compile Include="Data\PrivateChat.cs" />
     <Compile Include="Data\User.cs" />
     <Compile Include="Data\UserLoginMV.cs" />
+    <Compile Include="Data\UserPrivateChat.cs" />
     <Compile Include="Data\Сhecker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

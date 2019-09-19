@@ -241,29 +241,37 @@ namespace BackGammonDb.Repositories
             }
         }
 
+        #region PrivateChat
+
         public bool AddPrivateChat(string firstUserName, string secondUserName, string groupName)
         {
             lock (locker)
             {
-                var result = false;
                 try
                 {
-                    var firstUser = _backnammonContextDb.Users.FirstOrDefault(user => user.UserName == firstUserName);
-                    var secondUser = _backnammonContextDb.Users.FirstOrDefault(user => user.UserName == secondUserName);
+                    User firstUser = _backnammonContextDb.Users.FirstOrDefault(user => user.UserName == firstUserName);
+                    User secondUser = _backnammonContextDb.Users.FirstOrDefault(user => user.UserName == secondUserName);
                     if (firstUser != null && secondUser != null && !string.IsNullOrEmpty(groupName))
                     {
 
-                      int privateChatID =  _backnammonContextDb.Database.ExecuteSqlCommand("EXEC InsertPrivateChat @UserOneID, @UserTwoID, @GroupName",
-                                new SqlParameter("@UserOneID", firstUser.UserID),
-                                new SqlParameter("@UserTwoID", secondUser.UserID),
-                                new SqlParameter("@GroupName", groupName));
+                        PrivateChat privateChat = new PrivateChat {
+                            GroupName = groupName,
+                            TimeCreation = DateTime.Now,
+                            Users=new List<User>()
+                            {
+                                firstUser,
+                                secondUser
+                            }
+                        };
+                        _backnammonContextDb.PrivateChats.Add(privateChat);
+                        return SaveChanges();
                     }
-                    return result;
+                    else return false;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
 
-                    return result;
+                    throw ex;
                 }
 
             }
@@ -276,14 +284,18 @@ namespace BackGammonDb.Repositories
             {
                 try
                 {
+                    //var privateChat = _backnammonContextDb.PrivateChats
+                    //  .FromSql($"exec GetPrivateChat @UserOneName={firstUserName}, @UserTwoName={secondUserName}")
+                    //  .FirstOrDefault();
+
+
+                    var firstUser = _backnammonContextDb.Users.Where(u => u.UserName == firstUserName).FirstOrDefault();
+
+                    firstUser.Collection(u=>u.)
+                    var secondUser = _backnammonContextDb.Users.Where(u => u.UserName == secondUserName).FirstOrDefault();
                     var privateChat = _backnammonContextDb.PrivateChats
-                      .FromSql($"GetPrivateChat @UserOneName, @UserTwoName", parameters: new[] { firstUserName, secondUserName })
-                      .FirstOrDefault();
+                        .Where(x=>x.Users.Any(upc=> upc.UserID == firstUser.UserID).Select(upch => upch. == secondUser))
 
-
-              //      var privateChat= _backnammonContextDb.PrivateChats.Where(p => p.PrivateChatID == categoryId).SelectMany(c => c.Articles)
-                    //var privateChat = _backnammonContextDb.PrivateChats.FirstOrDefault(chat => (chat.FirstUserName == firstUserName && chat.SecondUserName == secondUserName)
-                    //                                                                          || (chat.FirstUserName == secondUserName && chat.SecondUserName == firstUserName));
                     return privateChat;
                 }
                 catch (Exception ex)
@@ -300,16 +312,11 @@ namespace BackGammonDb.Repositories
             {
                 try
                 {
-                    var privateChats = _backnammonContextDb.PrivateChats.Where(chat => chat.FirstUserName == userName || chat.SecondUserName == userName).ToList();
-                    if (privateChats == null || privateChats.Count() == 0) return null;
-                    foreach (var item in privateChats)
-                    {
-                        _backnammonContextDb.PrivateChats.Remove(item);
-                    }
-                    var result = SaveChanges();
-                    // var messages=_backnammonContextDb.Messages.Where()
-                    if (result) return privateChats;
-                    else return null;
+                    var privateChats = _backnammonContextDb
+                        .PrivateChats
+                        .FromSql("exec DeletePrivateChat @UserName", new SqlParameter("UserName", userName))
+                        .ToList();
+                    return privateChats;
                 }
                 catch (Exception ex)
                 {
@@ -347,6 +354,7 @@ namespace BackGammonDb.Repositories
             }
         }
 
+        #endregion
     }
 }
 

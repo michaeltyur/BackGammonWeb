@@ -181,7 +181,7 @@ namespace BackGammonWeb.Controllers
             var credentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256);
 
             var claims = new[] {
-                                new Claim("UserID", user.UserId.ToString()),
+                                new Claim("UserID", user.UserID.ToString()),
                                 new Claim("UserName", user.UserName),
                                 new Claim("FirstName", user.FirstName),
                                 new Claim("LastName", user.LastName)

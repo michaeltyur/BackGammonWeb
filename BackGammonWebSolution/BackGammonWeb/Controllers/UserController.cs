@@ -35,7 +35,7 @@ namespace BackGammonWeb.Controllers
                 var listUsers = _dbManager.UserRepositories.GetAllUsers();
                 return listUsers.Select(u => new User
                 {
-                    UserId = u.UserId,
+                    UserID = u.UserID,
                     FirstName = u.FirstName,
                     LastName = u.LastName,
                     UserName = u.UserName,
