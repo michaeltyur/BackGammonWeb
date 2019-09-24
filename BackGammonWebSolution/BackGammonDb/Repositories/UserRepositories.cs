@@ -251,19 +251,39 @@ namespace BackGammonDb.Repositories
                 {
                     User firstUser = _backnammonContextDb.Users.FirstOrDefault(user => user.UserName == firstUserName);
                     User secondUser = _backnammonContextDb.Users.FirstOrDefault(user => user.UserName == secondUserName);
+
                     if (firstUser != null && secondUser != null && !string.IsNullOrEmpty(groupName))
                     {
 
-                        PrivateChat privateChat = new PrivateChat {
+                        UserPrivateChat userPrivateChat1 = new UserPrivateChat();
+                        UserPrivateChat userPrivateChat2 = new UserPrivateChat();
+
+                        PrivateChat privateChat = new PrivateChat
+                        {
                             GroupName = groupName,
-                            TimeCreation = DateTime.Now,
-                            Users=new List<User>()
-                            {
-                                firstUser,
-                                secondUser
-                            }
+                            TimeCreation = DateTime.Now
                         };
+
+                        userPrivateChat1.User = firstUser;
+                        userPrivateChat1.PrivateChat = privateChat;
+
+                        userPrivateChat2.User = secondUser;
+                        userPrivateChat2.PrivateChat = privateChat;
+
+                        firstUser.UserPrivateChats.Add(userPrivateChat1);
+                        firstUser.UserPrivateChats.Add(userPrivateChat2);
+
+                        secondUser.UserPrivateChats.Add(userPrivateChat1);
+                        secondUser.UserPrivateChats.Add(userPrivateChat2);
+
+                        privateChat.UserPrivateChats.Add(userPrivateChat1);
+                        privateChat.UserPrivateChats.Add(userPrivateChat2);
+
+                       // _backnammonContextDb.Users.Update(firstUser);
+                       // _backnammonContextDb.Users.Update(secondUser);
+
                         _backnammonContextDb.PrivateChats.Add(privateChat);
+
                         return SaveChanges();
                     }
                     else return false;
@@ -289,12 +309,20 @@ namespace BackGammonDb.Repositories
                     //  .FirstOrDefault();
 
 
-                    var firstUser = _backnammonContextDb.Users.Where(u => u.UserName == firstUserName).FirstOrDefault();
+                    var firstUser = _backnammonContextDb.Users
+                        .Where(u => u.UserName == firstUserName)
+                        .FirstOrDefault();
 
-                    firstUser.Collection(u=>u.)
-                    var secondUser = _backnammonContextDb.Users.Where(u => u.UserName == secondUserName).FirstOrDefault();
+                    var secondUser = _backnammonContextDb.Users
+                        .Where(u => u.UserName == secondUserName)
+                        .FirstOrDefault();
+
                     var privateChat = _backnammonContextDb.PrivateChats
-                        .Where(x=>x.Users.Any(upc=> upc.UserID == firstUser.UserID).Select(upch => upch. == secondUser))
+                        .Where(x => x.UserPrivateChats
+                        .Any(upc => upc.UserID == firstUser.UserID))
+                        .Where(x => x.UserPrivateChats
+                        .Any(upc => upc.UserID == secondUser.UserID))
+                        .FirstOrDefault();
 
                     return privateChat;
                 }

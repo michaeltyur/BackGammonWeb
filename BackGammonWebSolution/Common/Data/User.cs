@@ -14,7 +14,7 @@ namespace Common.Data
     {
         public User()
         {
-            PrivateChats = new HashSet<UserPrivateChat>();
+            UserPrivateChats = new HashSet<UserPrivateChat>();
         }
         [DataMember]
         public int UserID { get; set; }
@@ -29,7 +29,7 @@ namespace Common.Data
         [DataMember]
         public bool IsOnline { get; set; }
 
-        public virtual ICollection<UserPrivateChat> PrivateChats { get; set; }
+        public  ICollection<UserPrivateChat> UserPrivateChats { get; set; }
 
         public string SignalRConnectionID { get; set; }
 

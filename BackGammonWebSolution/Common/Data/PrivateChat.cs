@@ -9,10 +9,9 @@ namespace Common.Data
 {
    public class PrivateChat
     {
-
         public PrivateChat()
         {
-            Users = new HashSet<UserPrivateChat>();
+            UserPrivateChats = new HashSet<UserPrivateChat>();
         }
         [DataMember]
         public int PrivateChatID { get; set; }
@@ -23,7 +22,7 @@ namespace Common.Data
         [DataMember]
         public DateTime TimeCreation { get; set; }
 
-        public virtual ICollection<UserPrivateChat> Users { get; set; }
+        public ICollection<UserPrivateChat> UserPrivateChats { get; set; }
 
 
     }
