@@ -24,7 +24,7 @@ namespace BackGammonDb
 
         public DbSet<PrivateChat> PrivateChats { get; set; }
 
-       // public DbSet<PrivateChat> UserPrivateChats { get; set; }
+        //public DbSet<PrivateChat> UserPrivateChats { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -35,6 +35,12 @@ namespace BackGammonDb
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>()
+                .HasKey(x => x.UserID);
+
+            modelBuilder.Entity<PrivateChat>()
+                .HasKey(x => x.PrivateChatID);
+
             modelBuilder.Entity<UserPrivateChat>().HasKey(sc => new { sc.UserID, sc.PrivateChatID });
 
             modelBuilder.Entity<UserPrivateChat>()

@@ -14,6 +14,7 @@ namespace Common.Data
         public int UserID { get; set; }
         public  User User { get; set; }
 
+
         public int PrivateChatID{ get; set; }
         public  PrivateChat PrivateChat { get; set; }
     }
