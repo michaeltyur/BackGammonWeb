@@ -27,10 +27,17 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.owner = localStorage.getItem("userName");
+    this.subscription.add(this.chatService.invitationToChat$.subscribe(res => {
+      this.privateChatOpenFromRemote(res.inviterID);
+    }, (error: any) => console.error(error)));
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  privateChatOpenFromRemote(inviterID: number): void {
+    this.usersOnLine.find(u => u.userID === inviterID).haveNewPrivateChat = true;
   }
 
   setUsersArrays(allUsers: Array<User>): void {

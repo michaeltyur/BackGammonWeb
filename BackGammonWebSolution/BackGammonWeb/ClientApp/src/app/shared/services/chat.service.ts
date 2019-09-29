@@ -26,7 +26,7 @@ export class ChatService {
     signalRConnectionService.isConnected$.subscribe(res => {
       if (res) {
 
-        signalRConnectionService.connection.on("InviteToPrivateChat", (res: ChatInvitation) => {
+        signalRConnectionService.connection.on("InviteToPrivateChat", res => {
           if (res) {
             this.invitationToChat$.emit({ userID: res.inviterID, groupName: res.groupName });
           }
