@@ -70,7 +70,10 @@ namespace BackGammonWeb
             //    hubOptions.EnableDetailedErrors = true;
             //      hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(20);
             //});
-            services.AddSignalR();
+            services.AddSignalR(o =>
+            {
+                o.EnableDetailedErrors = true;
+            });
 
             //JWT Config
 

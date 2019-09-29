@@ -139,7 +139,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   }
 
-  swichToChat(userName: number, groupName: string): void {
+  swichToChat(userID: number, groupName: string): void {
     if (groupName) {
       if (groupName === 'public') {
         this.groupName = "public";
@@ -148,7 +148,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
       }
       else {
         this.groupName = groupName;
-        this.chatTitle = "Chat with " + userName;
+        this.chatTitle = "Chat with " + this.usersOnLine.find(u=>u.userID=userID).userName;
       }
 
       let chat = <ChatMessage[]>this.allChatDictionary.getByKey(groupName);
