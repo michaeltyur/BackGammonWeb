@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -22,6 +23,7 @@ namespace Common.Data
         [DataMember]
         public DateTime TimeCreation { get; set; }
 
+        [ForeignKey("UserPrivateChatID")]
         public ICollection<UserPrivateChat> UserPrivateChats { get; set; }
 
 

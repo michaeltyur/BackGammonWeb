@@ -28,7 +28,7 @@ export class ChatService {
 
         signalRConnectionService.connection.on("InviteToPrivateChat", (res: ChatInvitation) => {
           if (res) {
-            this.invitationToChat$.emit({ userName: res.inviterName, groupName: res.groupName });
+            this.invitationToChat$.emit({ userID: res.inviterID, groupName: res.groupName });
           }
         });
 
@@ -73,9 +73,9 @@ export class ChatService {
 
   }
 
-  openPrivateChat(userName: string): Promise<any> {
-    return this.signalRConnectionService.connection.invoke("AddToGroup", userName).then((res: ChatInvitation) => {
-      this.switchToChat$.emit({ userName: res.inviterName, groupName: res.groupName });
+  openPrivateChat(userID: number): Promise<any> {
+    return this.signalRConnectionService.connection.invoke("AddToGroup", userID).then((res: ChatInvitation) => {
+      this.switchToChat$.emit({ userID: res.inviterID, groupName: res.groupName });
       return res;
     });
   }

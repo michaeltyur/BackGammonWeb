@@ -1,6 +1,6 @@
 export interface ChatInvitation {
 
-  inviterName: string;
+  inviterID: number;
 
   groupName: string;
 

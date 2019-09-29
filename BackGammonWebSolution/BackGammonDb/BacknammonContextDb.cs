@@ -35,7 +35,9 @@ namespace BackGammonDb
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserPrivateChat>().HasKey(sc => new { sc.UserID, sc.PrivateChatID });
+            modelBuilder
+                .Entity<UserPrivateChat>()
+                .HasKey(sc => new { sc.UserID, sc.PrivateChatID });
 
             modelBuilder.Entity<UserPrivateChat>()
                         .HasOne(upc => upc.User)

@@ -104,47 +104,47 @@ namespace BackGammonWeb.Hubs
             var userName = claimsIdentity.Claims.FirstOrDefault(u => u.Type == "UserName").Value;
             return userName;
         }
-        private string GetUserID()
+        private int GetUserID()
         {
             var claimsIdentity = (ClaimsIdentity)Context.User.Identity;
             var userName = claimsIdentity.Claims.FirstOrDefault(u => u.Type == "UserID").Value;
-            return userName;
+            return  int.Parse(userName);
         }
-        public async Task<ChatInvitation> AddToGroup(string secondUserName)
+        public async Task<ChatInvitation> AddToGroup(int secondUserID)
         {
             ChatInvitation chatInvitation = new ChatInvitation();
             try
             {
-                var userName = GetUserName();
-                PrivateChat privateChat = _dbManager.UserRepositories.GetPrivateChat(userName, secondUserName);
+                var userID = GetUserID();
+                PrivateChat privateChat = _dbManager.UserRepositories.GetPrivateChat(userID, secondUserID);
 
                 if (privateChat != null)
                 {
-                    chatInvitation.InviterName = secondUserName;
+                    chatInvitation.InviterID = secondUserID;
                     chatInvitation.GroupName = privateChat.GroupName;
                     chatInvitation.Message = "Switch to chat";
                     return chatInvitation;
                 }
 
-                var secondUserConnectionId = _dbManager.UserRepositories.GetSignalRConnection(secondUserName);
+                var secondUserConnectionId = _dbManager.UserRepositories.GetSignalRConnection(secondUserID);
                 var groupName = Guid.NewGuid().ToString();
                 await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
                 await Groups.AddToGroupAsync(secondUserConnectionId, groupName);
 
 
-                var result = _dbManager.UserRepositories.AddPrivateChat(userName, secondUserName, groupName);
+                var result = _dbManager.UserRepositories.AddPrivateChat(userID, secondUserID, groupName);
                 if (!result)
                 {
                     chatInvitation.Message = "The Error";
                     return chatInvitation;
                 }
 
-                chatInvitation.InviterName = userName;
+                chatInvitation.InviterID = userID;
                 chatInvitation.GroupName = groupName;
                 chatInvitation.Message = "Success: The Chat is successfully started";
                 await Clients.Client(secondUserConnectionId).InviteToPrivateChat(chatInvitation);
 
-                chatInvitation.InviterName = secondUserName;
+                chatInvitation.InviterID = secondUserID;
                 return chatInvitation;
             }
             catch (Exception ex)

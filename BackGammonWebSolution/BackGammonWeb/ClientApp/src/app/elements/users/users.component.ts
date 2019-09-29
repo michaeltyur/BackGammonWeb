@@ -62,13 +62,13 @@ export class UsersComponent implements OnInit, OnDestroy {
         this.chatService.switchToChat$.emit({ userName: user.userName, groupName: user.groupName });
       }
       this.loading = true;
-      this.chatService.openPrivateChat(user.userName).then((res: ChatInvitation) => {
+      this.chatService.openPrivateChat(user.userID).then((res: ChatInvitation) => {
         if (res) {
           this.loading = false;
           if (!res.error) {
             user.haveNewPrivateChat = true;
             user.groupName = res.groupName;
-            this.chatService.switchToChat$.emit({ userName: res.inviterName, groupName: res.groupName });
+            this.chatService.switchToChat$.emit({ userID: res.inviterID, groupName: res.groupName });
             this.nbToastrService.default('', res.message);
           }
           else if (res.error) {

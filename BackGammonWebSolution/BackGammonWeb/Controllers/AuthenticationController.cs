@@ -51,7 +51,7 @@ namespace BackGammonWeb.Controllers
                 {
                     if (userAuth.IsOnline)
                     {
-                        return JsonConvert.SerializeObject(new { error=$"The User {user.UserName} is allready logged in" });
+                       // return JsonConvert.SerializeObject(new { error=$"The User {user.UserName} is allready logged in" });
                     }
                     var tokenString = GenerateJSONWebToken(userAuth);
                     var jsonUser = new

@@ -220,13 +220,13 @@ namespace BackGammonDb.Repositories
 
         }
 
-        public string GetSignalRConnection(string userName)
+        public string GetSignalRConnection(int userID)
         {
             lock (locker)
             {
                 try
                 {
-                    User user = _backnammonContextDb.Users.FirstOrDefault(u => u.UserName == userName);
+                    User user = _backnammonContextDb.Users.FirstOrDefault(u => u.UserID == userID);
                     if (user != null && user.SignalRConnectionID != null)
                     {
                         return user.SignalRConnectionID;
@@ -243,48 +243,19 @@ namespace BackGammonDb.Repositories
 
         #region PrivateChat
 
-        public bool AddPrivateChat(string firstUserName, string secondUserName, string groupName)
+        public bool AddPrivateChat(int firstUserID, int secondUserID, string groupName)
         {
             lock (locker)
             {
                 try
                 {
-                    User firstUser = _backnammonContextDb.Users.FirstOrDefault(user => user.UserName == firstUserName);
-                    User secondUser = _backnammonContextDb.Users.FirstOrDefault(user => user.UserName == secondUserName);
 
-                    if (firstUser != null && secondUser != null && !string.IsNullOrEmpty(groupName))
+                    if (firstUserID > 0 && secondUserID > 0 && !string.IsNullOrEmpty(groupName))
                     {
 
-                        UserPrivateChat userPrivateChat1 = new UserPrivateChat();
-                        UserPrivateChat userPrivateChat2 = new UserPrivateChat();
 
-                        PrivateChat privateChat = new PrivateChat
-                        {
-                            GroupName = groupName,
-                            TimeCreation = DateTime.Now
-                        };
-
-                        userPrivateChat1.User = firstUser;
-                        userPrivateChat1.PrivateChat = privateChat;
-
-                        userPrivateChat2.User = secondUser;
-                        userPrivateChat2.PrivateChat = privateChat;
-
-                        firstUser.UserPrivateChats.Add(userPrivateChat1);
-                        firstUser.UserPrivateChats.Add(userPrivateChat2);
-
-                        secondUser.UserPrivateChats.Add(userPrivateChat1);
-                        secondUser.UserPrivateChats.Add(userPrivateChat2);
-
-                        privateChat.UserPrivateChats.Add(userPrivateChat1);
-                        privateChat.UserPrivateChats.Add(userPrivateChat2);
-
-                       // _backnammonContextDb.Users.Update(firstUser);
-                       // _backnammonContextDb.Users.Update(secondUser);
-
-                        _backnammonContextDb.PrivateChats.Add(privateChat);
-
-                        return SaveChanges();
+                        int privateChatID = _backnammonContextDb.Database.ExecuteSqlCommand($"InsertPrivateChat {firstUserID}, {secondUserID}, {groupName}");                                                               
+                        return privateChatID > 0;
                     }
                     else return false;
                 }
@@ -298,31 +269,31 @@ namespace BackGammonDb.Repositories
 
         }
 
-        public PrivateChat GetPrivateChat(string firstUserName, string secondUserName)
+        public PrivateChat GetPrivateChat(int firstUserID, int secondUserID)
         {
             lock (locker)
             {
                 try
                 {
-                    //var privateChat = _backnammonContextDb.PrivateChats
-                    //  .FromSql($"exec GetPrivateChat @UserOneName={firstUserName}, @UserTwoName={secondUserName}")
-                    //  .FirstOrDefault();
-
-
-                    var firstUser = _backnammonContextDb.Users
-                        .Where(u => u.UserName == firstUserName)
-                        .FirstOrDefault();
-
-                    var secondUser = _backnammonContextDb.Users
-                        .Where(u => u.UserName == secondUserName)
-                        .FirstOrDefault();
-
                     var privateChat = _backnammonContextDb.PrivateChats
-                        .Where(x => x.UserPrivateChats
-                        .Any(upc => upc.UserID == firstUser.UserID))
-                        .Where(x => x.UserPrivateChats
-                        .Any(upc => upc.UserID == secondUser.UserID))
-                        .FirstOrDefault();
+                      .FromSql($"GetPrivateChat {firstUserID}, {secondUserID}")
+                      .FirstOrDefault();
+
+
+                    //var firstUser = _backnammonContextDb.Users
+                    //    .Where(u => u.UserName == firstUserName)
+                    //    .FirstOrDefault();
+
+                    //var secondUser = _backnammonContextDb.Users
+                    //    .Where(u => u.UserName == secondUserName)
+                    //    .FirstOrDefault();
+
+                    //var privateChat = _backnammonContextDb.PrivateChats
+                    //    .Where(x => x.UserPrivateChats
+                    //    .Any(upc => upc.UserID == firstUser.UserID))
+                    //    .Where(x => x.UserPrivateChats
+                    //    .Any(upc => upc.UserID == secondUser.UserID))
+                    //    .FirstOrDefault();
 
                     return privateChat;
                 }

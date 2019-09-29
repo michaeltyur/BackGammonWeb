@@ -83,7 +83,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
     this.subscription.add(this.chatService.switchToChat$.subscribe(res => {
       if (res) {
-        this.swichToChat(res.userName, res.groupName);
+        this.swichToChat(res.userID, res.groupName);
       }
     }));
 
@@ -139,7 +139,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   }
 
-  swichToChat(userName: string, groupName: string): void {
+  swichToChat(userName: number, groupName: string): void {
     if (groupName) {
       if (groupName === 'public') {
         this.groupName = "public";
