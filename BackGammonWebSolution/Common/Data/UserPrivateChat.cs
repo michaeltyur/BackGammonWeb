@@ -17,6 +17,7 @@ namespace Common.Data
         [ForeignKey("UserID")]
         public User User { get; set; }
 
+
         public int PrivateChatID{ get; set; }
 
         [ForeignKey("PrivateChatID")]
