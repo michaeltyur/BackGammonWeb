@@ -47,10 +47,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\ChatClosing.cs" />
     <Compile Include="Data\ChatInvitation.cs" />
     <Compile Include="Data\GameColors.cs" />
     <Compile Include="Data\Message.cs" />
     <Compile Include="Data\PrivateChat.cs" />
+    <Compile Include="Data\PrivateChatByUser.cs" />
     <Compile Include="Data\User.cs" />
     <Compile Include="Data\UserLoginMV.cs" />
     <Compile Include="Data\UserPrivateChat.cs" />

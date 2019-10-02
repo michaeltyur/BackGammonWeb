@@ -74,6 +74,8 @@ namespace BackGammonWeb.Controllers
                          UpdateUsers();
                     });
 
+                  // var test= _dbManager.UserRepositories.GetPrivateChatsByUser(userAuth.UserID);
+
                 }
 
                 return response;

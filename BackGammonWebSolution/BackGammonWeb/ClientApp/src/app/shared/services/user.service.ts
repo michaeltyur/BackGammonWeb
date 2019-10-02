@@ -22,7 +22,7 @@ export class UserService {
     signalRConnectionService.isConnected$.subscribe(res => {
       if (res) {
 
-        signalRConnectionService.connection.on("UpdateUsers", res => {
+        signalRConnectionService.connection.on("UpdateUsers", (res:Array<User>) => {
           if (res) {
             //res = JSON.parse(res);
             this.users$.emit(res);

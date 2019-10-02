@@ -13,15 +13,11 @@ namespace Common.Data
     [DataContract]
     public class User
     {
-        public User()
-        {
-            UserPrivateChats = new HashSet<UserPrivateChat>();
-        }
+
         [DataMember]
         public int UserID { get; set; }
         [DataMember]
         public string UserName { get; set; }
-        // public ClaimsIdentity Username { get; set; }
         public string Password { get; set; }
         [DataMember]
         public string FirstName { get; set; }
@@ -29,10 +25,6 @@ namespace Common.Data
         public string LastName { get; set; }
         [DataMember]
         public bool IsOnline { get; set; }
-
-        [ForeignKey("UserPrivateChatID")]
-        public  ICollection<UserPrivateChat> UserPrivateChats { get; set; }
-
         public string SignalRConnectionID { get; set; }
 
 

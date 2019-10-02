@@ -24,7 +24,7 @@ namespace BackGammonDb
 
         public DbSet<PrivateChat> PrivateChats { get; set; }
 
-       // public DbSet<PrivateChat> UserPrivateChats { get; set; }
+        public DbSet<UserPrivateChat> UserPrivateChats { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -33,21 +33,21 @@ namespace BackGammonDb
             optionsBuilder.UseSqlServer(connection);
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder
-                .Entity<UserPrivateChat>()
-                .HasKey(sc => new { sc.UserID, sc.PrivateChatID });
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder
+        //        .Entity<UserPrivateChat>()
+        //        .HasKey(sc => new { sc.UserID, sc.PrivateChatID });
 
-            modelBuilder.Entity<UserPrivateChat>()
-                        .HasOne(upc => upc.User)
-                        .WithMany(u => u.UserPrivateChats)
-                        .HasForeignKey(upc => upc.PrivateChatID);
+        //    modelBuilder.Entity<UserPrivateChat>()
+        //                .HasOne(upc => upc.User)
+        //                .WithMany(u => u.)
+        //                .HasForeignKey(upc => upc.PrivateChatID);
 
-            modelBuilder.Entity<UserPrivateChat>()
-                       .HasOne(upc => upc.PrivateChat)
-                       .WithMany(pc => pc.UserPrivateChats)
-                       .HasForeignKey(upc => upc.UserID);
-        }
+        //    modelBuilder.Entity<UserPrivateChat>()
+        //               .HasOne(upc => upc.PrivateChat)
+        //               .WithMany(pc => pc.UserPrivateChats)
+        //               .HasForeignKey(upc => upc.UserID);
+        //}
     }
 }

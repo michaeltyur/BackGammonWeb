@@ -32,7 +32,7 @@ namespace BackGammonWeb.Controllers
         {
             try
             {
-                var messages = _dbManager.MessageRepositories.GetMessages(numberOfMessages,"public");
+                var messages = _dbManager.MessageRepositories.GetMessages(numberOfMessages, "public");
                 return messages;
             }
             catch (Exception ex)
@@ -44,7 +44,7 @@ namespace BackGammonWeb.Controllers
         }
 
         [HttpGet("getPrivateMessages")]
-        public IEnumerable<Message> GetPrivateMessages(int numberOfMessages,string groupName)
+        public IEnumerable<Message> GetPrivateMessages(int numberOfMessages, string groupName)
         {
             try
             {
@@ -66,15 +66,29 @@ namespace BackGammonWeb.Controllers
             if (string.IsNullOrEmpty(groupName))
             {
                 var privateChat = _dbManager.UserRepositories.DeletePrivateChat(groupName);
-                if (privateChat!=null)
+                if (privateChat != null)
                 {
                     return true;
                 }
                 return false;
             }
             else return false;
-            
+
 
         }
+        [HttpGet("getPrivateChatsByUser")]
+        public ICollection<PrivateChatByUser> GetPrivateChatsByUser(int userID)
+        {
+            List<PrivateChat> privateChats = new List<PrivateChat>();
+            if (userID > 0)
+            {
+                var privateChatByUsers = _dbManager.UserRepositories.GetPrivateChatsByUserID(userID);
+                return privateChatByUsers;
+            }
+            else return null;
+
+
+        }
+
     }
 }

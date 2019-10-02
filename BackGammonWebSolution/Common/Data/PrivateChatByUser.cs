@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -8,12 +7,8 @@ using System.Threading.Tasks;
 
 namespace Common.Data
 {
-   public class PrivateChat
+   public class PrivateChatByUser
     {
-        //public PrivateChat()
-        //{
-        //    UserPrivateChats = new HashSet<UserPrivateChat>();
-        //}
         [DataMember]
         public int PrivateChatID { get; set; }
 
@@ -23,8 +18,16 @@ namespace Common.Data
         [DataMember]
         public DateTime TimeCreation { get; set; }
 
-        //[ForeignKey("UserPrivateChatID")]
-        //public ICollection<UserPrivateChat> UserPrivateChats { get; set; }
+        [DataMember]
+        public int UserID { get; set; }
+
+        [DataMember]
+        public string UserName { get; set; }
+        [DataMember]
+        public int OpponentID { get; set; }
+        [DataMember]
+        public string OpponentName { get; set; }
+
 
 
     }

@@ -10,6 +10,7 @@ import { ChatMessage } from 'src/app/shared/models/chat-message';
 import { DOCUMENT } from '@angular/common';
 import { ChatInvitation } from 'src/app/shared/models/chat-invitation';
 import { NbToastrService } from '@nebular/theme';
+import { ChatClosing } from 'src/app/shared/models/chat-closing';
 
 @Component({
   selector: 'app-lobby',
@@ -58,13 +59,13 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
     this.subscription.add(this.chatService.invitationToChat$.subscribe(res => {
       if (res) {
-        this.openPrivateChatFromRemote(res.userName, res.groupName);
+        this.openPrivateChatFromRemote(res.userID, res.groupName);
       }
     }, error => console.error(error)));
 
-    this.subscription.add(this.chatService.privateChatClosedByOtherUser$.subscribe(res => {
+    this.subscription.add(this.chatService.privateChatClosedByOtherUser$.subscribe((res:ChatClosing) => {
       if (res) {
-        this.closePrivateChatByRemote(res.userName, res.groupName);
+        this.closePrivateChatByRemote(res);
       }
     }, err => console.error(err)
     ));
@@ -81,9 +82,9 @@ export class LobbyComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.subscription.add(this.chatService.switchToChat$.subscribe(res => {
+    this.subscription.add(this.chatService.switchToChat$.subscribe((res:ChatInvitation) => {
       if (res) {
-        this.swichToChat(res.userID, res.groupName);
+        this.swichToChat(res);
       }
     }));
 
@@ -139,24 +140,24 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   }
 
-  swichToChat(userID: number, groupName: string): void {
-    if (groupName) {
-      if (groupName === 'public') {
+  swichToChat(chatInvitation:ChatInvitation): void {
+    if (chatInvitation) {
+      if (chatInvitation.groupName === 'public') {
         this.groupName = "public";
         this.chatTitle = "Public Chat";
         this.nbToastrService.default('', 'switch to public chat');
       }
       else {
-        this.groupName = groupName;
-        this.chatTitle = "Chat with " + this.usersOnLine.find(u=>u.userID=userID).userName;
+        this.groupName = chatInvitation.groupName;
+        this.chatTitle = "Chat with " + this.usersOnLine.find(u=>u.userID=chatInvitation.inviterID).userName;
       }
 
-      let chat = <ChatMessage[]>this.allChatDictionary.getByKey(groupName);
+      let chat = <ChatMessage[]>this.allChatDictionary.getByKey(chatInvitation.groupName);
       if (chat) {
         this.currentChat = chat;
       }
       else {
-        this.addChatToArray(groupName);
+        this.addChatToArray(chatInvitation.groupName);
       }
 
       if (this.isMobile) this.isChat = true;
@@ -207,9 +208,9 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   }
 
-  openPrivateChatFromRemote(userName: string, groupName: string): void {
-    if (userName) {
-      let user = this.usersOnLine.find(el => el.userName === userName)
+  openPrivateChatFromRemote(userID: number, groupName: string): void {
+    if (userID) {
+      let user = this.usersOnLine.find(el => el.userID === userID)
       if (user) {
         user.haveNewPrivateChat = true;
         user.groupName = groupName;
@@ -217,16 +218,16 @@ export class LobbyComponent implements OnInit, OnDestroy {
     }
     else console.error("user name is null");
   }
-  closePrivateChatByRemote(userName: string, groupName: string): void {
-    if (!userName) {
+  closePrivateChatByRemote(chatClosing:ChatClosing): void {
+    if (!chatClosing.closerID) {
       console.error("userName is null");
       return;
     }
-    if (!groupName) {
+    if (!chatClosing.groupName) {
       console.error("groupName is null");
       return;
     }
-    let user = this.usersOnLine.find(user => user.userName === userName);
+    let user = this.usersOnLine.find(user => user.userID === chatClosing.closerID);
     if (user) {
       user.haveNewPrivateChat = false;
     }

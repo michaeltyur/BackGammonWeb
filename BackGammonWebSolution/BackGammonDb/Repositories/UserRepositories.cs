@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BackGammonDb.Repositories
 {
@@ -254,7 +252,7 @@ namespace BackGammonDb.Repositories
                     {
 
 
-                        int privateChatID = _backnammonContextDb.Database.ExecuteSqlCommand($"InsertPrivateChat {firstUserID}, {secondUserID}, {groupName}");                                                               
+                        int privateChatID = _backnammonContextDb.Database.ExecuteSqlCommand($"InsertPrivateChat {firstUserID}, {secondUserID}, {groupName}");
                         return privateChatID > 0;
                     }
                     else return false;
@@ -351,6 +349,57 @@ namespace BackGammonDb.Repositories
                 }
 
             }
+        }
+
+        public ICollection<PrivateChatByUser> GetPrivateChatsByUserID(int userID)
+        {
+            lock (locker)
+            {
+                List<PrivateChatByUser> privateChatsPlus = new List<PrivateChatByUser>();
+                var privateChats = _backnammonContextDb.PrivateChats;
+
+                var userPrivateChats = _backnammonContextDb.UserPrivateChats;
+                var users = _backnammonContextDb.Users;
+
+                if (userID > 0)
+                {
+                    var userPrivateChatsByUserQuery =
+                        from upc2 in _backnammonContextDb.UserPrivateChats
+                        where upc2.UserID == userID
+                        select upc2.PrivateChatID;
+
+                    //    from userPrivateChats
+                    var privateChatByUsersQuery =
+                        from pc in privateChats
+                        join upc in userPrivateChats on pc.PrivateChatID equals upc.PrivateChatID
+                        join u in users on upc.UserID equals u.UserID
+                        where (userPrivateChatsByUserQuery.Contains(pc.PrivateChatID))
+                        && u.UserID != userID
+                        select new { pc, upc, u };
+
+                    var list = privateChatByUsersQuery.ToList();
+
+                    foreach (var item in list)
+                    {
+                        PrivateChatByUser privateChatByUser = new PrivateChatByUser
+                        {
+                            PrivateChatID = item.pc.PrivateChatID,
+                            GroupName = item.pc.GroupName,
+                            TimeCreation = item.pc.TimeCreation,
+                            UserID = userID,
+                            OpponentID = item.u.UserID,
+                            OpponentName = item.u.UserName
+                        };
+                        privateChatsPlus.Add(privateChatByUser);
+
+                    }
+                    return privateChatsPlus;
+                }
+                else return null;
+            }
+
+
+
         }
 
         #endregion

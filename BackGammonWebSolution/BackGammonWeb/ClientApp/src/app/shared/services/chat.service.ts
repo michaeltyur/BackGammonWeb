@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { ChatMessage } from '../models/chat-message';
 import { User } from '../models/user';
 import { ChatInvitation } from '../models/chat-invitation';
+import { ChatClosing } from '../models/chat-closing';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +16,10 @@ export class ChatService {
 
   users$ = new EventEmitter();
   message$ = new EventEmitter();
-  invitationToChat$ = new EventEmitter();
-  switchToChat$ = new EventEmitter();
+  invitationToChat$ = new EventEmitter<ChatInvitation>();
+  switchToChat$ = new EventEmitter<ChatInvitation>();
   closePrivateChat$ = new EventEmitter<string>();
-  privateChatClosedByOtherUser$ = new EventEmitter<any>();
+  privateChatClosedByOtherUser$ = new EventEmitter<ChatClosing>();
   constructor(
     private signalRConnectionService: SignalRConnectionService,
     private httpClient: HttpClient) {
@@ -26,16 +27,15 @@ export class ChatService {
     signalRConnectionService.isConnected$.subscribe(res => {
       if (res) {
 
-        signalRConnectionService.connection.on("InviteToPrivateChat", res => {
+        signalRConnectionService.connection.on("InviteToPrivateChat", (res:ChatInvitation) => {
           if (res) {
-            this.invitationToChat$.emit({ inviterID: res.inviterID, groupName: res.groupName });
+            this.invitationToChat$.emit(res);
           }
         });
 
-        signalRConnectionService.connection.on("PrivateChatClosed", res => {
+        signalRConnectionService.connection.on("PrivateChatClosed", (res:ChatClosing) => {
           if (res) {
-            res = JSON.parse(res);
-            this.privateChatClosedByOtherUser$.emit({ userName: res['userName'], groupName: res['groupName'] });
+            this.privateChatClosedByOtherUser$.emit(res);
           }
         });
       }
@@ -75,7 +75,7 @@ export class ChatService {
 
   openPrivateChat(userID: number): Promise<any> {
     return this.signalRConnectionService.connection.invoke("AddToGroup", userID).then((res: ChatInvitation) => {
-      this.switchToChat$.emit({ userID: res.inviterID, groupName: res.groupName });
+      this.switchToChat$.emit(res);
       return res;
     });
   }

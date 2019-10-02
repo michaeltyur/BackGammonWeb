@@ -66,7 +66,13 @@ export class UsersComponent implements OnInit, OnDestroy {
         return;
       }
       else if (user.haveNewPrivateChat) {
-        this.chatService.switchToChat$.emit({ userName: user.userName, groupName: user.groupName });
+        var chatInvitation: ChatInvitation = {
+          inviterID: user.userID,
+          groupName: user.groupName,
+          message:null,
+          error:null
+        }
+        this.chatService.switchToChat$.emit(chatInvitation);
       }
       this.loading = true;
       this.chatService.openPrivateChat(user.userID).then((res: ChatInvitation) => {
@@ -75,7 +81,7 @@ export class UsersComponent implements OnInit, OnDestroy {
           if (!res.error) {
             user.haveNewPrivateChat = true;
             user.groupName = res.groupName;
-            this.chatService.switchToChat$.emit({ userID: res.inviterID, groupName: res.groupName });
+            this.chatService.switchToChat$.emit(res);
             this.nbToastrService.default('', res.message);
           }
           else if (res.error) {

@@ -145,6 +145,16 @@ namespace BackGammonWeb.Hubs
                 await Clients.Client(secondUserConnectionId).InviteToPrivateChat(chatInvitation);
 
                 chatInvitation.InviterID = secondUserID;
+
+                await Task.Run(() =>
+                {
+                    UpdatePrivateChatsByUser(userID);
+                });
+                await Task.Run(() =>
+                {
+                    UpdatePrivateChatsByUser(secondUserID);
+                });
+
                 return chatInvitation;
             }
             catch (Exception ex)
@@ -163,6 +173,7 @@ namespace BackGammonWeb.Hubs
                 {
                     var privateChat = _dbManager.UserRepositories.DeletePrivateChat(groupName);
                     var userName = GetUserName();
+                    int userID = GetUserID();
 
                     var msg = new Message();
 
@@ -175,7 +186,11 @@ namespace BackGammonWeb.Hubs
 
                     await Clients.Group(groupName).BroadcastMessage(json);
 
-                    await Clients.Group(groupName).PrivateChatClosed(new JavaScriptSerializer().Serialize(new { userName, groupName }));
+                    await Clients.Group(groupName).PrivateChatClosed(new ChatClosing
+                    {
+                        CloserID = userID,
+                        GroupName = groupName
+                    }) ;
 
                     await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
 
@@ -192,6 +207,13 @@ namespace BackGammonWeb.Hubs
             else return false;
 
 
+        }
+
+        public async void UpdatePrivateChatsByUser(int userID)
+        {
+            var privateChatByUsers = _dbManager.UserRepositories.GetPrivateChatsByUserID(userID);
+            string signalRConnection = _dbManager.UserRepositories.GetSignalRConnection(userID);
+            await  Clients.Client(signalRConnection).UpdatePrivateChatsByUser(privateChatByUsers);
         }
     }
 }

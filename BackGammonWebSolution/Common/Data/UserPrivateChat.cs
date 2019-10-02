@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace Common.Data
 {
+   // [Table("UserPrivateChats")]
     public class UserPrivateChat
     {
-
         public int UserPrivateChatID { get; set; }
         public int UserID { get; set; }
 
-        [ForeignKey("UserID")]
-        public User User { get; set; }
+        //[ForeignKey("UserID")]
+        //public User User { get; set; }
 
 
         public int PrivateChatID{ get; set; }
 
-        [ForeignKey("PrivateChatID")]
-        public  PrivateChat PrivateChat { get; set; }
+        //[ForeignKey("PrivateChatID")]
+        //public  PrivateChat PrivateChat { get; set; }
     }
 }
