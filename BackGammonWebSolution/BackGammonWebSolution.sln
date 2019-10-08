@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.705
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29230.47
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackGammonWeb", "BackGammonWeb\BackGammonWeb.csproj", "{B5C143F5-4647-4A19-A2C5-BC3DC1DA846F}"
 EndProject
@@ -11,9 +11,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{FE501C92-1F45-45BC-8D6B-9992774B3C20}"
 	ProjectSection(SolutionItems) = preProject
+		DeletePrivateChat.txt = DeletePrivateChat.txt
 		GetPrivateChat.txt = GetPrivateChat.txt
 		InsertPrivateChat.txt = InsertPrivateChat.txt
 		Sql.txt = Sql.txt
+		UserPrivateChats.txt = UserPrivateChats.txt
 	EndProjectSection
 EndProject
 Global

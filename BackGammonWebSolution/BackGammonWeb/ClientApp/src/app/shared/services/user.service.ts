@@ -6,6 +6,7 @@ import { SignalRConnectionService } from './signal-r-connection.service';
 import { HubConnection } from '@aspnet/signalr';
 import { ChatInvitation } from '../models/chat-invitation';
 import { tap } from 'rxjs/operators';
+import { IPrivateChatByUser } from '../models/private-chat-by-user';
 
 @Injectable({
   providedIn: 'root'
@@ -13,19 +14,28 @@ import { tap } from 'rxjs/operators';
 export class UserService {
 
   users$ = new EventEmitter();
-  users: Array<User>=[];
+  users: Array<User> = [];
+  privateChatByUser$ = new EventEmitter<Array<IPrivateChatByUser>>();
+
   constructor(
     private httpClient: HttpClient,
     private signalRConnectionService: SignalRConnectionService
-    ) {
+  ) {
 
     signalRConnectionService.isConnected$.subscribe(res => {
       if (res) {
 
-        signalRConnectionService.connection.on("UpdateUsers", (res:Array<User>) => {
+        signalRConnectionService.connection.on("UpdateUsers", (res: Array<User>) => {
           if (res) {
             //res = JSON.parse(res);
             this.users$.emit(res);
+          }
+        });
+
+        signalRConnectionService.connection.on("UpdatePrivateChatsByUser", (res: Array<IPrivateChatByUser>) => {
+          if (res) {
+            //res = JSON.parse(res);
+            this.privateChatByUser$.emit(res);
           }
         });
       }

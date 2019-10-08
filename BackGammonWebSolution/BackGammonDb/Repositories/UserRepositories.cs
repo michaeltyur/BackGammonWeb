@@ -317,8 +317,7 @@ namespace BackGammonDb.Repositories
                 }
                 catch (Exception ex)
                 {
-                    return null;
-
+                   throw ex;
                 }
 
             }
@@ -377,7 +376,7 @@ namespace BackGammonDb.Repositories
                         && u.UserID != userID
                         select new { pc, upc, u };
 
-                    var list = privateChatByUsersQuery.ToList();
+                    var list = privateChatByUsersQuery.Distinct().ToList();
 
                     foreach (var item in list)
                     {

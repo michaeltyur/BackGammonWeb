@@ -1,0 +1,6 @@
+CREATE TABLE UserPrivateChats(
+    UserID int NOT NULL,
+    PrivateChatID int NOT NULL,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID), 
+    FOREIGN KEY (PrivateChatID) REFERENCES PrivateChats(PrivateChatID),
+);

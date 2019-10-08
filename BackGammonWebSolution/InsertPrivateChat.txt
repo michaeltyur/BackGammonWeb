@@ -1,15 +1,19 @@
-CREATE PROCEDURE InsertPrivateChat
+USE [DB_A4A6EE_BackgamonChatDb]
+GO
+/****** Object:  StoredProcedure [dbo].[InsertPrivateChat]    Script Date: 04-Oct-19 21:23:30 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[InsertPrivateChat]
        -- Add the parameters for the stored procedure here
        @UserOneID int,
        @UserTwoID int,
        @GroupName varchar(50),
-	   @PrivateChatID int OUTPUT
+	   @PrivateChatID int = null OUTPUT
 
 AS
 BEGIN
-       -- SET NOCOUNT ON added to prevent extra result sets from
-       -- interfering with SELECT statements.
-       SET NOCOUNT ON;
 
     -- Insert statements for procedure here
        INSERT INTO PrivateChats
@@ -21,10 +25,12 @@ BEGIN
 	    INSERT INTO UserPrivateChats
               (UserID, PrivateChatID)
         VALUES
-              (@UserTwoID,@PrivateChatID)
+              (@UserOneID,@PrivateChatID)
 
 	    INSERT INTO UserPrivateChats
               (UserID, PrivateChatID)
         VALUES
               (@UserTwoID,@PrivateChatID)
 END
+
+RETURN @PrivateChatID

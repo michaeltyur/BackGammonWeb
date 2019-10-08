@@ -1,0 +1,34 @@
+USE [DB_A4A6EE_BackgamonChatDb]
+GO
+/****** Object:  StoredProcedure [dbo].[DeletePrivateChat]    Script Date: 04-Oct-19 21:24:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[DeletePrivateChat]
+       -- Add the parameters for the stored procedure here
+       @UserID varchar(50)
+
+AS
+BEGIN
+       -- SET NOCOUNT ON added to prevent extra result sets from
+       -- interfering with SELECT statements.
+       SET NOCOUNT ON;
+
+
+	   Select u.UserID,u.UserName,pc.GroupName into #PrivateChatToDelete from Users u
+	   join UserPrivateChats upc on u.UserID=upc.UserID
+	   join PrivateChats pc on upc.PrivateChatID=pc.PrivateChatID
+	   where upc.UserID=@UserID
+
+
+	   DELETE FROM [PrivateChats] where GroupName in (select GroupName from #PrivateChatToDelete)
+       DELETE FROM [UserPrivateChats] where UserID in (select UserID from #PrivateChatToDelete)
+
+	   
+	   SELECT DISTINCT GroupName,* from PrivateChats 
+	   WHERE GroupName in (select GroupName from #PrivateChatToDelete)
+END
+
+RETURN 
+

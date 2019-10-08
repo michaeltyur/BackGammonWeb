@@ -1,7 +1,14 @@
-CREATE PROCEDURE GetPrivateChat
+USE [DB_A4A6EE_BackgamonChatDb]
+GO
+/****** Object:  StoredProcedure [dbo].[GetPrivateChat]    Script Date: 04-Oct-19 21:22:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[GetPrivateChat]
        -- Add the parameters for the stored procedure here
-       @UserOneName varchar(50),
-       @UserTwoName varchar(50)
+       @UserOneID varchar(50),
+       @UserTwoID varchar(50)
 
 AS
 BEGIN
@@ -10,9 +17,9 @@ BEGIN
        SET NOCOUNT ON;
 
     -- Insert statements for procedure here
-SELECT * FROM PrivateChats pc
+SELECT pc.PrivateChatID,pc.GroupName,pc.TimeCreation FROM PrivateChats pc
 JOIN UserPrivateChats upc on pc.PrivateChatID=upc.PrivateChatID
 JOIN Users u on upc.UserID=u.UserID
-where u.UserName=@UserOneName OR u.UserName= @UserTwoName
+where upc.UserID = @UserOneID and upc.UserID = @UserTwoID
 
 END
