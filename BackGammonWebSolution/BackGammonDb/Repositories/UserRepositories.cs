@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BackGammonDb.Repositories
 {
@@ -49,6 +50,19 @@ namespace BackGammonDb.Repositories
                 user = _backnammonContextDb.Users.FirstOrDefault(u => u.UserName == username);
                 return user;
             }
+
+        }
+
+        public async Task <User> GetUserByID(int userID)
+        {
+
+            User user;
+            if (userID>0)
+            {
+                return null;
+            }
+            user = await _backnammonContextDb.Users.FirstOrDefaultAsync(u => u.UserID == userID);
+            return user;
 
         }
 
@@ -180,7 +194,8 @@ namespace BackGammonDb.Repositories
                     if (user != null)
                     {
                         user.SignalRConnectionID = connectionId;
-                        _backnammonContextDb.Users.Update(user);
+                        // _backnammonContextDb.Users.Update(user);
+
                         return SaveChanges();
                     }
                     else return false;
@@ -204,7 +219,8 @@ namespace BackGammonDb.Repositories
                     if (user != null)
                     {
                         user.SignalRConnectionID = null;
-                        _backnammonContextDb.Users.Update(user);
+                        // _backnammonContextDb.Users.Update(user);
+                      
                         return SaveChanges();
                     }
                     else return false;
@@ -303,7 +319,7 @@ namespace BackGammonDb.Repositories
             }
         }
 
-        public List<PrivateChat> DeletePrivateChatsAll(string userName)
+        public List<PrivateChat> DeletePrivateChatsAll(int userID)
         {
             lock (locker)
             {
@@ -311,13 +327,13 @@ namespace BackGammonDb.Repositories
                 {
                     var privateChats = _backnammonContextDb
                         .PrivateChats
-                        .FromSql("exec DeletePrivateChat @UserName", new SqlParameter("UserName", userName))
+                        .FromSql($"DeletePrivateChat {userID}")
                         .ToList();
                     return privateChats;
                 }
                 catch (Exception ex)
                 {
-                   throw ex;
+                    throw ex;
                 }
 
             }

@@ -31,14 +31,17 @@ namespace BackGammonWeb.Controllers
         private readonly AppSettings _appSettings;
         private readonly DbManager _dbManager;
         IHubContext<ServerHub, ITypedHubClient> _serverHub;
+        private readonly UserController _userController;
         public AuthenticationController(
             DbManager dbManager,
             IOptions<AppSettings> appSettings,
-            IHubContext<ServerHub, ITypedHubClient> serverHub)
+            IHubContext<ServerHub, ITypedHubClient> serverHub,
+            UserController userController)
         {
             _dbManager = dbManager;
             _serverHub = serverHub;
             _appSettings = appSettings.Value;
+            _userController = userController;
         }
 
         [AllowAnonymous]
@@ -60,6 +63,7 @@ namespace BackGammonWeb.Controllers
                     var tokenString = GenerateJSONWebToken(userAuth);
                     var jsonUser = new
                     {
+                        userID= userAuth.UserID,
                         userName = userAuth.UserName,
                         firstName = userAuth.FirstName,
                         lastName = userAuth.LastName,
@@ -75,8 +79,8 @@ namespace BackGammonWeb.Controllers
                     Task.Run(() =>
                     {
                         Thread.Sleep(TimeSpan.FromMilliseconds(500));
-                        UpdateUsers();//async
-                        UpdatePrivateChatsByUser(userAuth.UserID);//async
+                        _userController.UpdateUsers(userAuth.UserID);
+
                     });
                     
 
@@ -145,11 +149,11 @@ namespace BackGammonWeb.Controllers
 
                     response = JsonConvert.SerializeObject(new { success = "The user did logged out" });
 
-                    UpdateUsers();
+                   // UpdateUsers(userFromDb.UserID);
 
                     Task.Run(() =>
                     {
-                        var privateChats = _dbManager.UserRepositories.DeletePrivateChatsAll(userName);
+                        var privateChats = _dbManager.UserRepositories.DeletePrivateChatsAll(userFromDb.UserID);
 
                         if (privateChats != null && privateChats.Count > 0)
                         {
@@ -160,7 +164,8 @@ namespace BackGammonWeb.Controllers
 
                         }
 
-                        UpdatePrivateChatsByUser(userFromDb.UserID);
+                        _userController.UpdateUsers(userFromDb.UserID);
+                       // UpdatePrivateChatsByUser(userFromDb.UserID);
 
                     });
 
@@ -205,29 +210,30 @@ namespace BackGammonWeb.Controllers
 
             return encodedJwt;
         }
-        private async void UpdateUsers()
-        {
-            try
-            {
-                List<User> users = _dbManager.UserRepositories.GetAllUsers().ToList();
-                if (users != null && users.Count > 0)
-                {
-                    await _serverHub.Clients.All.UpdateUsers(users);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+        //private async void UpdateUsers(int userID)
+        //{
+        //    try
+        //    {
+        //        List<User> users = _dbManager.UserRepositories.GetAllUsers().ToList();
+        //        if (users != null && users.Count > 0)
+        //        {
+        //            await _serverHub.Clients.All.UpdateUsers(users);
+        //            UpdatePrivateChatsByUser(userID);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
 
-        }
+        //}
 
-        public async void UpdatePrivateChatsByUser(int userID)
-        {
-            var privateChatByUsers = _dbManager.UserRepositories.GetPrivateChatsByUserID(userID);
-            string signalRConnection = _dbManager.UserRepositories.GetSignalRConnection(userID);
-            await _serverHub.Clients.Client(signalRConnection).UpdatePrivateChatsByUser(privateChatByUsers);
-        }
+        //public async void UpdatePrivateChatsByUser(int userID)
+        //{
+        //    var privateChatByUsers = _dbManager.UserRepositories.GetPrivateChatsByUserID(userID);
+        //    string signalRConnection = _dbManager.UserRepositories.GetSignalRConnection(userID);
+        //    await _serverHub.Clients.Client(signalRConnection).UpdatePrivateChatsByUser(privateChatByUsers);
+        //}
 
 
     }

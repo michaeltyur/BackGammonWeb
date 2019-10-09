@@ -8,7 +8,7 @@ import { ChatService } from 'src/app/shared/services/chat.service';
 import { IDictionary, Dictionary } from 'src/app/shared/models/dictionary';
 import { ChatMessage } from 'src/app/shared/models/chat-message';
 import { DOCUMENT } from '@angular/common';
-import { ChatInvitation } from 'src/app/shared/models/chat-invitation';
+import { IChatInvitation } from 'src/app/shared/models/chat-invitation';
 import { NbToastrService } from '@nebular/theme';
 import { ChatClosing } from 'src/app/shared/models/chat-closing';
 
@@ -20,8 +20,8 @@ import { ChatClosing } from 'src/app/shared/models/chat-closing';
 export class LobbyComponent implements OnInit, OnDestroy {
 
   subscription = new Subscription();
-  usersOnLine: Array<User>=[];
-  usersOffLine: Array<User>=[];
+  // usersOnLine: Array<User> = [];
+  // usersOffLine: Array<User> = [];
   currentChat: Array<ChatMessage> = [];
   allChatDictionary: IDictionary;
   chatTitle: string = "Public Chat";
@@ -45,32 +45,32 @@ export class LobbyComponent implements OnInit, OnDestroy {
     }
 
     //Users
-    this.subscription.add(this.userService.users$.subscribe(res => {
-      if (res) {
-        this.setUsersArrays(res);
-      }
-    }));
+    // this.subscription.add(this.userService.users$.subscribe(res => {
+    //   if (res) {
+    //     this.setUsersArrays(res);
+    //   }
+    // }));
 
-    this.subscription.add(this.chatService.users$.subscribe(res => {
-      if (res) {
-        this.setUsersArrays(res);
-      }
-    }));
+    // this.subscription.add(this.chatService.users$.subscribe(res => {
+    //   if (res) {
+    //     this.setUsersArrays(res);
+    //   }
+    // }));
 
-    this.subscription.add(this.chatService.invitationToChat$.subscribe(res => {
-      if (res) {
-        this.openPrivateChatFromRemote(res.userID, res.groupName);
-      }
-    }, error => console.error(error)));
+    // this.subscription.add(this.chatService.invitationToChat$.subscribe(res => {
+    //   if (res) {
+    //     this.openPrivateChatFromRemote(res.userID, res.groupName);
+    //   }
+    // }, error => console.error(error)));
 
-    this.subscription.add(this.chatService.privateChatClosedByOtherUser$.subscribe((res:ChatClosing) => {
-      if (res) {
-        this.closePrivateChatByRemote(res);
-      }
-    }, err => console.error(err)
-    ));
+    // this.subscription.add(this.chatService.privateChatClosedByOtherUser$.subscribe((res: ChatClosing) => {
+    //   if (res) {
+    //     this.closePrivateChatByRemote(res);
+    //   }
+    // }, err => console.error(err)
+    // ));
 
-    this.getAllUser();
+    //this.getAllUser();
 
     this.signalRConnectionService.connection.on("BroadcastMessage", res => {
       if (res) {
@@ -82,7 +82,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.subscription.add(this.chatService.switchToChat$.subscribe((res:ChatInvitation) => {
+    this.subscription.add(this.chatService.switchToChat$.subscribe((res: IChatInvitation) => {
       if (res) {
         this.swichToChat(res);
       }
@@ -140,19 +140,14 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   }
 
-  swichToChat(chatInvitation:ChatInvitation): void {
+  swichToChat(chatInvitation: IChatInvitation): void {
     if (chatInvitation) {
-      if (chatInvitation.groupName === 'public') {
-        this.groupName = "public";
-        this.chatTitle = "Public Chat";
-        this.nbToastrService.default('', 'switch to public chat');
-      }
-      else {
-        this.groupName = chatInvitation.groupName;
-        this.chatTitle = "Chat with " + this.usersOnLine.find(u=>u.userID=chatInvitation.inviterID).userName;
-      }
+
+      this.groupName = chatInvitation.groupName;
+      this.chatTitle = "Chat with " + chatInvitation.inviterName;
 
       let chat = <ChatMessage[]>this.allChatDictionary.getByKey(chatInvitation.groupName);
+
       if (chat) {
         this.currentChat = chat;
       }
@@ -161,6 +156,12 @@ export class LobbyComponent implements OnInit, OnDestroy {
       }
 
       if (this.isMobile) this.isChat = true;
+    }
+    else {
+      this.groupName = "public";
+      this.chatTitle = "Public Chat";
+      this.nbToastrService.default('', 'switch to public chat');
+      this.currentChat = <ChatMessage[]>this.allChatDictionary.getByKey(this.groupName);
     }
   }
 
@@ -178,60 +179,61 @@ export class LobbyComponent implements OnInit, OnDestroy {
     }
   }
 
-  getAllUser(): void {
+  // getAllUser(): void {
 
-    this.subscription.add(this.userService.getAllUser().subscribe(res => {
-      if (res) {
-        this.setUsersArrays(res);
-      }
-    }, error => {
-      console.error(error);
-    }));
+  //   this.subscription.add(this.userService.getAllUser().subscribe(res => {
+  //     if (res) {
+  //       this.setUsersArrays(res);
+  //     }
+  //   }, error => {
+  //     console.error(error);
+  //   }));
 
-  }
+  // }
 
-  setUsersArrays(allUsers: Array<User>): void {
-    if (allUsers && allUsers.length) {
 
-      this.usersOnLine = [];
-      this.usersOffLine = [];
+  // setUsersArrays(allUsers: Array<User>): void {
+  //   if (allUsers && allUsers.length) {
 
-      allUsers.forEach(element => {
-        if (element.isOnline) {
-          this.usersOnLine.push(element);
-        }
-        else {
-          this.usersOffLine.push(element);
-        }
-      });
-    }
+  //     this.usersOnLine = [];
+  //     this.usersOffLine = [];
 
-  }
+  //     allUsers.forEach(element => {
+  //       if (element.isOnline) {
+  //         this.usersOnLine.push(element);
+  //       }
+  //       else {
+  //         this.usersOffLine.push(element);
+  //       }
+  //     });
+  //   }
 
-  openPrivateChatFromRemote(userID: number, groupName: string): void {
-    if (userID) {
-      let user = this.usersOnLine.find(el => el.userID === userID)
-      if (user) {
-        user.haveNewPrivateChat = true;
-        user.groupName = groupName;
-      }
-    }
-    else console.error("user name is null");
-  }
-  closePrivateChatByRemote(chatClosing:ChatClosing): void {
-    if (!chatClosing.closerID) {
-      console.error("userName is null");
-      return;
-    }
-    if (!chatClosing.groupName) {
-      console.error("groupName is null");
-      return;
-    }
-    let user = this.usersOnLine.find(user => user.userID === chatClosing.closerID);
-    if (user) {
-      user.haveNewPrivateChat = false;
-    }
-  }
+  // }
+
+  // openPrivateChatFromRemote(userID: number, groupName: string): void {
+  //   if (userID) {
+  //     let user = this.usersOnLine.find(el => el.userID === userID)
+  //     if (user) {
+  //       user.haveNewPrivateChat = true;
+  //       user.groupName = groupName;
+  //     }
+  //   }
+  //   else console.error("user name is null");
+  // }
+  // closePrivateChatByRemote(chatClosing: ChatClosing): void {
+  //   if (!chatClosing.closerID) {
+  //     console.error("userName is null");
+  //     return;
+  //   }
+  //   if (!chatClosing.groupName) {
+  //     console.error("groupName is null");
+  //     return;
+  //   }
+  //   let user = this.usersOnLine.find(user => user.userID === chatClosing.closerID);
+  //   if (user) {
+  //     user.haveNewPrivateChat = false;
+  //   }
+  // }
 
 
 

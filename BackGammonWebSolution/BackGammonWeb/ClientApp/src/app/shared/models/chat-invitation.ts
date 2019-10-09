@@ -1,6 +1,8 @@
-export interface ChatInvitation {
+export interface IChatInvitation {
 
   inviterID: number;
+
+  inviterName:string;
 
   groupName: string;
 
@@ -8,3 +10,17 @@ export interface ChatInvitation {
 
   error: string;
 }
+
+export class ChatInvitation implements IChatInvitation {
+
+  inviterID: number;
+
+  inviterName:string;
+
+  groupName: string;
+
+  message: string;
+
+  error: string;
+}
+

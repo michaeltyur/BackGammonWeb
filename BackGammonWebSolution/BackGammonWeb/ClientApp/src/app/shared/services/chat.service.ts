@@ -85,5 +85,10 @@ export class ChatService {
     return this.signalRConnectionService.connection.invoke("ClosePrivateChat", groupName);
    }
 
+   getPrivateChatsByUserID(userID:number):Observable<any>{
+     let url=`/api/chat/getPrivateChatsByUserID?userID=${userID}`;
+     return this.httpClient.get(url);
+   }
+
 
 }

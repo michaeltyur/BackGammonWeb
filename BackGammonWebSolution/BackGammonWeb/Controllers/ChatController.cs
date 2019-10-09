@@ -76,10 +76,9 @@ namespace BackGammonWeb.Controllers
 
 
         }
-        [HttpGet("getPrivateChatsByUser")]
-        public ICollection<PrivateChatByUser> GetPrivateChatsByUser(int userID)
+        [HttpGet("getPrivateChatsByUserID")]
+        public ICollection<PrivateChatByUser> GetPrivateChatsByUserID(int userID)
         {
-            List<PrivateChat> privateChats = new List<PrivateChat>();
             if (userID > 0)
             {
                 var privateChatByUsers = _dbManager.UserRepositories.GetPrivateChatsByUserID(userID);

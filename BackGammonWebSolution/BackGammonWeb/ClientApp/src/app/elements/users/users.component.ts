@@ -5,8 +5,9 @@ import { ChatService } from 'src/app/shared/services/chat.service';
 import { Subscription } from 'rxjs';
 import { User } from 'src/app/shared/models/user';
 import { NbToastrService } from '@nebular/theme';
-import { ChatInvitation } from 'src/app/shared/models/chat-invitation';
+import { IChatInvitation } from 'src/app/shared/models/chat-invitation';
 import { IPrivateChatByUser } from 'src/app/shared/models/private-chat-by-user';
+import { ChatClosing } from 'src/app/shared/models/chat-closing';
 
 @Component({
   selector: 'app-users',
@@ -15,9 +16,10 @@ import { IPrivateChatByUser } from 'src/app/shared/models/private-chat-by-user';
 })
 export class UsersComponent implements OnInit, OnDestroy {
   subscription = new Subscription();
-  @Input() usersOnLine: Array<User>;
-  @Input() usersOffLine: Array<User>;
-  owner: string;
+  usersOnLine: Array<User>=[];
+  usersOffLine: Array<User>=[];
+  userName: string;
+  userID: number;
   loading: boolean = false;
   constructor(
     private nbToastrService: NbToastrService,
@@ -27,11 +29,37 @@ export class UsersComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.owner = localStorage.getItem("userName");
+    this.userName = localStorage.getItem("userName");
+    this.userID = +localStorage.getItem("userID");
 
-    this.subscription.add(this.chatService.invitationToChat$.subscribe(res => {
-      // this.privateChatOpenFromRemote(res.inviterID);
-    }, (error: any) => console.error(error)));
+    if (!this.usersOnLine.length) {
+      this.getAllUser();
+    }
+
+    this.subscription.add(this.userService.users$.subscribe(res => {
+      if (res) {
+        this.setUsersArrays(res);
+      }
+    }));
+
+    this.subscription.add(this.chatService.users$.subscribe(res => {
+      if (res) {
+        this.setUsersArrays(res);
+      }
+    }));
+
+    this.subscription.add(this.chatService.invitationToChat$.subscribe((res:IChatInvitation) => {
+      if (res) {
+        this.openPrivateChatFromRemote(res);
+      }
+    }, error => console.error(error)));
+
+    this.subscription.add(this.chatService.privateChatClosedByOtherUser$.subscribe((res: ChatClosing) => {
+      if (res) {
+        this.closePrivateChatByRemote(res);
+      }
+    }, err => console.error(err)
+    ));
 
     this.subscription.add(this.userService.privateChatByUser$.subscribe((res: Array<IPrivateChatByUser>) => {
       if (res && res.length) {
@@ -49,39 +77,17 @@ export class UsersComponent implements OnInit, OnDestroy {
   updatePrivateChatByUser(array: Array<IPrivateChatByUser>): void {
     array.forEach(userWithPrivateChat => {
       this.usersOnLine.forEach(user => {
-        if (user.userID == userWithPrivateChat.opponentID && user.userName !== this.owner) {
+        if (user.userID == userWithPrivateChat.opponentID && user.userName !== this.userName) {
           user.haveNewPrivateChat = true;
           user.groupName = userWithPrivateChat.groupName;
         }
-        else if (user.userName !== this.owner) {
+        else if (user.userName !== this.userName) {
           user.haveNewPrivateChat = false;
           user.groupName = null;
         }
       });
 
     });
-  }
-
-  // privateChatOpenFromRemote(inviterID: number): void {
-  //   this.usersOnLine.find(u => u.userID === inviterID).haveNewPrivateChat = true;
-  // }
-
-  setUsersArrays(allUsers: Array<User>): void {
-    if (allUsers && allUsers.length) {
-
-      this.usersOnLine = [];
-      this.usersOffLine = [];
-
-      allUsers.forEach(element => {
-        if (element.isOnline) {
-          this.usersOnLine.push(element);
-        }
-        else {
-          this.usersOffLine.push(element);
-        }
-      });
-    }
-
   }
 
   openPrivateChat(user: User): void {
@@ -92,18 +98,19 @@ export class UsersComponent implements OnInit, OnDestroy {
         return;
       }
       else if (user.haveNewPrivateChat) {
-        var chatInvitation: ChatInvitation = {
+        var chatInvitation: IChatInvitation = {
           inviterID: user.userID,
+          inviterName:user.userName,
           groupName: user.groupName,
           message: null,
           error: null
         }
-        this.nbToastrService.info('', `switch to private chat with ${user.userName}`);
+        this.nbToastrService.default('', `switch to private chat with ${user.userName}`);
         this.chatService.switchToChat$.emit(chatInvitation);
         this.loading = false;
       }
       else {
-        this.chatService.openPrivateChat(user.userID).then((res: ChatInvitation) => {
+        this.chatService.openPrivateChat(user.userID).then((res: IChatInvitation) => {
           if (res) {
             this.loading = false;
             if (!res.error) {
@@ -141,5 +148,68 @@ export class UsersComponent implements OnInit, OnDestroy {
     }
 
   }
+
+  setUsersArrays(allUsers: Array<User>): void {
+    if (allUsers && allUsers.length) {
+
+      this.usersOnLine = [];
+      this.usersOffLine = [];
+
+      allUsers.forEach(element => {
+        if (element.isOnline) {
+          this.usersOnLine.push(element);
+        }
+        else {
+          this.usersOffLine.push(element);
+        }
+      });
+    }
+
+  }
+
+  openPrivateChatFromRemote(chatInvitation:IChatInvitation): void {
+    if (chatInvitation) {
+      let user = this.usersOnLine.find(el => el.userID === chatInvitation.inviterID);
+      chatInvitation.inviterName=user.userName;
+      if (user) {
+        user.haveNewPrivateChat = true;
+        user.groupName = chatInvitation.groupName;
+      }
+    }
+    else console.error("chatInvitation is null");
+  }
+  closePrivateChatByRemote(chatClosing: ChatClosing): void {
+    if (!chatClosing.closerID) {
+      console.error("userName is null");
+      return;
+    }
+    if (!chatClosing.groupName) {
+      console.error("groupName is null");
+      return;
+    }
+    let user = this.usersOnLine.find(user => user.userID === chatClosing.closerID);
+    if (user) {
+      user.haveNewPrivateChat = false;
+    }
+  }
+
+  getAllUser(): void {
+
+    this.subscription.add(this.userService.getAllUser().subscribe(res => {
+      if (res) {
+        this.setUsersArrays(res);
+        this.subscription.add(this.chatService.getPrivateChatsByUserID(this.userID).subscribe((res:Array<IPrivateChatByUser>) => {
+          if (res.length) {
+            this.updatePrivateChatByUser(res);
+          }
+        }, error => console.error(error)));
+      }
+    }, error => {
+      console.error(error);
+    }));
+
+  }
+
+
 
 }

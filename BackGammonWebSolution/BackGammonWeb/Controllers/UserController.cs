@@ -4,10 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using BackGammonDb;
 using BackGammonWeb.Helpers;
+using BackGammonWeb.Hubs;
+using BackGammonWeb.Services;
 using Common.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 
 namespace BackGammonWeb.Controllers
@@ -20,11 +23,17 @@ namespace BackGammonWeb.Controllers
     {
         private readonly AppSettings _appSettings;
         private readonly DbManager _dbManager;
+        IHubContext<ServerHub, ITypedHubClient> _serverHub;
 
-        public UserController(DbManager dbManager, IOptions<AppSettings> appSettings)
+        public UserController(
+            DbManager dbManager,
+            IOptions<AppSettings> appSettings,
+            IHubContext<ServerHub,
+            ITypedHubClient> serverHub)
         {
             _dbManager = dbManager;
             _appSettings = appSettings.Value;
+            _serverHub = serverHub;
         }
 
         [HttpGet("getAllUsers")]
@@ -32,8 +41,9 @@ namespace BackGammonWeb.Controllers
         {
             try
             {
+                var userID = (int.Parse(User.Claims.FirstOrDefault(u => u.Type == "UserID").Value));
                 var listUsers = _dbManager.UserRepositories.GetAllUsers();
-                return listUsers.Select(u => new User
+                var users = listUsers.Select(u => new User
                 {
                     UserID = u.UserID,
                     FirstName = u.FirstName,
@@ -41,6 +51,8 @@ namespace BackGammonWeb.Controllers
                     UserName = u.UserName,
                     IsOnline = u.IsOnline
                 }).ToList();
+                UpdatePrivateChatsByUser(userID);
+                return users;
             }
             catch (Exception ex)
             {
@@ -48,6 +60,31 @@ namespace BackGammonWeb.Controllers
                 throw ex;
             }
 
+        }        
+
+        public async void UpdateUsers(int userID)
+        {
+            try
+            {
+                List<User> users = _dbManager.UserRepositories.GetAllUsers().ToList();
+                if (users != null && users.Count > 0)
+                {
+                    await _serverHub.Clients.All.UpdateUsers(users);
+                    UpdatePrivateChatsByUser(userID);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+        private async void UpdatePrivateChatsByUser(int userID)
+        {
+            var privateChatByUsers = _dbManager.UserRepositories.GetPrivateChatsByUserID(userID);
+            string signalRConnection = _dbManager.UserRepositories.GetSignalRConnection(userID);
+            await _serverHub.Clients.Client(signalRConnection).UpdatePrivateChatsByUser(privateChatByUsers);
         }
     }
 }

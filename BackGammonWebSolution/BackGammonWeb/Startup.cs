@@ -32,7 +32,8 @@ namespace BackGammonWeb
         {
             services.AddSingleton<DbManager>();
 
-           // services.AddSingleton<ServerHub>();
+            //All Controlers as services
+            services.AddMvc().AddControllersAsServices();
 
             services.AddSingleton(Configuration);
 

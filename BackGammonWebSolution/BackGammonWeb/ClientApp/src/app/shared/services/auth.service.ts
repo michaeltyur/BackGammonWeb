@@ -27,6 +27,7 @@ export class AuthService {
         this.user = <User>res;
         localStorage.setItem('token', this.user.token);
         localStorage.setItem('userName', this.user.userName);
+        localStorage.setItem('userID', this.user.userID.toString());
         this.isAuthenticated$.emit(true);
         //this.signalRConnectionService.startConnection();
       }

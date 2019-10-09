@@ -107,8 +107,8 @@ namespace BackGammonWeb.Hubs
         private int GetUserID()
         {
             var claimsIdentity = (ClaimsIdentity)Context.User.Identity;
-            var userName = claimsIdentity.Claims.FirstOrDefault(u => u.Type == "UserID").Value;
-            return  int.Parse(userName);
+            var userID = claimsIdentity.Claims.FirstOrDefault(u => u.Type == "UserID").Value;
+            return  int.Parse(userID);
         }
         public async Task<ChatInvitation> AddToGroup(int secondUserID)
         {
@@ -116,11 +116,14 @@ namespace BackGammonWeb.Hubs
             try
             {
                 var userID = GetUserID();
+
+               // var secondUser = await _dbManager.UserRepositories.GetUserByID(secondUserID);
                 PrivateChat privateChat = _dbManager.UserRepositories.GetPrivateChat(userID, secondUserID);
 
                 if (privateChat != null)
                 {
                     chatInvitation.InviterID = secondUserID;
+                   // chatInvitation.InviterName = secondUser.UserName;
                     chatInvitation.GroupName = privateChat.GroupName;
                     chatInvitation.Message = "Switch to chat";
                     return chatInvitation;
@@ -140,6 +143,7 @@ namespace BackGammonWeb.Hubs
                 }
 
                 chatInvitation.InviterID = userID;
+                chatInvitation.InviterName = GetUserName();
                 chatInvitation.GroupName = groupName;
                 chatInvitation.Message = "Success: The Chat is successfully started";
                 await Clients.Client(secondUserConnectionId).InviteToPrivateChat(chatInvitation);
