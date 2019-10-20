@@ -12,9 +12,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{FE501C92-1F45-45BC-8D6B-9992774B3C20}"
 	ProjectSection(SolutionItems) = preProject
 		DeletePrivateChat.txt = DeletePrivateChat.txt
+		Games.txt = Games.txt
 		GetPrivateChat.txt = GetPrivateChat.txt
 		InsertPrivateChat.txt = InsertPrivateChat.txt
 		Sql.txt = Sql.txt
+		UserGames.txt = UserGames.txt
 		UserPrivateChats.txt = UserPrivateChats.txt
 	EndProjectSection
 EndProject

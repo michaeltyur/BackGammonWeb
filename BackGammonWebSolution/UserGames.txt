@@ -1,0 +1,5 @@
+CREATE TABLE UserGames (
+    UserGameID int IDENTITY(1,1) PRIMARY KEY,
+    UserID int NOT NULL,
+	GameID int NOT NULL
+);
