@@ -3,7 +3,7 @@ import { UserService } from 'src/app/shared/services/user.service';
 import { SignalRConnectionService } from 'src/app/shared/services/signal-r-connection.service';
 import { ChatService } from 'src/app/shared/services/chat.service';
 import { Subscription } from 'rxjs';
-import { User } from 'src/app/shared/models/user';
+import { IUser } from 'src/app/shared/models/user';
 import { NbToastrService } from '@nebular/theme';
 import { IChatInvitation } from 'src/app/shared/models/chat-invitation';
 import { IPrivateChatByUser } from 'src/app/shared/models/private-chat-by-user';
@@ -16,8 +16,8 @@ import { ChatClosing } from 'src/app/shared/models/chat-closing';
 })
 export class UsersComponent implements OnInit, OnDestroy {
   subscription = new Subscription();
-  usersOnLine: Array<User>=[];
-  usersOffLine: Array<User>=[];
+  usersOnLine: Array<IUser>=[];
+  usersOffLine: Array<IUser>=[];
   userName: string;
   userID: number;
   loading: boolean = false;
@@ -90,7 +90,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     });
   }
 
-  openPrivateChat(user: User): void {
+  openPrivateChat(user: IUser): void {
     if (user) {
       this.loading = true;
       if (user.userName === localStorage.getItem('userName')) {
@@ -135,7 +135,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     }
   }
 
-  closePrivateChat(user: User): void {
+  closePrivateChat(user: IUser): void {
     if (user) {
       this.chatService.closePrivateChat(user.groupName).then(res => {
         if (res) {
@@ -149,7 +149,7 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   }
 
-  setUsersArrays(allUsers: Array<User>): void {
+  setUsersArrays(allUsers: Array<IUser>): void {
     if (allUsers && allUsers.length) {
 
       this.usersOnLine = [];
