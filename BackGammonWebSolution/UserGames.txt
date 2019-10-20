@@ -1,5 +1,6 @@
-CREATE TABLE UserGames (
-    UserGameID int IDENTITY(1,1) PRIMARY KEY,
+CREATE TABLE UserGames(
     UserID int NOT NULL,
-	GameID int NOT NULL
+    GameID int NOT NULL,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID), 
+    FOREIGN KEY (GameID) REFERENCES Games(GameID),
 );

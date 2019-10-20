@@ -30,9 +30,83 @@ namespace BackGammonWeb.Controllers
             _serverHub = serverHub;
         }
         [HttpGet("addGame")]
-        public string AddGame(Game  game)
+        public async Task<string> AddGame(int userOneID, int userTwoID)
         {
 
+            try
+            {
+                Game newGame = new Game();
+                var userOne = await _dbManager.UserRepositories.GetUserByID(userOneID);
+                var userTwo = await _dbManager.UserRepositories.GetUserByID(userTwoID);
+
+                if (userOne != null && userTwo != null)
+                {
+                    var result = await _dbManager.GameRepositories.AddGame(newGame, userOne, userTwo);
+                    if (result)
+                    {
+                        return await Task.FromResult("The Game is started");
+                    }
+                    else
+                    {
+                        return await Task.FromResult("An error has occurred during game adding");
+                    }
+                }
+                else
+                {
+                    return await Task.FromResult("Users are not found");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+        [HttpGet("getGame")]
+        public async Task<Game> GetGame(int userOneID, int userTwoID)
+        {
+            try
+            {
+                return await _dbManager.GameRepositories.GetGameByUsersID(userOneID, userTwoID);
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpGet("deleteGame")]
+        public async Task<string> DeleteGame(int userID)
+        {
+            try
+            {
+                var user = await _dbManager.UserRepositories.GetUserByID(userID);
+                if (user == null)
+                {
+                    return await Task.FromResult("User is not found");
+                }
+                else
+                {
+                    var result = await _dbManager.GameRepositories.DeleteGameByUserID(userID);
+                    if (result)
+                    {
+                        return await Task.FromResult("The game was deleted successfully");
+                    }
+                    else
+                    {
+                        return await Task.FromResult("An error has occurred during game deleting");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
     }
 }

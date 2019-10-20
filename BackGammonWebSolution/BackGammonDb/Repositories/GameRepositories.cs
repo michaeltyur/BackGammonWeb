@@ -25,21 +25,126 @@ namespace BackGammonDb.Repositories
 
         private async Task<bool> SaveChanges()
         {
-            return await _backnammonContextDb.SaveChangesAsync() > 0;
+            try
+            {
+                return await _backnammonContextDb.SaveChangesAsync() > 0;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
 
-        public async Task<bool> AddGame(Game game)
+        /// <summary>
+        /// Add to db the game according given gamers ids
+        /// </summary>
+        /// <param name="game">empty instance of game</param>
+        /// <param name="userOne">first gamer</param>
+        /// <param name="userTwo">second gamer</param>
+        /// <returns></returns>
+        public async Task<bool> AddGame(Game game, User userOne, User userTwo)
         {
             try
             {
                 var gameFromDb = await _backnammonContextDb.Games.FirstOrDefaultAsync(g => g.GameID == game.GameID);
                 if (gameFromDb != null)
                 {
-                  return false;
+                    return false;
                 }
 
                 await _backnammonContextDb.Games.AddAsync(game);
+
+                await SaveChanges();
+
+                UserGame[] userGames = new UserGame[2];
+
+                userGames[0] = new UserGame
+                {
+                    GameID = game.GameID,
+                    UserID = userOne.UserID
+                };
+
+                userGames[1] = new UserGame
+                {
+                    GameID = game.GameID,
+                    UserID = userTwo.UserID
+                };
+
+                await _backnammonContextDb.UserGames.AddAsync(userGames[0]);
+                await _backnammonContextDb.UserGames.AddAsync(userGames[1]);
+
+                return await SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<Game> GetGameByUsersID(int userOneID, int userTwoID)
+        {
+            try
+            {
+                var users = _backnammonContextDb.Users;
+                var games = _backnammonContextDb.Games;
+                var userToGames = _backnammonContextDb.UserGames;
+
+                var gamesByUserOne = GetGamesByUserID(userOneID);
+
+                var gamesByUserTwo = GetGamesByUserID(userTwoID);
+
+                var unionGames = (
+                    from g in gamesByUserOne
+                    join g2 in gamesByUserTwo on g.GameID equals g2.GameID
+                    select g);
+
+                if (unionGames != null && unionGames.Count() > 0)
+                {
+                    return await unionGames.LastOrDefaultAsync();
+                }
+
+                else return await Task.FromResult(default(Game));
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        private IQueryable<Game> GetGamesByUserID(int userID)
+        {
+            var users = _backnammonContextDb.Users;
+            var games = _backnammonContextDb.Games;
+            var userToGames = _backnammonContextDb.UserGames;
+            return (
+                   from g in games
+                   join ug in userToGames on g.GameID equals ug.GameID
+                   join u in users on ug.UserID equals u.UserID
+                   where u.UserID == userID
+                   select g);
+        }
+
+        public async Task<bool> DeleteGameByUserID(int userID)
+        {
+            try
+            {
+                var gamesQuery = GetGamesByUserID(userID);//Games for delete
+                var userToGames = _backnammonContextDb.UserGames;
+                var userToGamesQuery = (
+                    from ug in userToGames
+                    join g in gamesQuery on ug.GameID equals g.GameID
+                    select ug
+                    );//Join tables rows for delete
+
+                _backnammonContextDb.UserGames.RemoveRange(userToGamesQuery);
+
+                var result = await SaveChanges();
+
+                _backnammonContextDb.Games.RemoveRange(gamesQuery);
 
                 return await SaveChanges();
 
