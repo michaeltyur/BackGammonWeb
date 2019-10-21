@@ -2,7 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { User } from '../models/user';
+import { IUser } from '../models/user';
 import { Router } from '@angular/router';
 import { SignalRConnectionService } from './signal-r-connection.service';
 
@@ -11,7 +11,7 @@ import { SignalRConnectionService } from './signal-r-connection.service';
 })
 export class AuthService {
 
-  public user: User;
+  public user: IUser;
 
   isAuthenticated$ = new EventEmitter<boolean>();
 
@@ -24,7 +24,7 @@ export class AuthService {
     let url = "/api/authentication/login";
     return this.httpClient.post(url, form).pipe(tap(res => {
       if (res['token']) {
-        this.user = <User>res;
+        this.user = <IUser>res;
         localStorage.setItem('token', this.user.token);
         localStorage.setItem('userName', this.user.userName);
         localStorage.setItem('userID', this.user.userID.toString());
@@ -54,13 +54,13 @@ export class AuthService {
 
   }
 
-  registration(user: User): Observable<any> {
+  registration(user: IUser): Observable<any> {
 
     let url = "/api/authentication/registration";
 
     return this.httpClient.post(url, user).pipe(tap(res => {
       if (res['token']) {
-        this.user = <User>res;
+        this.user = <IUser>res;
         localStorage.setItem('token', this.user.token);
         this.isAuthenticated$.emit(true);
       }

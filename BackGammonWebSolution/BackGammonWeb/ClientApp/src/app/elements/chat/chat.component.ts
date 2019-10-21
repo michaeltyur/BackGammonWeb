@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ChatMessage } from 'src/app/shared/models/chat-message';
 import { Subscription } from 'rxjs';
 import { UserService } from 'src/app/shared/services/user.service';
-import { User } from 'src/app/shared/models/user';
 import { ChatService } from 'src/app/shared/services/chat.service';
 import { ISendMessage, SendMessage } from 'src/app/shared/models/message-send';
 import { SignalRConnectionService } from 'src/app/shared/services/signal-r-connection.service';

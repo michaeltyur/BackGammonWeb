@@ -133,20 +133,24 @@ namespace BackGammonDb.Repositories
             try
             {
                 var gamesQuery = GetGamesByUserID(userID);//Games for delete
+                var gamesList = gamesQuery.ToList();
                 var userToGames = _backnammonContextDb.UserGames;
+
                 var userToGamesQuery = (
                     from ug in userToGames
                     join g in gamesQuery on ug.GameID equals g.GameID
                     select ug
                     );//Join tables rows for delete
 
-                _backnammonContextDb.UserGames.RemoveRange(userToGamesQuery);
+                _backnammonContextDb.UserGames.RemoveRange(userToGamesQuery.ToList());
 
                 var result = await SaveChanges();
 
-                _backnammonContextDb.Games.RemoveRange(gamesQuery);
+                _backnammonContextDb.Games.RemoveRange(gamesList);
 
-                return await SaveChanges();
+                var result2 = await SaveChanges();
+
+                return result2;
 
             }
             catch (Exception ex)
