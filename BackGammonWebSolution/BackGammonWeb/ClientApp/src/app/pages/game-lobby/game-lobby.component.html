@@ -7,12 +7,46 @@
 
       <!-- Users -->
       <div style="cursor: pointer; color: goldenrod;" (click)="openUserWindow()">
-          <i class="fas fa-users fa-2x"></i>
-        </div>
+        <i class="fas fa-users fa-2x"></i>
+      </div>
 
     </nb-card-header>
-    <nb-card-body>
-        <div class="game-boarder"></div>
+    <nb-card-body class="m-0 p-0">
+      <div class="game-boarder">
+        <section id="black-board" class="h-100 w-100">
+          <div class="row top-row">
+            <div id="00 stack"></div>
+            <div id="01 stack"></div>
+            <div id="02 stack"></div>
+            <div id="03 stack"></div>
+            <div id="04 stack"></div>
+            <div id="05 stack"></div>
+            <div id="top-bar stack"></div>
+            <div id="06 stack"></div>
+            <div id="07 stack"></div>
+            <div id="08 stack"></div>
+            <div id="09 stack"></div>
+            <div id="10 stack"></div>
+            <div id="11 stack"></div>
+          </div>
+          <div class="row middle"></div>
+          <div class="row bottom-row">
+              <div id="11 stack"></div>
+              <div id="10 stack"></div>
+              <div id="09 stack"></div>
+              <div id="08 stack"></div>
+              <div id="07 stack"></div>
+              <div id="06 stack"></div>
+              <div id="bottom-bar stack"></div>
+              <div id="05 stack"></div>
+              <div id="04 stack"></div>
+              <div id="03 stack"></div>
+              <div id="02 stack"></div>
+              <div id="10 stack"></div>
+              <div id="01 stack"></div>
+          </div>
+        </section>
+      </div>
     </nb-card-body>
     <nb-card-footer>
 
