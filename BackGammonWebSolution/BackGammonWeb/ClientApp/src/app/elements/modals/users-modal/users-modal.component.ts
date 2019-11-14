@@ -57,10 +57,12 @@ export class UsersModalComponent implements OnInit, OnDestroy {
       else if (user.haveNewPrivateChat) {
         var chatInvitation: ChatInvitation = {
           inviterID: user.userID,
+          inviterName:"",
           groupName: user.groupName,
           message:null,
           error:null
         }
+        debugger;
         this.chatService.switchToChat$.emit(chatInvitation);
       }
       this.loading = true;
