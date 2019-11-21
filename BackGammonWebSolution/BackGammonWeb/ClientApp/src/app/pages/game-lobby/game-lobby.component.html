@@ -1,56 +1,109 @@
 <section *ngIf="!isMobile">
   <nb-card class="game-lobby-card mb-1">
     <nb-card-header class="pt-2 pb-2 d-flex justify-content-between">
-
       <!-- Title -->
-      <div class="title"> Game</div>
+      <div class="title">Game</div>
 
       <!-- Users -->
-      <div style="cursor: pointer; color: goldenrod;" (click)="openUserWindow()">
+      <div
+        style="cursor: pointer; color: goldenrod;"
+        (click)="openUserWindow()"
+      >
         <i class="fas fa-users fa-2x"></i>
       </div>
-
     </nb-card-header>
     <nb-card-body class="m-0 p-0">
       <div class="game-boarder">
-        <section id="black-board" class="h-100 w-100">
-          <div class="row top-row">
-            <div id="00 stack"></div>
-            <div id="01 stack"></div>
-            <div id="02 stack"></div>
-            <div id="03 stack"></div>
-            <div id="04 stack"></div>
-            <div id="05 stack"></div>
-            <div id="top-bar stack"></div>
-            <div id="06 stack"></div>
-            <div id="07 stack"></div>
-            <div id="08 stack"></div>
-            <div id="09 stack"></div>
-            <div id="10 stack"></div>
-            <div id="11 stack"></div>
+        <section id="black-board" class="h-100 w-100 checkers-area">
+          <div class="row top-row game-row">
+            <div id="00" class="stack">
+              <app-game-stack [checkersArray]="gameTableArray[0]"></app-game-stack>
+            </div>
+            <div id="01" class="stack">
+              <app-game-stack  [checkersArray]="gameTableArray[1]"></app-game-stack>
+            </div>
+            <div id="02" class="stack">
+              <app-game-stack  [checkersArray]="gameTableArray[2]"></app-game-stack>
+            </div>
+            <div id="03" class="stack">
+              <app-game-stack  [checkersArray]="gameTableArray[3]"></app-game-stack>
+            </div>
+            <div id="04" class="stack">
+                <app-game-stack  [checkersArray]="gameTableArray[4]"></app-game-stack>
+            </div>
+            <div id="05" class="stack">
+                <app-game-stack  [checkersArray]="gameTableArray[5]"></app-game-stack>
+            </div>
+            <div id="top-bar stack" class="stack">
+                <app-game-stack  [checkersArray]="gameTableArray[6]"></app-game-stack>
+            </div>
+            <div id="06" class="stack">
+                <app-game-stack  [checkersArray]="gameTableArray[7]"></app-game-stack>
+            </div>
+            <div id="07" class="stack">
+                <app-game-stack  [checkersArray]="gameTableArray[8]"></app-game-stack>
+            </div>
+            <div id="08" class="stack">
+                <app-game-stack  [checkersArray]="gameTableArray[9]"></app-game-stack>
+            </div>
+            <div id="09" class="stack">
+                <app-game-stack  [checkersArray]="gameTableArray[10]"></app-game-stack>
+            </div>
+            <div id="10" class="stack">
+                <app-game-stack  [checkersArray]="gameTableArray[11]"></app-game-stack>
+            </div>
+            <div id="11" class="stack">
+                <app-game-stack  [checkersArray]="gameTableArray[12]"></app-game-stack>
+            </div>
           </div>
-          <div class="row middle"></div>
-          <div class="row bottom-row">
-              <div id="11 stack"></div>
-              <div id="10 stack"></div>
-              <div id="09 stack"></div>
-              <div id="08 stack"></div>
-              <div id="07 stack"></div>
-              <div id="06 stack"></div>
-              <div id="bottom-bar stack"></div>
-              <div id="05 stack"></div>
-              <div id="04 stack"></div>
-              <div id="03 stack"></div>
-              <div id="02 stack"></div>
-              <div id="10 stack"></div>
-              <div id="01 stack"></div>
+          <div class="row middle game-row">
+              <app-game-stack  [checkersArray]="gameTableArray[13]"></app-game-stack>
+          </div>
+          <div class="row bottom-row game-row">
+            <div id="11" class="stack">
+                <app-game-stack  [checkersArray]="gameTableArray[14]"></app-game-stack>
+            </div>
+            <div id="10" class="stack">
+                <app-game-stack  [checkersArray]="gameTableArray[15]"></app-game-stack>
+            </div>
+            <div id="09" class="stack">
+              <app-game-stack  [checkersArray]="gameTableArray[16]"></app-game-stack>
+            </div>
+            <div id="08" class="stack">
+                <app-game-stack  [checkersArray]="gameTableArray[17]"></app-game-stack>
+            </div>
+            <div id="07" class="stack">
+                <app-game-stack  [checkersArray]="gameTableArray[18]"></app-game-stack>
+            </div>
+            <div id="06" class="stack">
+                <app-game-stack  [checkersArray]="gameTableArray[19]"></app-game-stack>
+            </div>
+            <div id="bottom-bar" class="stack">
+                <app-game-stack  [checkersArray]="gameTableArray[20]"></app-game-stack>
+            </div>
+            <div id="05" class="stack">
+                <app-game-stack  [checkersArray]="gameTableArray[21]"></app-game-stack>
+            </div>
+            <div id="04" class="stack">
+                <app-game-stack  [checkersArray]="gameTableArray[22]"></app-game-stack>
+            </div>
+            <div id="03" class="stack">
+                <app-game-stack  [checkersArray]="gameTableArray[23]"></app-game-stack>
+            </div>
+            <div id="02" class="stack">
+                <app-game-stack  [checkersArray]="gameTableArray[24]"></app-game-stack>
+            </div>
+            <div id="10" class="stack">
+                <app-game-stack  [checkersArray]="gameTableArray[25]"></app-game-stack>
+            </div>
+            <div id="01" class="stack">
+                <app-game-stack  [checkersArray]="gameTableArray[26]"></app-game-stack>
+            </div>
           </div>
         </section>
       </div>
     </nb-card-body>
-    <nb-card-footer>
-
-    </nb-card-footer>
+    <nb-card-footer> </nb-card-footer>
   </nb-card>
 </section>
 <section *ngIf="isMobile"></section>

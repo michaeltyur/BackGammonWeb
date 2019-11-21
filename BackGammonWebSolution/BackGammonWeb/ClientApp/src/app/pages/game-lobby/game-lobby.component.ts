@@ -12,19 +12,41 @@ import { UsersModalComponent } from 'src/app/elements/modals/users-modal/users-m
 export class GameLobbyComponent implements OnInit, OnDestroy {
   subscription = new Subscription();
   isMobile: boolean = false;
-  constructor(private nbDialogService:NbDialogService) { }
+  gameTableArray=[];
+  constructor(private nbDialogService: NbDialogService) { }
 
   ngOnInit() {
     if (window.innerWidth < 600) {
       this.isMobile = true;
     }
+    this.fillGameTable();
   }
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 
-  openUserWindow():void{
+  openUserWindow(): void {
     const dialogRef = this.nbDialogService.open(UsersModalComponent);
   }
 
+  fillGameTable(): void {
+    this.gameTableArray = [];
+
+    for (let i = 0; i < 27; i++) {
+      let element  = this.fillSingleArray();
+      this.gameTableArray.push(element);
+    }
+  }
+  fillSingleArray(): Array<boolean> {
+    let array = [];
+    for (let index = 0; index < 6; index++) {
+      if (index%2===0) {
+        array.push(true);
+      }
+      else{
+        array.push(false);
+      }
+    }
+    return array;
+  }
 }

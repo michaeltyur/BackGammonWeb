@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from "@angular/common";
 import { AppComponent } from './app.component';
 import { LoginComponent } from './pages/login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,6 +21,8 @@ import { UsersComponent } from './elements/users/users.component';
 import { GameComponent } from './elements/game/game.component';
 import { GameLobbyComponent } from './pages/game-lobby/game-lobby.component';
 import { UsersModalComponent } from './elements/modals/users-modal/users-modal.component';
+import { GameStackComponent } from './elements/game-stack/game-stack.component';
+import { FirstStepModalComponent } from './elements/modals/first-step-modal/first-step-modal.component';
 
 const routes: Routes = [
 
@@ -61,8 +64,11 @@ const routes: Routes = [
     GameComponent,
     GameLobbyComponent,
     UsersModalComponent,
+    GameStackComponent,
+    FirstStepModalComponent,
   ],
   imports: [
+    //CommonModule,
     BrowserModule,
     RouterModule.forRoot(routes),
     BrowserAnimationsModule,

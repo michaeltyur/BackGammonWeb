@@ -14,8 +14,11 @@
   padding-bottom: 0;
   padding-top: 0;
 }
+.game-row{
+  margin-left: 0.5rem;
+}
 .top-row{
-  height: 40%;
+  height: 40%; 
 }
 .bottom-row{
   height: 40%;
@@ -24,7 +27,13 @@
   height: 20%;
 }
 .stack{
-  width: 7.69%;
-  border-style: solid;
-  border-color: green;
+  width: 7.47% !important;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+.checkers-area{
+  padding-bottom: 20px;
+  padding-right: 12px;
+  padding-left: 13px;
+  padding-top: 20px;
 }

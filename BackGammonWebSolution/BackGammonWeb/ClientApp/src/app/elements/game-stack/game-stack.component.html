@@ -1,0 +1,8 @@
+<div class="h-100 w-100 checkers-container">
+  <div
+    *ngFor="let checker of checkersArray"
+    class="checker"
+    [ngClass]="checker ? 'white-checker' : 'black-checker'"
+  >
+  </div>
+</div>

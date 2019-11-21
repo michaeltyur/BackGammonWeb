@@ -1,0 +1,7 @@
+Backgammone http requests:
+
+http://localhost:50740/api/authentication/login
+{
+  "UserName":"misha"
+ "Password":123
+}
