@@ -1,6 +1,6 @@
 
 
-export interface User {
+export interface IUser {
   userID: number;
   token: string;
   userName: string;
@@ -11,6 +11,7 @@ export interface User {
   avatar:any;
   haveNewMessage:boolean;
   haveNewPrivateChat:boolean;
+  haveGame:boolean,
   groupName:string;
 }
 

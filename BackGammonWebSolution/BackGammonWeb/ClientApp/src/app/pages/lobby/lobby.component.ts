@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { User } from 'src/app/shared/models/user';
+import { IUser } from 'src/app/shared/models/user';
 import { Subscription } from 'rxjs';
 import { UserService } from 'src/app/shared/services/user.service';
 import { SignalRConnectionService } from 'src/app/shared/services/signal-r-connection.service';
@@ -24,6 +24,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
   // usersOffLine: Array<User> = [];
   currentChat: Array<ChatMessage> = [];
   allChatDictionary: IDictionary;
+  allGamesDictionary: IDictionary;
   chatTitle: string = "Public Chat";
   groupName: string = "public";
   isChat: boolean = true;
@@ -43,34 +44,8 @@ export class LobbyComponent implements OnInit, OnDestroy {
     if (window.innerWidth < 600) {
       this.isMobile = true;
     }
-
-    //Users
-    // this.subscription.add(this.userService.users$.subscribe(res => {
-    //   if (res) {
-    //     this.setUsersArrays(res);
-    //   }
-    // }));
-
-    // this.subscription.add(this.chatService.users$.subscribe(res => {
-    //   if (res) {
-    //     this.setUsersArrays(res);
-    //   }
-    // }));
-
-    // this.subscription.add(this.chatService.invitationToChat$.subscribe(res => {
-    //   if (res) {
-    //     this.openPrivateChatFromRemote(res.userID, res.groupName);
-    //   }
-    // }, error => console.error(error)));
-
-    // this.subscription.add(this.chatService.privateChatClosedByOtherUser$.subscribe((res: ChatClosing) => {
-    //   if (res) {
-    //     this.closePrivateChatByRemote(res);
-    //   }
-    // }, err => console.error(err)
-    // ));
-
-    //this.getAllUser();
+    this.allChatDictionary = new Dictionary<ChatMessage>();
+    this.allGamesDictionary = new Dictionary<IUser>();
 
     this.signalRConnectionService.connection.on("BroadcastMessage", res => {
       if (res) {
@@ -109,7 +84,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
     }));
 
 
-    this.allChatDictionary = new Dictionary<ChatMessage>();
 
     this.getNumberOfMessages("public", 50);
 

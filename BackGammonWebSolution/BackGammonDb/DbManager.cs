@@ -17,6 +17,10 @@ namespace BackGammonDb
         private readonly UserRepositories _userRepositories;
         public UserRepositories UserRepositories => _userRepositories ?? new UserRepositories(_backnammonContextDb, locker);
 
+        private readonly GameRepositories _gameRepositories;
+        public GameRepositories GameRepositories => _gameRepositories ?? new GameRepositories(_backnammonContextDb, locker);
+
+
         public DbManager()
         {
             _backnammonContextDb = new BacknammonContextDb ();

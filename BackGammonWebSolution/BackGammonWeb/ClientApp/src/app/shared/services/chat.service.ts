@@ -5,7 +5,6 @@ import { SendMessage, ISendMessage } from '../models/message-send';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ChatMessage } from '../models/chat-message';
-import { User } from '../models/user';
 import { ChatInvitation } from '../models/chat-invitation';
 import { ChatClosing } from '../models/chat-closing';
 

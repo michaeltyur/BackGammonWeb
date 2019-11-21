@@ -57,7 +57,7 @@ namespace BackGammonDb.Repositories
         {
 
             User user;
-            if (userID>0)
+            if (userID<=0)
             {
                 return null;
             }
