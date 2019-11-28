@@ -1,6 +1,7 @@
 using BackGammonDb;
 using BackGammonWeb.Helpers;
 using BackGammonWeb.Hubs;
+using BLServer;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -38,6 +39,7 @@ namespace BackGammonWeb
             services.AddSingleton(Configuration);
 
             services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
+            services.AddSingleton<ServerLogic, ServerLogic>();
 
             // Enable cookie authentication
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

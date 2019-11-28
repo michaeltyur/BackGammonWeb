@@ -55,7 +55,6 @@ namespace BackGammonWeb.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
-
         public void UpdateUsers()
         {
             try
@@ -98,18 +97,42 @@ namespace BackGammonWeb.Hubs
             }
         }
 
+        public void SendErrorMessage(ErrorMessage message)
+        {
+            var userName = GetUserName();
+            //_userIdProvider.GetUserId(Context.);
+
+            if (message != null)
+            {
+                message.Date = DateTime.Now;
+
+                if (message.GroupName == "public")
+                {
+                    Clients.All.BroadcastErrorMessage(message);
+                }
+                else
+                {
+                    Clients.Group(message.GroupName).BroadcastErrorMessage(message);
+                }
+
+            }
+        }
+
+
         private string GetUserName()
         {
             var claimsIdentity = (ClaimsIdentity)Context.User.Identity;
             var userName = claimsIdentity.Claims.FirstOrDefault(u => u.Type == "UserName").Value;
             return userName;
         }
+
         private int GetUserID()
         {
             var claimsIdentity = (ClaimsIdentity)Context.User.Identity;
             var userID = claimsIdentity.Claims.FirstOrDefault(u => u.Type == "UserID").Value;
             return  int.Parse(userID);
         }
+
         public async Task<ChatInvitation> AddToGroup(int secondUserID)
         {
             ChatInvitation chatInvitation = new ChatInvitation();
@@ -219,5 +242,6 @@ namespace BackGammonWeb.Hubs
             string signalRConnection = _dbManager.UserRepositories.GetSignalRConnection(userID);
             await  Clients.Client(signalRConnection).UpdatePrivateChatsByUser(privateChatByUsers);
         }
+
     }
 }

@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Data\ChatClosing.cs" />
     <Compile Include="Data\ChatInvitation.cs" />
+    <Compile Include="Data\ErrorMessage.cs" />
     <Compile Include="Data\Game.cs" />
     <Compile Include="Data\GameColors.cs" />
     <Compile Include="Data\Message.cs" />
