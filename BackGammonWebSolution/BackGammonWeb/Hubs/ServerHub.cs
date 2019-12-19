@@ -243,5 +243,17 @@ namespace BackGammonWeb.Hubs
             await  Clients.Client(signalRConnection).UpdatePrivateChatsByUser(privateChatByUsers);
         }
 
+        public async void UserOnlineUpdate(int userID)
+        {
+            try
+            {
+                 await _dbManager.UserRepositories.UserOnlineUpdate(userID);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
     }
 }

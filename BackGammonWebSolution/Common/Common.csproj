@@ -59,7 +59,9 @@
     <Compile Include="Data\UserGame.cs" />
     <Compile Include="Data\UserLoginMV.cs" />
     <Compile Include="Data\UserPrivateChat.cs" />
+    <Compile Include="Data\UserAddInfo.cs" />
     <Compile Include="Data\Сhecker.cs" />
+    <Compile Include="Enums\EnumsCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

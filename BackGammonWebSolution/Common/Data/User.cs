@@ -18,6 +18,7 @@ namespace Common.Data
         public int UserID { get; set; }
         [DataMember]
         public string UserName { get; set; }
+        [DataMember]
         public string Password { get; set; }
         [DataMember]
         public string FirstName { get; set; }
@@ -25,6 +26,7 @@ namespace Common.Data
         public string LastName { get; set; }
         [DataMember]
         public bool IsOnline { get; set; }
+        [DataMember]
         public string SignalRConnectionID { get; set; }
 
 

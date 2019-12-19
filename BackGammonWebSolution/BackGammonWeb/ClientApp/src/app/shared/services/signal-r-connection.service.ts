@@ -55,7 +55,11 @@ export class SignalRConnectionService {
         this.isConnected$.emit(false);
       }).catch(err=>console.error(err))
     }
-
-
   }
+
+  connectionSubscribtions():void{
+    let userID = +localStorage.getItem("userID");
+     this.connection.invoke("UserOnlineUpdate",userID);
+  }
+
 }

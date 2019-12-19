@@ -145,6 +145,10 @@ namespace BackGammonDb.Repositories
 
         }
 
+        /// <summary>
+        /// Saves change in db
+        /// </summary>
+        /// <returns>returns true when action successfully or false when not</returns>
         private bool SaveChanges()
         {
             return _backnammonContextDb.SaveChanges() > 0;
@@ -254,6 +258,17 @@ namespace BackGammonDb.Repositories
                 }
             }
         }
+
+        public async Task<bool> UserOnlineUpdate(int userID)
+        {
+            var user = await _backnammonContextDb.Users.FirstOrDefaultAsync(u => u.UserID == userID);
+            if (user != null)
+            {
+                var userAdditionalData = await _backnammonContextDb.UserAddInfos.FirstOrDefaultAsync(data => data.UserID == userID);
+                userAdditionalData.LastVisitTime = DateTime.Now;
+            }
+            return SaveChanges();
+        } 
 
         #region PrivateChat
 
@@ -418,6 +433,8 @@ namespace BackGammonDb.Repositories
         }
 
         #endregion
+
+      
     }
 }
 

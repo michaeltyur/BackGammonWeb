@@ -7,8 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Media;
-using System.Windows.Threading;
 
 namespace BLServer.Game.AutoPlayer
 {
@@ -16,14 +14,14 @@ namespace BLServer.Game.AutoPlayer
     {
         static readonly Semaphore sem = new Semaphore(1, 1);
 
-        public Brush MyCheckerColor { get; set; }
+       // public Brush MyCheckerColor { get; set; }
         public string Opponent { get; }
         private GameTable gameTable;
         private GameLogic gameLogic;
         private readonly DiceLogic diceLogic;        
         private Random rand;
-        private ObservableCollection<Checker> BarColl { get; set; }
-        private DispatcherTimer Timer;
+        private Collection<Checker> BarColl { get; set; }
+        //private DispatcherTimer Timer;
         private bool firstMove;
 
         public AutoPlayerLogic(GameTable gameTable, GameLogic gameLogic, DiceLogic diceLogic, bool white)
@@ -32,20 +30,20 @@ namespace BLServer.Game.AutoPlayer
             rand = new Random();
             this.gameTable = gameTable;
 
-            Timer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromSeconds(2)
-            };
+            //Timer = new DispatcherTimer
+            //{
+            //    Interval = TimeSpan.FromSeconds(2)
+            //};
             //Timer.Tick += ComputerTurn;
 
             if (white)
             {
-                MyCheckerColor = gameTable.White;
+                //MyCheckerColor = gameTable.White;
                 firstMove = true;
             }
             else
             {
-                MyCheckerColor = gameTable.Black;
+                //MyCheckerColor = gameTable.Black;
                 firstMove = false;
             }
 
@@ -168,8 +166,8 @@ namespace BLServer.Game.AutoPlayer
             try
             {
                 var index = 0;
-                if (MyCheckerColor == gameTable.White) index = 0;
-                else index = 1;
+                //if (MyCheckerColor == gameTable.White) index = 0;
+                //else index = 1;
                 result = gameLogic.CheckersMoovingFromBarLogic(index, diceNumber);
                // if (result!=null) Thread.Sleep(TimeSpan.FromSeconds(0.5));
                 return result;
@@ -191,7 +189,8 @@ namespace BLServer.Game.AutoPlayer
             int[] myTable;
             int[] opponentTable;
 
-            if (MyCheckerColor == gameTable.White)
+           // if (MyCheckerColor == gameTable.White)
+           if(true)
             {
                 myTable = tables[0];
                 opponentTable = tables[1];

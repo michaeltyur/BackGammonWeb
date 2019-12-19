@@ -57,7 +57,7 @@ namespace BLServer
                 }
                 catch (Exception ex)
                 {
-                    callback.RecieveError(ex.Message);
+                   // callback.RecieveError(ex.Message);
                 }
             }
         }
@@ -76,7 +76,7 @@ namespace BLServer
                 }
                 catch (Exception ex)
                 {
-                    callback.RecieveError(ex.Message);
+                    //callback.RecieveError(ex.Message);
                 }
             }
         }
@@ -213,9 +213,9 @@ namespace BLServer
                             else if (diffDice != null && diffDice.IsMoovingFinish())
                             {
                                 // GameMng.DeleteDifferentDice(user, opponent);
-                                if (opponent != Player.autoPlayer.ToString())
-                                    _callback[opponent].SetMasterFromServer(opponent, user);
-                                _callback[user].SetWaiterFromServer(user, opponent);
+                                //if (opponent != Player.autoPlayer.ToString())
+                                //    _callback[opponent].SetMasterFromServer(opponent, user);
+                                //_callback[user].SetWaiterFromServer(user, opponent);
                                 //turn computer moving
                                 if (opponent == Player.autoPlayer.ToString())
                                     MoveCheckerAuto(opponent, user);
@@ -223,22 +223,22 @@ namespace BLServer
 
                             if (GameMng.IsGameOver(user, opponent))
                             {
-                                _callback[user].GameOverFromServer(user, opponent, true);
-                                if (opponent != Player.autoPlayer.ToString())
-                                    _callback[opponent].GameOverFromServer(opponent, user, false);
-                                GameMng.DeleteGame(user, opponent);
+                                //_callback[user].GameOverFromServer(user, opponent, true);
+                                //if (opponent != Player.autoPlayer.ToString())
+                                //    _callback[opponent].GameOverFromServer(opponent, user, false);
+                                //GameMng.DeleteGame(user, opponent);
                             }
 
                         }
                         else
                         {
-                            if (_callback.ContainsKey(opponent))
+                           // if (_callback.ContainsKey(opponent))
 
                                // _callback[user].SetWaiterFromServer(user, opponent);
 
                             //if (_callback.ContainsKey(opponent))
                             //    _callback[opponent].SetMasterFromServer(opponent, user);
-                            else MoveCheckerAuto(opponent, user);
+                          //  else MoveCheckerAuto(opponent, user);
                         }
                     }
                     catch (Exception ex)
@@ -357,26 +357,26 @@ namespace BLServer
                                 //if (_callback.ContainsKey(opponent))
                                 //    _callback[opponent].UpdateTable(opponent, user, whiteCheckers, blackCheckers, barCheckers);
 
-                                if (doubleDice != null && doubleDice.IsMoovingFinish())
-                                {
+                               // if (doubleDice != null && doubleDice.IsMoovingFinish())
+                               // {
                                     // GameMng.DeleteDoubleDice(user, opponent);
                                     //_callback[user].SetWaiterFromServer(user, opponent);
                                     //if (_callback.ContainsKey(opponent))
                                     //    _callback[opponent].SetMasterFromServer(opponent, user);
                                     //turn computer moving
-                                    else if (opponent == Player.autoPlayer.ToString())
+                              //      else if (opponent == Player.autoPlayer.ToString())
                                         MoveCheckerAuto(opponent, user);
-                                }
-                                else if (diffDice != null && diffDice.IsMoovingFinish())
-                                {
+                             //   }
+                             //   else if (diffDice != null && diffDice.IsMoovingFinish())
+                             //   {
                                     //GameMng.DeleteDifferentDice(user, opponent);
                                     //_callback[user].SetWaiterFromServer(user, opponent);
                                     //if (_callback.ContainsKey(opponent))
                                     //    _callback[opponent].SetMasterFromServer(opponent, user);
                                     //turn computer moving
-                                    else if (opponent == Player.autoPlayer.ToString())
+                                //    else if (opponent == Player.autoPlayer.ToString())
                                         MoveCheckerAuto(opponent, user);
-                                }
+                            //    }
                             }
                         }
                         else

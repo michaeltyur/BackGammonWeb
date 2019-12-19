@@ -20,6 +20,8 @@ namespace BackGammonDb
 
         public DbSet<User> Users { get; set; }
 
+        public DbSet<UserAddInfo> UserAddInfos { get; set; }
+
         public DbSet<Message> Messages { get; set; }
 
         public DbSet<PrivateChat> PrivateChats { get; set; }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,6 @@ namespace Common.Data
 {
     public class Checker
     {
-        public Brush Color { get; set; }
+        public CheckerColors Color { get; set; }
     }
 }

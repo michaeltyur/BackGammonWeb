@@ -266,9 +266,9 @@ namespace BLServer.Game
                 //Brush _color;
 
                 //if (selectedColl.Count>0)
-                Brush _color = selectedColl.First().Color;
+               // Brush _color = selectedColl.First().Color;
 
-                futureColl.Add(new Checker { Color = _color });
+               // futureColl.Add(new Checker { Color = _color });
                 if (selectedColl.Count > 0)
                 {
                     selectedColl.Remove(selectedColl.First());

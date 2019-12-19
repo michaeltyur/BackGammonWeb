@@ -1,11 +1,12 @@
 ﻿using Common.Data;
+using Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Media;
+
 
 namespace BLServer.Game
 {
@@ -14,32 +15,44 @@ namespace BLServer.Game
 
         private static readonly object padlock = new object();
         //Checkers collection
-        public List<ObservableCollection<Checker>> ListAllCollections { get; set; }
+        public List<Collection<Checker>> ListAllCollections { get; set; }
         //List Of Bar Collection
-        public List<ObservableCollection<Checker>> ListBarCollections { get; set; }
+        public List<Collection<Checker>> ListBarCollections { get; set; }
 
         //Bars
-        public ObservableCollection<Checker> WhiteBar { get; set; }
-        public ObservableCollection<Checker> BlackBar { get; set; }
+        public Collection<Checker> WhiteBar { get; set; }
+        public Collection<Checker> BlackBar { get; set; }
 
         public int WhiteCounter;
         public int BlackCounter;
 
         //Colors
-        public Brush Black { get; set; }
-        public Brush White { get; set; }
-        public Brush Selected { get; set; }
+        public CheckerColors _black;
+        public CheckerColors Black
+        {
+            get { return _black; }
+            set { _black = value; }
+        }
+        public CheckerColors _white;
+        public CheckerColors White
+        {
+            get { return _white; }
+            set { _white = value; }
+        }
+        public CheckerColors Selected { get; set; }
 
         public GameTable()
         {
             lock (padlock)
             {
-                ListAllCollections = new List<ObservableCollection<Checker>>();
-                ListBarCollections = new List<ObservableCollection<Checker>>();
+                _black = CheckerColors.black;
+                _white = CheckerColors.white;
+                ListAllCollections = new List<Collection<Checker>>();
+                ListBarCollections = new List<Collection<Checker>>();
 
-                Black = new SolidColorBrush(Colors.Black);
-                White = new SolidColorBrush(Colors.Moccasin);
-                Selected = new SolidColorBrush(Colors.Brown);
+                //  Black = new SolidColorBrush(Colors.Black);
+                //  White = new SolidColorBrush(Colors.Moccasin);
+                Selected = CheckerColors.brown;
                 SetCollection();
 
                 CheckerStartPosition();
@@ -59,12 +72,12 @@ namespace BLServer.Game
             //Checkers collection
             for (int i = 0; i < 24; i++)
             {
-                ListAllCollections.Add(new ObservableCollection<Checker>());
+                ListAllCollections.Add(new Collection<Checker>());
             }
 
             for (int i = 0; i < 2; i++)
             {
-                ListBarCollections.Add(new ObservableCollection<Checker>());
+                ListBarCollections.Add(new Collection<Checker>());
             }
         }
 
@@ -74,32 +87,32 @@ namespace BLServer.Game
             //5 checkers
             for (int i = 0; i < 5; i++)
             {
-                ListAllCollections[5].Add(new Checker { Color = Black });
-                ListAllCollections[12].Add(new Checker { Color = Black });
+                ListAllCollections[5].Add(new Checker { Color = CheckerColors.black });
+                ListAllCollections[12].Add(new Checker { Color = CheckerColors.black });
 
-                ListAllCollections[11].Add(new Checker { Color = White });
-                ListAllCollections[18].Add(new Checker { Color = White });
+                ListAllCollections[11].Add(new Checker { Color = CheckerColors.white });
+                ListAllCollections[18].Add(new Checker { Color = CheckerColors.white });
             }
             //3 checkers 
             for (int i = 0; i < 3; i++)
             {
-                ListAllCollections[16].Add(new Checker { Color = White });
-                ListAllCollections[7].Add(new Checker { Color = Black });
+                ListAllCollections[16].Add(new Checker { Color = CheckerColors.white });
+                ListAllCollections[7].Add(new Checker { Color = CheckerColors.black });
             }
             //2 checkers
             for (int i = 0; i < 2; i++)
             {
-                ListAllCollections[0].Add(new Checker { Color = White });
+                ListAllCollections[0].Add(new Checker { Color = CheckerColors.white });
 
-                ListAllCollections[23].Add(new Checker { Color = Black });
+                ListAllCollections[23].Add(new Checker { Color = CheckerColors.black });
             }
         }
 
         public void TestCheckerStartPosition()
         {
 
-            ListAllCollections[0].Add(new Checker { Color = Black });
-            ListAllCollections[0].Add(new Checker { Color = Black });
+            ListAllCollections[0].Add(new Checker { Color = CheckerColors.black });
+            ListAllCollections[0].Add(new Checker { Color = CheckerColors.black });
 
             //ListAllCollections[1].Add(new Checker { Color = Black });
             //ListAllCollections[1].Add(new Checker { Color = Black });
@@ -120,29 +133,29 @@ namespace BLServer.Game
             //ListAllCollections[6].Add(new Checker { Color = Black });
 
 
-            ListAllCollections[16].Add(new Checker { Color = White });
-            ListAllCollections[16].Add(new Checker { Color = White });
+            ListAllCollections[16].Add(new Checker { Color = CheckerColors.white });
+            ListAllCollections[16].Add(new Checker { Color = CheckerColors.white });
 
-            ListAllCollections[17].Add(new Checker { Color = White });
-            ListAllCollections[17].Add(new Checker { Color = White });
+            ListAllCollections[17].Add(new Checker { Color = CheckerColors.white });
+            ListAllCollections[17].Add(new Checker { Color = CheckerColors.white });
 
-            ListAllCollections[18].Add(new Checker { Color = White });
-            ListAllCollections[18].Add(new Checker { Color = White });
+            ListAllCollections[18].Add(new Checker { Color = CheckerColors.white });
+            ListAllCollections[18].Add(new Checker { Color = CheckerColors.white });
 
-            ListAllCollections[19].Add(new Checker { Color = White });
-            ListAllCollections[19].Add(new Checker { Color = White });
+            ListAllCollections[19].Add(new Checker { Color = CheckerColors.white });
+            ListAllCollections[19].Add(new Checker { Color = CheckerColors.white });
 
-            ListAllCollections[20].Add(new Checker { Color = White });
-            ListAllCollections[20].Add(new Checker { Color = White });
+            ListAllCollections[20].Add(new Checker { Color = CheckerColors.white });
+            ListAllCollections[20].Add(new Checker { Color = CheckerColors.white });
 
-            ListAllCollections[21].Add(new Checker { Color = White });
-            ListAllCollections[21].Add(new Checker { Color = White });
+            ListAllCollections[21].Add(new Checker { Color = CheckerColors.white });
+            ListAllCollections[21].Add(new Checker { Color = CheckerColors.white });
 
-            ListAllCollections[22].Add(new Checker { Color = White });
-            ListAllCollections[22].Add(new Checker { Color = White });
+            ListAllCollections[22].Add(new Checker { Color = CheckerColors.white });
+            ListAllCollections[22].Add(new Checker { Color = CheckerColors.white });
 
-            ListAllCollections[23].Add(new Checker { Color = Black });
-            ListAllCollections[23].Add(new Checker { Color = Black });
+            ListAllCollections[23].Add(new Checker { Color = CheckerColors.white });
+            ListAllCollections[23].Add(new Checker { Color = CheckerColors.white });
         }
 
         /// <summary>
@@ -156,7 +169,7 @@ namespace BLServer.Game
             for (int i = 0; i < listCollectons.Count; i++)
             {
                 var collection = listCollectons[i];
-                if (collection.Count > 0 && collection.First().Color == White)
+                if (collection.Count > 0 && collection.First().Color == CheckerColors.white)
                 {
                     array[i] = collection.Count;
                 }
@@ -175,7 +188,7 @@ namespace BLServer.Game
             for (int i = 0; i < listCollectons.Count; i++)
             {
                 var collection = listCollectons[i];
-                if (collection.Count > 0 && collection.First().Color == Black)
+                if (collection.Count > 0 && collection.First().Color == CheckerColors.black)
                 {
                     array[i] = collection.Count;
                 }

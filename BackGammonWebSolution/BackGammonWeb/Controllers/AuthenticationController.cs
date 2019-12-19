@@ -135,7 +135,7 @@ namespace BackGammonWeb.Controllers
             }
         }
 
-        [HttpGet("logout")]
+        [HttpGet("getUserByToken")]
         public string Logout(string userName)
         {
             var response = "";
@@ -184,6 +184,19 @@ namespace BackGammonWeb.Controllers
             return response;
         }
 
+        public async Task<string> GetUserByToken()
+        {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+               var user =  HttpContext.User.Identity;
+
+            }
+            else
+            {
+                return await Task.FromResult(null);
+            }
+        }
+
         private string GenerateJSONWebToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -210,31 +223,7 @@ namespace BackGammonWeb.Controllers
 
             return encodedJwt;
         }
-        //private async void UpdateUsers(int userID)
-        //{
-        //    try
-        //    {
-        //        List<User> users = _dbManager.UserRepositories.GetAllUsers().ToList();
-        //        if (users != null && users.Count > 0)
-        //        {
-        //            await _serverHub.Clients.All.UpdateUsers(users);
-        //            UpdatePrivateChatsByUser(userID);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-
-        //}
-
-        //public async void UpdatePrivateChatsByUser(int userID)
-        //{
-        //    var privateChatByUsers = _dbManager.UserRepositories.GetPrivateChatsByUserID(userID);
-        //    string signalRConnection = _dbManager.UserRepositories.GetSignalRConnection(userID);
-        //    await _serverHub.Clients.Client(signalRConnection).UpdatePrivateChatsByUser(privateChatByUsers);
-        //}
-
+   
 
     }
 }
