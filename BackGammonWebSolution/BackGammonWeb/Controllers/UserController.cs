@@ -35,7 +35,6 @@ namespace BackGammonWeb.Controllers
             _dbManager = dbManager;
             _appSettings = appSettings.Value;
             _serverHub = serverHub;
-            _userManager = userManager;
         }
 
         [HttpGet("getAllUsers")]
@@ -89,7 +88,6 @@ namespace BackGammonWeb.Controllers
             {
                 System.Security.Claims.ClaimsPrincipal currentUser = this.User;
                // User.Claims["UserID"]
-                var userID = _userManager.GetUserId(User);
             }
             
         }
