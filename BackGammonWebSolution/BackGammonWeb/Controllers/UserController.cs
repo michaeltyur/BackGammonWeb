@@ -9,6 +9,7 @@ using BackGammonWeb.Services;
 using Common.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
@@ -34,6 +35,7 @@ namespace BackGammonWeb.Controllers
             _dbManager = dbManager;
             _appSettings = appSettings.Value;
             _serverHub = serverHub;
+            _userManager = userManager;
         }
 
         [HttpGet("getAllUsers")]
@@ -78,6 +80,18 @@ namespace BackGammonWeb.Controllers
                 throw ex;
             }
 
+        }
+
+        [HttpGet("updateUserOnline")]
+        public async void UpdateUserOnline()
+        {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+               // User.Claims["UserID"]
+                var userID = _userManager.GetUserId(User);
+            }
+            
         }
 
         private async void UpdatePrivateChatsByUser(int userID)

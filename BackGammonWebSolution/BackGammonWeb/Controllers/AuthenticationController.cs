@@ -184,16 +184,18 @@ namespace BackGammonWeb.Controllers
             return response;
         }
 
-        public async Task<string> GetUserByToken()
+        [AllowAnonymous]
+        [HttpGet("checkUserIfLogged")]
+        public async Task<bool> GetUserByToken()
         {
             if (HttpContext.User.Identity.IsAuthenticated)
             {
-               var user =  HttpContext.User.Identity;
-
+                var user = HttpContext.User.Identity;
+                return await Task.FromResult(true);
             }
             else
             {
-                return await Task.FromResult(null);
+                return await Task.FromResult(false)  ;
             }
         }
 

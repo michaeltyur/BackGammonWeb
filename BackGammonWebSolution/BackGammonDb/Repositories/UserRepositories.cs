@@ -432,6 +432,14 @@ namespace BackGammonDb.Repositories
 
         }
 
+        public async void UpdateUserOnlineTime(int userID)
+        {
+            if (userID>0)
+            {
+                let 
+            }
+        }
+
         #endregion
 
       

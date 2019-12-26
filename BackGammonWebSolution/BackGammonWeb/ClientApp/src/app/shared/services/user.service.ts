@@ -16,6 +16,8 @@ export class UserService {
   users$ = new EventEmitter();
   users: Array<IUser> = [];
   privateChatByUser$ = new EventEmitter<Array<IPrivateChatByUser>>();
+  updateUserOnlineInterval;
+  updateUserOnlineIntervalTime = 1000 * 5;
 
   constructor(
     private httpClient: HttpClient,
@@ -52,4 +54,24 @@ export class UserService {
       }
     }));
   }
+
+  updateUserOnlineStart():void{
+    let url = `api/updateUserOnline`;
+    this.updateUserOnlineInterval = setInterval(()=>{
+      this.httpClient.get(url).subscribe();
+    },)
+  }
+
+  updateUserOnlineStop():void{
+    clearInterval(this.updateUserOnlineInterval);
+  }
+
+  checkIfUserLogged():Observable<boolean>{
+    if(localStorage.getItem("token"))
+    {
+      let url ="api/checkUserIfLogged";
+      return this.httpClient.get<boolean>(url);
+    }
+  }
+
 }
